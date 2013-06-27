@@ -15,6 +15,7 @@ public interface GameConstants {
 
     public static final String ASSET_GRAPHICS_DIR = "gfx/";
     public static final String ASSET_MAP_FILE = "map.png";
+    public static final String ASSET_BACKGROUND_IMAGE_FILE = "spacebg1-half-noalpha-smaller.gif";
     public static final String ASSET_SETTING_BUTTONS = "buttons.png";
     public static final String ASSET_LEVEL_BUTTONS = "LevelSelect.png";
 

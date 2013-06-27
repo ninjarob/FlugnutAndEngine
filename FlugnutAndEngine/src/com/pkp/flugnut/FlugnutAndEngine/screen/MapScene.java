@@ -7,14 +7,10 @@ import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationRedirect;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
-import org.andengine.opengl.font.Font;
-import org.andengine.opengl.font.FontFactory;
-import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import java.math.BigDecimal;
 
@@ -33,10 +29,6 @@ public class MapScene extends BaseGameScene {
     private ITextureRegion forrestLevel;
     private ITextureRegion housesLevel;
     private ITextureRegion pondLevel;
-
-    private Font mFont;
-
-    private VertexBufferObjectManager objectManager;
 
     // ===========================================================
     // CONSTANTS
@@ -59,11 +51,6 @@ public class MapScene extends BaseGameScene {
 
     @Override
     public void initResources() {
-        //FONT
-        FontFactory.setAssetBasePath(GameConstants.ASSET_FONT_DIR);
-        final ITexture fontTexture = new BitmapTextureAtlas(game.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        this.mFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(), GameConstants.ASSET_FONT_DROID, 16, true, android.graphics.Color.WHITE);
-        this.mFont.load();
 
         //IMAGES
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GameConstants.ASSET_GRAPHICS_DIR);
@@ -98,10 +85,8 @@ public class MapScene extends BaseGameScene {
     @Override
     public void initScene() {
 
-        objectManager = game.getVertexBufferObjectManager();
-
         //BACKGROUND
-        normalBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, mapBackground, objectManager));
+        normalBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, mapBackground, defaultObjectManager));
         setBackground(normalBackground);
 
         buildNavigationControl();
@@ -110,7 +95,7 @@ public class MapScene extends BaseGameScene {
     private void buildNavigationControl() {
 
         //Home Planet Nav
-        final Sprite homePlanetNav = new Sprite(HOME_PLANET_NAV_X, HOME_PLANET_NAV_Y, flugnutPlanetLevel, objectManager) {
+        final Sprite homePlanetNav = new Sprite(HOME_PLANET_NAV_X, HOME_PLANET_NAV_Y, flugnutPlanetLevel, defaultObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 game.setNewScene((BaseGameScene) NavigationRedirect.getInstance().getObjectToNavigate(GameConstants.HOME_PLANET_NAV, game));
@@ -121,7 +106,7 @@ public class MapScene extends BaseGameScene {
         registerTouchArea(homePlanetNav);
 
         //Forrest Level Nav
-        final Sprite forrestLevelNav = new Sprite(FORREST_NAV_X, FORREST_NAV_Y, forrestLevel, objectManager) {
+        final Sprite forrestLevelNav = new Sprite(FORREST_NAV_X, FORREST_NAV_Y, forrestLevel, defaultObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 //game.setNewScene(new MainMenuScene(game));
@@ -132,7 +117,7 @@ public class MapScene extends BaseGameScene {
         registerTouchArea(forrestLevelNav);
 
         //Houses Nav
-        final Sprite housesLevelNav = new Sprite(HOUSES_NAV_X, HOUSES_NAV_Y, housesLevel, objectManager) {
+        final Sprite housesLevelNav = new Sprite(HOUSES_NAV_X, HOUSES_NAV_Y, housesLevel, defaultObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 //game.setNewScene(new MainMenuScene(game));
@@ -143,7 +128,7 @@ public class MapScene extends BaseGameScene {
         registerTouchArea(housesLevelNav);
 
         //Pond Nav
-        final Sprite pondLevelNav = new Sprite(POND_NAV_X, POND_NAV_Y, pondLevel, objectManager) {
+        final Sprite pondLevelNav = new Sprite(POND_NAV_X, POND_NAV_Y, pondLevel, defaultObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 //game.setNewScene(new MainMenuScene(game));
@@ -155,7 +140,7 @@ public class MapScene extends BaseGameScene {
 
 
         //BACK_TO_MAIN_MENU BUTTON
-        final Sprite backButton = game.getNavigationElements().getBackToMainMenuButton(BACK_BUTTON_NAV_X, BACK_BUTTON_NAV_Y, game, objectManager);
+        final Sprite backButton = game.getNavigationElements().getBackToMainMenuButton(BACK_BUTTON_NAV_X, BACK_BUTTON_NAV_Y, game, defaultObjectManager);
         attachChild(backButton);
         registerTouchArea(backButton);
 

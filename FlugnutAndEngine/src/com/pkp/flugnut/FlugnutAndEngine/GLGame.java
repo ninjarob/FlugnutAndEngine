@@ -65,7 +65,7 @@ public class GLGame extends SimpleBaseGameActivity {
     @Override
     public EngineOptions onCreateEngineOptions() {
         this.mCamera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
-        getStartScene();
+        // getStartScene();
         EngineOptions eo = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera);
         eo.getAudioOptions().setNeedsMusic(true);
         return eo;
