@@ -2,6 +2,8 @@ package com.pkp.flugnut.FlugnutAndEngine.navigation;
 
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
+import com.pkp.flugnut.FlugnutAndEngine.utils.GameConstants;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.util.HorizontalAlign;
@@ -31,5 +33,10 @@ public class HomePlanetNavScene extends BaseGameScene {
                 "This is the home planet level selection page",
                 new TextOptions(HorizontalAlign.LEFT), defaultObjectManager);
         attachChild(leftText);
+
+        final Sprite backButton = game.getNavigationElements().getBackButton(BACK_BUTTON_NAV_X, BACK_BUTTON_NAV_Y, game, GameConstants.HOME_PLANET_BACK_NAV);
+        attachChild(backButton);
+        registerTouchArea(backButton);
+
     }
 }

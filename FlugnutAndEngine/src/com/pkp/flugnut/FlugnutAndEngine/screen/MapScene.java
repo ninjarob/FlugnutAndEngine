@@ -19,10 +19,6 @@ public class MapScene extends BaseGameScene {
     // ===========================================================
     // Fields
     // ===========================================================
-    private SpriteBackground normalBackground;
-
-    private BitmapTextureAtlas backgroundBitmapTextureAtlas;
-    private BitmapTextureAtlas bitmapTextureAtlas;
 
     private ITextureRegion mapBackground;
     private ITextureRegion flugnutPlanetLevel;
@@ -51,43 +47,42 @@ public class MapScene extends BaseGameScene {
 
     @Override
     public void initResources() {
-
         //IMAGES
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GameConstants.ASSET_GRAPHICS_DIR);
         //BACKGROUND
-        this.backgroundBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 800, 1200);
+        BitmapTextureAtlas backgroundBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 800, 1200);
         this.mapBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundBitmapTextureAtlas, game, GameConstants.ASSET_MAP_FILE, 0, 0);
-        this.backgroundBitmapTextureAtlas.load();
+        backgroundBitmapTextureAtlas.load();
 
 
-        this.bitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 129, 226, TextureOptions.BILINEAR);
+        BitmapTextureAtlas bitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 129, 226, TextureOptions.BILINEAR);
 
         // Flugnut's Planet Level Image
         this.flugnutPlanetLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
-        this.bitmapTextureAtlas.load();
+        bitmapTextureAtlas.load();
 
         // Forrest Level Image
         //TODO: Need image for navigating into forrest
         this.forrestLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
-        this.bitmapTextureAtlas.load();
+        bitmapTextureAtlas.load();
 
         // Houses Level Image
         //TODO: Need image for navigating into house
         this.housesLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
-        this.bitmapTextureAtlas.load();
+        bitmapTextureAtlas.load();
 
         // Pond Level Image
         //TODO: Need image for navigating into pond
         this.pondLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
-        this.bitmapTextureAtlas.load();
+        bitmapTextureAtlas.load();
     }
 
     @Override
     public void initScene() {
 
         //BACKGROUND
-        normalBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, mapBackground, defaultObjectManager));
-        setBackground(normalBackground);
+        SpriteBackground mapSpriteBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, mapBackground, defaultObjectManager));
+        setBackground(mapSpriteBackground);
 
         buildNavigationControl();
     }

@@ -14,6 +14,8 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+import java.math.BigDecimal;
+
 public abstract class BaseGameScene extends Scene {
     public static float SSC; //SCREEN_SIZE_CONSTANT
     protected double timePassed = 0;
@@ -24,6 +26,8 @@ public abstract class BaseGameScene extends Scene {
     protected static VertexBufferObjectManager defaultObjectManager;
     protected static SpriteBackground defaultBackground;
 
+    protected final int BACK_BUTTON_NAV_X = new BigDecimal(GLGame.CAMERA_WIDTH - (GLGame.CAMERA_WIDTH * 0.10)).intValue();
+    protected final int BACK_BUTTON_NAV_Y = new BigDecimal(GLGame.CAMERA_HEIGHT - (GLGame.CAMERA_WIDTH * 0.10)).intValue();
 
     public enum ScreenType {
         MainMenu,

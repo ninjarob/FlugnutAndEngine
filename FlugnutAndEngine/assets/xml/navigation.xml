@@ -8,6 +8,11 @@
         <from>com.pkp.flugnut.FlugnutAndEngine.screen.MapScene</from>
         <to>com.pkp.flugnut.FlugnutAndEngine.navigation.HomePlanetNavScene</to>
     </redirect>
+    <redirect>
+        <id>HOME_PLANET_BACK_NAV</id>
+        <from>com.pkp.flugnut.FlugnutAndEngine.navigation.HomePlanetNavScene</from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.MapScene</to>
+    </redirect>
 
     <!-- Global Navigation -->
     <redirect>

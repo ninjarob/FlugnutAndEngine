@@ -24,7 +24,6 @@ import java.util.Map;
 public class NavigationElements {
 
     private ITextureRegion backButtonTextureRegion;
-    private BitmapTextureAtlas navigationBitmapTextureAtlas;
 
     Map<NavigationButtons, Sprite> navigationButtonCache;
 
@@ -34,14 +33,15 @@ public class NavigationElements {
     }
 
     public enum NavigationButtons {
+        BACK_BUTTON,
         BACK_TO_MAIN_MENU;
     }
 
     public void initResources(GLGame game) {
-        this.navigationBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 129, 226, TextureOptions.BILINEAR);
+        BitmapTextureAtlas navigationBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 129, 226, TextureOptions.BILINEAR);
         this.backButtonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(navigationBitmapTextureAtlas, game, GameConstants.ASSET_SETTING_BUTTONS, 0, 0);
         this.backButtonTextureRegion = TextureRegionFactory.extractFromTexture(navigationBitmapTextureAtlas, 64, 64, 64, 64);  //Cropping the buttons image to get the back button
-        this.navigationBitmapTextureAtlas.load();
+        navigationBitmapTextureAtlas.load();
     }
 
     public Sprite getBackToMainMenuButton(final int x, final int y, final GLGame game, final VertexBufferObjectManager objectManager) {
@@ -49,7 +49,7 @@ public class NavigationElements {
             return navigationButtonCache.get(NavigationButtons.BACK_TO_MAIN_MENU);
         }
         initResources(game);
-        final Sprite backButton = new Sprite(x, y, backButtonTextureRegion, objectManager) {
+        final Sprite backToMainButton = new Sprite(x, y, backButtonTextureRegion, objectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 game.setNewScene((BaseGameScene) NavigationRedirect.getInstance().getObjectToNavigate(GameConstants.MAIN_MENU_NAV, game));
@@ -57,7 +57,22 @@ public class NavigationElements {
             }
         };
 
-        navigationButtonCache.put(NavigationButtons.BACK_TO_MAIN_MENU, backButton);
+        navigationButtonCache.put(NavigationButtons.BACK_TO_MAIN_MENU, backToMainButton);
+        return backToMainButton;
+    }
+
+    public Sprite getBackButton(final int x, final int y, final GLGame game, final String navigationId) {
+        if (backButtonTextureRegion == null) {
+            initResources(game);
+        }
+
+        final Sprite backButton = new Sprite(x, y, backButtonTextureRegion, game.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+                game.setNewScene((BaseGameScene) NavigationRedirect.getInstance().getObjectToNavigate(navigationId, game));
+                return true;
+            }
+        };
         return backButton;
     }
 }

@@ -24,6 +24,7 @@ public interface GameConstants {
     // Navigation ID's
     // ========================================
     public static final String HOME_PLANET_NAV = "HOME_PLANET_NAV";
+    public static final String HOME_PLANET_BACK_NAV = "HOME_PLANET_BACK_NAV";
     public static final String MAIN_MENU_NAV = "MAIN_MENU_NAV";
 
 }

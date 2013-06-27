@@ -69,6 +69,10 @@ public class NavigationRedirect {
     }
 
     public Object getObjectToNavigate(String id, GLGame game) {
+        if (id == null || id.equals(GameConstants.EMPTY_STRING)) {
+            throw new IllegalArgumentException(" Navigation id cannot be empty or null ");
+        }
+
         String className = instance.navigationRedirect.get(id);
         try {
             return (Class.forName(className).getConstructor(GLGame.class).newInstance(game));
