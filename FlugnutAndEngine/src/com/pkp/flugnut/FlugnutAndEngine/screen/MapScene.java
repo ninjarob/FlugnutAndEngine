@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutAndEngine.screen;
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.utils.GameConstants;
+import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationRedirect;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
@@ -13,28 +14,44 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+
+import java.math.BigDecimal;
 
 public class MapScene extends BaseGameScene {
 
     // ===========================================================
     // Fields
     // ===========================================================
-    SpriteBackground normalBackground;
-    VertexBufferObjectManager vertexBufferObjectManager;
+    private SpriteBackground normalBackground;
 
-    private BitmapTextureAtlas backgroundTexture;
+    private BitmapTextureAtlas backgroundBitmapTextureAtlas;
+    private BitmapTextureAtlas bitmapTextureAtlas;
 
     private ITextureRegion mapBackground;
+    private ITextureRegion flugnutPlanetLevel;
+    private ITextureRegion forrestLevel;
+    private ITextureRegion housesLevel;
+    private ITextureRegion pondLevel;
 
-    private BitmapTextureAtlas mBitmapTextureAtlas;
-    private ITextureRegion levelSelect;
-
-    private ITextureRegion buttonTextureRegion;
-    private ITextureRegion spriteTextureRegion;
-    private ITextureRegion backButtonTextureRegion;
     private Font mFont;
+
+    private VertexBufferObjectManager objectManager;
+
+    // ===========================================================
+    // CONSTANTS
+    // ===========================================================
+
+    private final int HOME_PLANET_NAV_X = new BigDecimal(GLGame.CAMERA_WIDTH - (GLGame.CAMERA_WIDTH * 0.65)).intValue();
+    private final int HOME_PLANET_NAV_Y = new BigDecimal(GLGame.CAMERA_HEIGHT - (GLGame.CAMERA_HEIGHT * 0.99)).intValue();
+    private final int FORREST_NAV_X = new BigDecimal(GLGame.CAMERA_WIDTH - (GLGame.CAMERA_WIDTH * 0.90)).intValue();
+    private final int FORREST_NAV_Y = new BigDecimal(GLGame.CAMERA_HEIGHT - (GLGame.CAMERA_HEIGHT * 0.60)).intValue();
+    private final int HOUSES_NAV_X = new BigDecimal(GLGame.CAMERA_WIDTH - (GLGame.CAMERA_WIDTH * 0.45)).intValue();
+    private final int HOUSES_NAV_Y = new BigDecimal(GLGame.CAMERA_HEIGHT - (GLGame.CAMERA_HEIGHT * 0.75)).intValue();
+    private final int POND_NAV_X = new BigDecimal(GLGame.CAMERA_WIDTH - (GLGame.CAMERA_WIDTH * 0.30)).intValue();
+    private final int POND_NAV_Y = new BigDecimal(GLGame.CAMERA_HEIGHT - (GLGame.CAMERA_HEIGHT * 0.30)).intValue();
+    private final int BACK_BUTTON_NAV_X = new BigDecimal(GLGame.CAMERA_WIDTH - (GLGame.CAMERA_WIDTH * 0.95)).intValue();
+    private final int BACK_BUTTON_NAV_Y = new BigDecimal(GLGame.CAMERA_HEIGHT - (GLGame.CAMERA_WIDTH * 0.10)).intValue();
 
     public MapScene(GLGame game) {
         super(game);
@@ -48,61 +65,101 @@ public class MapScene extends BaseGameScene {
         this.mFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(), GameConstants.ASSET_FONT_DROID, 16, true, android.graphics.Color.WHITE);
         this.mFont.load();
 
+        //IMAGES
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GameConstants.ASSET_GRAPHICS_DIR);
         //BACKGROUND
-        this.backgroundTexture = new BitmapTextureAtlas(game.getTextureManager(), 800, 1200);
-        this.mapBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.backgroundTexture, game, GameConstants.ASSET_MAP_FILE, 0, 0);
-        this.backgroundTexture.load();
+        this.backgroundBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 800, 1200);
+        this.mapBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundBitmapTextureAtlas, game, GameConstants.ASSET_MAP_FILE, 0, 0);
+        this.backgroundBitmapTextureAtlas.load();
 
-        //BACK BUTTON
-        this.mBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 129, 226, TextureOptions.BILINEAR);
-        this.buttonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, GameConstants.ASSET_SETTING_BUTTONS, 0, 0);
-        this.spriteTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
 
-        this.backButtonTextureRegion = TextureRegionFactory.extractFromTexture(mBitmapTextureAtlas, 64, 64, 64, 64);
-        this.mBitmapTextureAtlas.load();
+        this.bitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 129, 226, TextureOptions.BILINEAR);
+
+        // Flugnut's Planet Level Image
+        this.flugnutPlanetLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
+        this.bitmapTextureAtlas.load();
+
+        // Forrest Level Image
+        //TODO: Need image for navigating into forrest
+        this.forrestLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
+        this.bitmapTextureAtlas.load();
+
+        // Houses Level Image
+        //TODO: Need image for navigating into house
+        this.housesLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
+        this.bitmapTextureAtlas.load();
+
+        // Pond Level Image
+        //TODO: Need image for navigating into pond
+        this.pondLevel = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, game, GameConstants.ASSET_LEVEL_BUTTONS, 0, 193);
+        this.bitmapTextureAtlas.load();
     }
 
     @Override
     public void initScene() {
+
+        objectManager = game.getVertexBufferObjectManager();
+
         //BACKGROUND
-        normalBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, mapBackground, game.getVertexBufferObjectManager()));
-        vertexBufferObjectManager = game.getVertexBufferObjectManager();
+        normalBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, mapBackground, objectManager));
         setBackground(normalBackground);
 
-        initLevels();
+        buildNavigationControl();
+    }
 
-        //BACK BUTTON
-        final Sprite backButton = new Sprite(10, GLGame.CAMERA_HEIGHT - 74, backButtonTextureRegion, game.getVertexBufferObjectManager()) {
+    private void buildNavigationControl() {
+
+        //Home Planet Nav
+        final Sprite homePlanetNav = new Sprite(HOME_PLANET_NAV_X, HOME_PLANET_NAV_Y, flugnutPlanetLevel, objectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-                game.setNewScene(new MainMenuScene(game));
+                game.setNewScene((BaseGameScene) NavigationRedirect.getInstance().getObjectToNavigate(GameConstants.HOME_PLANET_NAV, game));
                 return true;
             }
         };
-        attachChild(backButton);
-        registerTouchArea(backButton);
-        setTouchAreaBindingOnActionDownEnabled(true);
-    }
+        attachChild(homePlanetNav);
+        registerTouchArea(homePlanetNav);
 
-    private void initLevels() {
-        //FONT
-//        final Text leftText = new Text(50, 180, this.mFont,
-//                "Flugnut is the hero of Flugeria.  Herein I will show you\n" +
-//                        "how to use flugnut to protect buildings and people, solve\n" +
-//                        " puzzles stop the Snostreblaian attack!",
-//                new TextOptions(HorizontalAlign.LEFT), vertexBufferObjectManager);
-//        attachChild(leftText);
-        //BACK BUTTON
-        final Sprite level1 = new Sprite(185, 7, spriteTextureRegion, game.getVertexBufferObjectManager()) {
+        //Forrest Level Nav
+        final Sprite forrestLevelNav = new Sprite(FORREST_NAV_X, FORREST_NAV_Y, forrestLevel, objectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 //game.setNewScene(new MainMenuScene(game));
                 return true;
             }
         };
-        attachChild(level1);
-        registerTouchArea(level1);
+        attachChild(forrestLevelNav);
+        registerTouchArea(forrestLevelNav);
+
+        //Houses Nav
+        final Sprite housesLevelNav = new Sprite(HOUSES_NAV_X, HOUSES_NAV_Y, housesLevel, objectManager) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+                //game.setNewScene(new MainMenuScene(game));
+                return true;
+            }
+        };
+        attachChild(housesLevelNav);
+        registerTouchArea(housesLevelNav);
+
+        //Pond Nav
+        final Sprite pondLevelNav = new Sprite(POND_NAV_X, POND_NAV_Y, pondLevel, objectManager) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+                //game.setNewScene(new MainMenuScene(game));
+                return true;
+            }
+        };
+        attachChild(pondLevelNav);
+        registerTouchArea(pondLevelNav);
+
+
+        //BACK_TO_MAIN_MENU BUTTON
+        final Sprite backButton = game.getNavigationElements().getBackToMainMenuButton(BACK_BUTTON_NAV_X, BACK_BUTTON_NAV_Y, game, objectManager);
+        attachChild(backButton);
+        registerTouchArea(backButton);
+
+
         setTouchAreaBindingOnActionDownEnabled(true);
     }
 }

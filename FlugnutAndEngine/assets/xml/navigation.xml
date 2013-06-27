@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This xml will be used for navigation around the game. Id to be the same as the value in GameConstants.java  -->
+<!-- The from and to need to class names of the scenes to which the redirect should happen to and from.-->
+<!-- Access the navigation details from NavigationRedirect.-->
+<navigation>
+    <redirect>
+        <id>HOME_PLANET_NAV</id>
+        <from>com.pkp.flugnut.FlugnutAndEngine.screen.MapScene</from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.navigation.HomePlanetNavScene</to>
+    </redirect>
+
+    <!-- Global Navigation -->
+    <redirect>
+        <id>MAIN_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.MainMenuScene</to>
+    </redirect>
+</navigation>
