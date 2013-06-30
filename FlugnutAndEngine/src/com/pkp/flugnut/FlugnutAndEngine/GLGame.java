@@ -1,9 +1,11 @@
 package com.pkp.flugnut.FlugnutAndEngine;
 
 import android.os.PowerManager.WakeLock;
+import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.screen.MainMenuScene;
+import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationElements;
+import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationRedirect;
 import org.andengine.audio.music.Music;
-import org.andengine.audio.music.MusicFactory;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
@@ -11,10 +13,6 @@ import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
-import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
-import org.andengine.util.debug.Debug;
-
-import java.io.IOException;
 
 public class GLGame extends SimpleBaseGameActivity {
 
@@ -50,6 +48,7 @@ public class GLGame extends SimpleBaseGameActivity {
 
     GLGameState state = GLGameState.Initialized;
     Object stateChanged = new Object();
+    private NavigationElements navigationElements;
 
     // ===========================================================
     // Constructors
@@ -66,7 +65,7 @@ public class GLGame extends SimpleBaseGameActivity {
     @Override
     public EngineOptions onCreateEngineOptions() {
         this.mCamera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
-        getStartScene();
+        // getStartScene();
         EngineOptions eo = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera);
         eo.getAudioOptions().setNeedsMusic(true);
         return eo;
@@ -76,6 +75,8 @@ public class GLGame extends SimpleBaseGameActivity {
     public void onCreateResources() {
         getStartScene();
         mScene.initResources();
+        navigationElements = new NavigationElements();
+        NavigationRedirect.initInstance(getApplicationContext());
     }
 
     @Override
@@ -103,9 +104,12 @@ public class GLGame extends SimpleBaseGameActivity {
 
     public BaseGameScene getStartScene() {
         if (mScene == null) {
-    	    mScene = new MainMenuScene(this);
+            mScene = new MainMenuScene(this);
         }
         return mScene;
     }
-    
+
+    public NavigationElements getNavigationElements() {
+        return navigationElements;
+    }
 }
