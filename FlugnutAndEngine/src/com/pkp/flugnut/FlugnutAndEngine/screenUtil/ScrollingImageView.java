@@ -17,22 +17,55 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 
-
 /*
  * This class allows showing a clipped area of an image and having the scene scroll across the image in a defined set of time.
  * Use the constructor to create an object, call initResources in your initResources, call initScene in your initScene
+ * 
+ * Example: This AustinScene class shows the flug_nut_title.png image and scrolls it
+		import android.graphics.Point;
+		import android.graphics.Rect;
+		import com.pkp.flugnut.FlugnutAndEngine.GLGame;
+		import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
+		import com.pkp.flugnut.FlugnutAndEngine.screenUtil.ScrollingImageView;
+
+		public class AustinScene extends BaseGameScene {
+
+			private ScrollingImageView scrollingImageView;
+
+			public AustinScene(GLGame game) {
+				super(game);
+
+				Point imageSize = new Point(736, 391);
+				Rect spriteRect = new Rect(10, 10, 500, 401); // rect to show of the image at a time; this gives both the position on the view and the height/width to show
+				String imageFileName = "flugnut_title.png"; // 736X391
+				float secondsLength = 5.3f; // how long it takes to scroll from left to right of image
+				boolean backAndForth = true; // if true then will keep bouncing back and forth. otherwise it will got left to right and then stop
+
+				scrollingImageView = new ScrollingImageView(game, this, imageSize, spriteRect, imageFileName, secondsLength, backAndForth);
+			}
+
+			@Override
+			public void initResources() {
+				scrollingImageView.initResources();
+			}
+
+			@Override
+			public void initScene() {
+				scrollingImageView.initScene();
+			}
+		}
  */
 public class ScrollingImageView {
 
-	// parameters from the caller
-	private Point imageSize = new Point(736, 391);
-	private Rect spriteRect = new Rect(10, 10, 500, 401); // rect to show of the image at a time; this gives both the position on the view and the height/width to show
-	private String imageFileName = "flugnut_title.png"; // 736X391
-	private float secondsLength = 5.3f; // how long it takes to scroll from left to right of image
-	private boolean backAndForth = true; // if true then will keep bouncing back and forth. otherwise it will got left to right and then stop
+	// == parameters from the caller ==
+	private Point imageSize; // the size of the actual image
+	private Rect spriteRect; // rect to show of the image at a time; this gives both the position on the view and the height/width to show
+	private String imageFileName;
+	private float secondsLength; // how long it takes to scroll from left to right of image
+	private boolean backAndForth; // if true then will keep bouncing back and forth. otherwise it will got left to right and then stop
 	private GLGame game;
 	private Scene scene;
-	// values used internally
+	// == values used internally ==
 	private static final float optimizationFactor = 5.0f; // instead of 1 pixel per move, move this factor of pixels (moving just one pixel per time was too processor intensive
 	private BitmapTextureAtlas imageBitmapTextureAtlas;
 	private Sprite imageSprite;
