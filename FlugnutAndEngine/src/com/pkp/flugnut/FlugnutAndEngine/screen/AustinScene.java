@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
+import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.sprite.Sprite;
@@ -27,11 +28,13 @@ public class AustinScene extends BaseGameScene {
 	private int moveModifier = 1; // -1 moves to the left
 	private PointF margin;// this is how many pixels it takes to move from left/top to right/bottom of the image in the view port
 	private float secondsPerPixel; // how many seconds to wait to move another pixel
+	private IUpdateHandler timerUpdateHandler;
 	// parameters
 	private final Point imageSize = new Point(736, 391);
-	private final Rect spriteRect = new Rect(10, 10, 200, 401); // rect to show of the image at a time; this gives both the position on the view and the height/width to show
+	private final Rect spriteRect = new Rect(10, 10, 500, 401); // rect to show of the image at a time; this gives both the position on the view and the height/width to show
 	private final String imageFileName = "flugnut_title.png"; // 736X391
 	private final float secondsLength = 5.3f; // how long it takes to scroll from left to right of image
+	private final boolean backAndForth = true; // if true then will keep bouncing back and forth. otherwise it will got left to right and then stop
 
 	public AustinScene(GLGame game) {
 		super(game);
@@ -65,13 +68,14 @@ public class AustinScene extends BaseGameScene {
 
 	@Override
 	public void initScene() {
-		registerUpdateHandler(new TimerHandler(secondsPerPixel, true, new ITimerCallback() {
+		timerUpdateHandler = new TimerHandler(secondsPerPixel, true, new ITimerCallback() {
 			@Override
 			public void onTimePassed(final TimerHandler pTimerHandler) {
 				moveSprite();
 				showSprite();
 			}
-		}));
+		});
+		registerUpdateHandler(timerUpdateHandler);
 	}
 
 	private void moveSprite() {
@@ -81,7 +85,11 @@ public class AustinScene extends BaseGameScene {
 		spriteSliderRect.bottom += imageStep.y * moveModifier;
 
 		if (spriteSliderRect.left >= imageSize.x - spriteRect.width() || spriteSliderRect.left <= 0) {
-			moveModifier *= -1; // next move will go in the opposite direction
+			if (backAndForth) {
+				moveModifier *= -1; // next move will go in the opposite direction
+			} else {
+				unregisterUpdateHandler(timerUpdateHandler);
+			}
 		}
 	}
 
@@ -102,8 +110,5 @@ public class AustinScene extends BaseGameScene {
 		// remember the new sprite
 		imageSprite = tempSprite;
 	}
-	// combine clippedRegion replaces spritesliderrect
-	// instead of moving by lage chunks, move by one pixel but make  timer longer/shorter to be able to scroll the whole image tin time
-//	HE IS ALREADY SCROLLING ON THE MAIN PAGE!!!
-	// Later: set destination points and times between so that animation can jump around for timed intervals
+	// option to keep bouncing back and forth or to stop
 }
