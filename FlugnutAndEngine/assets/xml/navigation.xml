@@ -4,20 +4,55 @@
 <!-- Access the navigation details from NavigationRedirect.-->
 <navigation>
     <redirect>
-        <id>HOME_PLANET_NAV</id>
-        <from>com.pkp.flugnut.FlugnutAndEngine.screen.MapScene</from>
-        <to>com.pkp.flugnut.FlugnutAndEngine.navigation.HomePlanetNavScene</to>
+        <id>CASTLE_NAV</id>
+        <from>com.pkp.flugnut.FlugnutAndEngine.screen.global.MapScene</from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.navigation.CastleNavScene</to>
     </redirect>
     <redirect>
-        <id>HOME_PLANET_BACK_NAV</id>
-        <from>com.pkp.flugnut.FlugnutAndEngine.navigation.HomePlanetNavScene</from>
-        <to>com.pkp.flugnut.FlugnutAndEngine.screen.MapScene</to>
+        <id>CASTLE_PLANET_BACK_NAV</id>
+        <from>com.pkp.flugnut.FlugnutAndEngine.screen.navigation.CastleNavScene</from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.MapScene</to>
     </redirect>
 
     <!-- Global Navigation -->
     <redirect>
         <id>MAIN_MENU_NAV</id>
         <from></from>
-        <to>com.pkp.flugnut.FlugnutAndEngine.screen.MainMenuScene</to>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.MainMenuScene</to>
+    </redirect>
+    <redirect>
+        <id>PLAY_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.MapScene</to>
+    </redirect>
+    <redirect>
+        <id>HELP_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.HelpScene</to>
+    </redirect>
+    <redirect>
+        <id>MAP_SCENE_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.MapScene</to>
+    </redirect>
+    <redirect>
+        <id>PAUSE_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.PauseMenu</to>
+    </redirect>
+    <redirect>
+        <id>SETTINGS_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.SettingsScene</to>
+    </redirect>
+    <redirect>
+        <id>STORY_SCENE_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.StoryScene</to>
+    </redirect>
+    <redirect>
+        <id>TUTORIAL_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.TutorialScene</to>
     </redirect>
 </navigation>
