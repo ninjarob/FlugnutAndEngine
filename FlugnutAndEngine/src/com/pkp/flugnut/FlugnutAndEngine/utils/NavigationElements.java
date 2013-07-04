@@ -39,7 +39,7 @@ public class NavigationElements {
 
     public void initResources(GLGame game) {
         BitmapTextureAtlas navigationBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 129, 226, TextureOptions.BILINEAR);
-        this.backButtonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(navigationBitmapTextureAtlas, game, GameConstants.ASSET_SETTING_BUTTONS, 0, 0);
+        this.backButtonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(navigationBitmapTextureAtlas, game, GameConstants.SETTING_BUTTONS, 0, 0);
         this.backButtonTextureRegion = TextureRegionFactory.extractFromTexture(navigationBitmapTextureAtlas, 64, 64, 64, 64);  //Cropping the buttons image to get the back button
         navigationBitmapTextureAtlas.load();
     }

@@ -8,23 +8,61 @@ package com.pkp.flugnut.FlugnutAndEngine.utils;
  * To change this template use File | Settings | File Templates.
  */
 public interface GameConstants {
+
+    // ========================================
+    // Texts / Labels
+    // ========================================
     public static final String EMPTY_STRING = "";
+    public static final String LABEL_PLAY_BUTTON = "PLAY";
+    public static final String LABEL_TUTORIAL_BUTTON = "TUTORIAL";
+    public static final String LABEL_HELP_BUTTON = "HELP";
+    public static final String LABEL_STORY_BUTTON = "STORY";
+    public static final String LABEL_SETTINGS_BUTTON = "SETTINGS";
+    public static final String LABEL_QUIT_BUTTON = "QUIT";
 
-    public static final String ASSET_FONT_DIR = "font/";
-    public static final String ASSET_FONT_DROID = "Droid.ttf";
+    // ========================================
+    // Fonts
+    // ========================================
+    public static final String FONT_DIR = "font/";
+    public static final String FONT_DROID = "Droid.ttf";
+    public static final String FONT_PLOK = "Plok.ttf";
 
-    public static final String ASSET_GRAPHICS_DIR = "gfx/";
-    public static final String ASSET_MAP_FILE = "map.png";
-    public static final String ASSET_BACKGROUND_IMAGE_FILE = "spacebg1-half-noalpha-smaller.gif";
-    public static final String ASSET_SETTING_BUTTONS = "buttons.png";
-    public static final String ASSET_LEVEL_BUTTONS = "LevelSelect.png";
+    // ========================================
+    // Images
+    // ========================================
+    public static final String GRAPHICS_DIR = "gfx/";
+    public static final String MAP_FILE = "map.png";
+    public static final String BACKGROUND_IMAGE_FILE = "spacebg1-half-noalpha-smaller.gif";
+    public static final String PARALLAX_BACKGROUND_FRONT_FILE = "parallax_background_layer_front.png";
+    public static final String PARALLAX_BACKGROUND_MID_FILE = "parallax_background_layer_mid.png";
+    public static final String SETTING_BUTTONS = "buttons.png";
+    public static final String LEVEL_BUTTONS = "LevelSelect.png";
 
+    // ========================================
+    // Music
+    // ========================================
+    public static final String MUSIC_DIR = "mfx/";
+    public static final String MUSIC_DEFAULT_THEME = "flugnutmaintheme.mp3";
 
     // ========================================
     // Navigation ID's
     // ========================================
-    public static final String HOME_PLANET_NAV = "HOME_PLANET_NAV";
-    public static final String HOME_PLANET_BACK_NAV = "HOME_PLANET_BACK_NAV";
+    public static final String CASTLE_NAV = "CASTLE_NAV";
+    public static final String FORREST_NAV = "FORREST_NAV";
+    public static final String VILLAGE_NAV = "VILLAGE_NAV";
+    public static final String SEA_NAV = "SEA_NAV";
+    public static final String CASTLE_PLANET_BACK_NAV = "CASTLE_PLANET_BACK_NAV";
+
+    // ========================================
+    // Global Navigation ID's
+    // ========================================
     public static final String MAIN_MENU_NAV = "MAIN_MENU_NAV";
+    public static final String PLAY_MENU_NAV = "PLAY_MENU_NAV";
+    public static final String HELP_MENU_NAV = "HELP_MENU_NAV";
+    public static final String MAP_SCENE_NAV = "MAP_SCENE_NAV";
+    public static final String PAUSE_MENU_NAV = "PAUSE_MENU_NAV";
+    public static final String SETTINGS_MENU_NAV = "SETTINGS_MENU_NAV";
+    public static final String STORY_SCENE_NAV = "STORY_SCENE_NAV";
+    public static final String TUTORIAL_MENU_NAV = "TUTORIAL_MENU_NAV";
 
 }

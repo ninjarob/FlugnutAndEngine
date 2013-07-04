@@ -1,11 +1,7 @@
-package com.pkp.flugnut.FlugnutAndEngine.screen;
+package com.pkp.flugnut.FlugnutAndEngine.screen.global;
 
 import android.opengl.GLES20;
 import com.pkp.flugnut.FlugnutAndEngine.game.Settings;
-import com.pkp.flugnut.FlugnutAndEngine.utils.Utilities;
-import org.andengine.audio.music.Music;
-import org.andengine.audio.music.MusicFactory;
-import org.andengine.audio.music.MusicManager;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -20,23 +16,20 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
-import com.pkp.flugnut.FlugnutAndEngine.game.Swipeable;
 import org.andengine.util.color.Color;
-import org.andengine.util.debug.Debug;
 
-import java.io.IOException;
-
-public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuItemClickListener {
-    protected static final int MENU_PLAY = 0;
-    protected static final int MENU_TUTORIAL = MENU_PLAY + 1;
-    protected static final int MENU_HELP = MENU_TUTORIAL + 1;
-    protected static final int MENU_STORY = MENU_HELP + 1;
-    protected static final int MENU_SETTINGS = MENU_STORY+ 1;
-    protected static final int MENU_QUIT = MENU_SETTINGS + 1;
+public class SettingsScene extends BaseGameScene implements MenuScene.IOnMenuItemClickListener {
+    protected static final int MENU_SOUNDS = 0;
+    protected static final int MENU_MUSIC = MENU_SOUNDS + 1;
+    protected static final int MENU_BACK = MENU_MUSIC + 1;
+    private final String SOUND_ON = "SOUND ON";
+    private final String SOUND_OFF = "SOUND OFF";
+    private final String MUSIC_ON = "MUSIC ON";
+    private final String MUSIC_OFF = "MUSIC OFF";
+    private final String BACK = "GO BACK";
 
 
     // ===========================================================
@@ -54,9 +47,13 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
     private Font mFont;
     private MenuScene menuScene;
 
-	public MainMenuScene(GLGame game) {
-		super(game);
-	}
+    private TextMenuItem soundTextMenuItem;
+    private TextMenuItem musicTextMenuItem;
+    private TextMenuItem backTextMenuItem;
+
+    public SettingsScene(GLGame game) {
+        super(game);
+    }
 
     @Override
     public void initResources() {
@@ -71,22 +68,10 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
         this.mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, "spacebg1-half-noalpha-smaller.gif", 0, 188);  //plus the height of the front
         this.mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, "parallax_background_layer_mid.png", 0, 989);   //plus the height of the front and the back
         this.mAutoParallaxBackgroundTexture.load();
-
-        if (game.mMusic == null) {
-            MusicFactory.setAssetBasePath("mfx/");
-            try {
-                game.mMusic = MusicFactory.createMusicFromAsset(game.getMusicManager(), game, "flugnutmaintheme.mp3");
-                game.mMusic.setLooping(true);
-                game.mMusic.setVolume(Settings.musicVolume);
-            } catch (final IOException e) {
-                Debug.e(e);
-            }
-        }
     }
 
     @Override
     public void initScene() {
-        Utilities.playMusic(game.mMusic);
         autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
         vertexBufferObjectManager = game.getVertexBufferObjectManager();
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0.0f, new Sprite(0, 0, this.mParallaxLayerBack, vertexBufferObjectManager)));
@@ -99,29 +84,22 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
     protected void createMenuScene() {
         menuScene = new MenuScene(game.mCamera);
 
-        final IMenuItem playMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MENU_PLAY, this.mFont, "PLAY", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
-        playMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        menuScene.addMenuItem(playMenuItem);
+        String soundText = Settings.soundEnabled ? SOUND_ON : SOUND_OFF;
+        String musicText = Settings.musicEnabled ? MUSIC_ON : MUSIC_OFF;
+        soundTextMenuItem = new TextMenuItem(MENU_SOUNDS, this.mFont, soundText, game.getVertexBufferObjectManager());
+        final IMenuItem soundMenuItem = new ColorMenuItemDecorator(soundTextMenuItem, new Color(1,0,0), new Color(1,1,1));
+        soundMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        menuScene.addMenuItem(soundMenuItem);
 
-        final IMenuItem tutorialMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MENU_TUTORIAL, this.mFont, "TUTORIAL", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
-        tutorialMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        menuScene.addMenuItem(tutorialMenuItem);
+        musicTextMenuItem = new TextMenuItem(MENU_MUSIC, this.mFont, musicText, game.getVertexBufferObjectManager());
+        final IMenuItem musicMenuItem = new ColorMenuItemDecorator(musicTextMenuItem, new Color(1,0,0), new Color(1,1,1));
+        musicMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        menuScene.addMenuItem(musicMenuItem);
 
-        final IMenuItem helpMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MENU_HELP, this.mFont, "HELP", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
-        helpMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        menuScene.addMenuItem(helpMenuItem);
-
-        final IMenuItem storyMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MENU_STORY, this.mFont, "STORY", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
-        storyMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        menuScene.addMenuItem(storyMenuItem);
-
-        final IMenuItem settingsMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MENU_SETTINGS, this.mFont, "SETTINGS", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
-        settingsMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        menuScene.addMenuItem(settingsMenuItem);
-
-        final IMenuItem quitMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MENU_QUIT, this.mFont, "QUIT", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
-        quitMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        menuScene.addMenuItem(quitMenuItem);
+        backTextMenuItem = new TextMenuItem(MENU_BACK, this.mFont, "GO BACK", game.getVertexBufferObjectManager());
+        final IMenuItem backMenuItem = new ColorMenuItemDecorator(backTextMenuItem, new Color(1,0,0), new Color(1,1,1));
+        backMenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        menuScene.addMenuItem(backMenuItem);
 
         menuScene.buildAnimations();
 
@@ -135,23 +113,25 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
     @Override
     public boolean onMenuItemClicked(final MenuScene pMenuScene, final IMenuItem pMenuItem, final float pMenuItemLocalX, final float pMenuItemLocalY) {
         switch(pMenuItem.getID()) {
-            case MENU_PLAY:
-                game.setNewScene(new MapScene(game));
+            case MENU_SOUNDS:
+                Settings.soundEnabled = !Settings.soundEnabled;
+                String soundText = Settings.soundEnabled ? SOUND_ON : SOUND_OFF;
+                soundTextMenuItem.setText(soundText);
                 return true;
-            case MENU_TUTORIAL:
-                game.setNewScene(new TutorialScene(game));
+            case MENU_MUSIC:
+                Settings.musicEnabled = !Settings.musicEnabled;
+                String musicText = Settings.musicEnabled ? MUSIC_ON : MUSIC_OFF;
+                musicTextMenuItem.setText(musicText);
+                if (Settings.musicEnabled) {
+                    game.mMusic.seekTo(0);
+                    game.mMusic.play();
+                }
+                else {
+                    game.mMusic.pause();
+                }
                 return true;
-            case MENU_HELP:
-                game.setNewScene(new HelpScene(game));
-                return true;
-            case MENU_STORY:
-                game.setNewScene(new StoryScene(game));
-                return true;
-            case MENU_SETTINGS:
-                game.setNewScene(new SettingsScene(game));
-                return true;
-            case MENU_QUIT:
-                game.finish();
+            case MENU_BACK:
+                game.setNewScene(new MainMenuScene(game));
                 return true;
             default:
                 return false;

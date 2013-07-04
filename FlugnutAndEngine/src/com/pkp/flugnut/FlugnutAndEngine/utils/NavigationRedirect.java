@@ -74,6 +74,11 @@ public class NavigationRedirect {
         }
 
         String className = instance.navigationRedirect.get(id);
+        if (className == null || className.equals(GameConstants.EMPTY_STRING)) {
+            throw new IllegalStateException(String.format(" Navigation for %s had a null for redirect or does not have a redirect. Fix the navigation.xml", id));
+        }
+
+
         try {
             return (Class.forName(className).getConstructor(GLGame.class).newInstance(game));
 

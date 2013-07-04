@@ -74,10 +74,10 @@ public abstract class BaseGameScene extends Scene {
             return defaultFont;
         }
 
-        FontFactory.setAssetBasePath(GameConstants.ASSET_FONT_DIR);
+        FontFactory.setAssetBasePath(GameConstants.FONT_DIR);
         final ITexture fontTexture = new BitmapTextureAtlas(game.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
         this.defaultFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(),
-                GameConstants.ASSET_FONT_DROID, 16, true, android.graphics.Color.WHITE);
+                GameConstants.FONT_DROID, 16, true, android.graphics.Color.WHITE);
         this.defaultFont.load();
         return defaultFont;
     }
@@ -96,9 +96,9 @@ public abstract class BaseGameScene extends Scene {
             return defaultBackground;
         }
 
-        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GameConstants.ASSET_GRAPHICS_DIR);
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GameConstants.GRAPHICS_DIR);
         BitmapTextureAtlas backgroundBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 800, 1200);
-        ITextureRegion textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundBitmapTextureAtlas, game, GameConstants.ASSET_BACKGROUND_IMAGE_FILE, 0, 188);
+        ITextureRegion textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundBitmapTextureAtlas, game, GameConstants.BACKGROUND_IMAGE_FILE, 0, 188);
         backgroundBitmapTextureAtlas.load();
 
         defaultBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, textureRegion, defaultObjectManager));

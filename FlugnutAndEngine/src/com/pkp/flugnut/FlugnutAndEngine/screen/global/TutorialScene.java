@@ -1,10 +1,11 @@
-package com.pkp.flugnut.FlugnutAndEngine.screen;
+package com.pkp.flugnut.FlugnutAndEngine.screen.global;
 
 import android.opengl.GLES20;
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.game.Settings;
 import com.pkp.flugnut.FlugnutAndEngine.model.level.Level;
+import com.pkp.flugnut.FlugnutAndEngine.screen.LevelScene;
 import com.pkp.flugnut.FlugnutAndEngine.utils.Utilities;
 import org.andengine.audio.music.MusicFactory;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
@@ -14,7 +15,6 @@ import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
-import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
@@ -22,7 +22,6 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.color.Color;
 import org.andengine.util.debug.Debug;

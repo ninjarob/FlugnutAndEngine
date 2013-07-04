@@ -1,4 +1,4 @@
-package com.pkp.flugnut.FlugnutAndEngine.screen;
+package com.pkp.flugnut.FlugnutAndEngine.screen.global;
 
 import android.opengl.GLES20;
 import android.view.MotionEvent;

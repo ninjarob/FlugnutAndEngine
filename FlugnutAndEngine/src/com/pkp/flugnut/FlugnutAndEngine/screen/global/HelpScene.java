@@ -1,4 +1,4 @@
-package com.pkp.flugnut.FlugnutAndEngine.screen;
+package com.pkp.flugnut.FlugnutAndEngine.screen.global;
 
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
@@ -19,7 +19,7 @@ import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.HorizontalAlign;
 
-public class StoryScene extends BaseGameScene {
+public class HelpScene extends BaseGameScene {
 
     // ===========================================================
     // Fields
@@ -38,7 +38,7 @@ public class StoryScene extends BaseGameScene {
     private ITextureRegion backButtonTextureRegion;
     private Font mFont;
 
-    public StoryScene(GLGame game) {
+    public HelpScene(GLGame game) {
         super(game);
     }
 
@@ -76,24 +76,10 @@ public class StoryScene extends BaseGameScene {
         setBackground(autoParallaxBackground);
 
         //FONT
-        final Text leftText = new Text(25, 180, this.mFont,
-                "Flugnut accidently found a planet which he calls Snostrebla\n" +
-                "and he accidently introduced Snostreblaians to hyperspace\n" +
-                "technology.  He did this not knowing that the Snostreblaians\n" +
-                "would use this technology to try to expand their empire and\n" +
-                "destroy all lesser civilizations in the process.  Flugnut also\n" +
-                "accidently showed them the way to Flugeria (and to Earth, but\n" +
-                "that's another story) which they decided they would make their\n" +
-                "first conquest.\n" +
-                "The Snostreblaians, after taking their time to learn the\n" +
-                "technology, gather an army and plan a rather impressive invasion\n" +
-                "made their attack on the cities of Flugeria on multiple fronts.\n" +
-                "The Flugerian armies of King Cailm were tasked with taking care\n" +
-                "enemy ground forces while Flugnut volunteered to defend the\n" +
-                "cities against arial attacks using his cunning, strength and\n" +
-                "technology.\n" +
-                "Flugnut fights to fix his mistake, for the freedom of his world\n" +
-                "and the safety of his fiance, Lindzerious.\n",
+        final Text leftText = new Text(50, 180, this.mFont,
+                "Flugnut is the hero of Flugeria.  Herein I will show you\n" +
+                "how to use flugnut to protect buildings and people, solve\n" +
+                " puzzles stop the Snostreblaian attack!",
                 new TextOptions(HorizontalAlign.LEFT), vertexBufferObjectManager);
         attachChild(leftText);
 
