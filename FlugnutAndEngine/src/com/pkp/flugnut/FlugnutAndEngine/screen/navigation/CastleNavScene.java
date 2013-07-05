@@ -1,11 +1,16 @@
 package com.pkp.flugnut.FlugnutAndEngine.screen.navigation;
 
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
+import com.pkp.flugnut.FlugnutAndEngine.model.level.Level;
+import com.pkp.flugnut.FlugnutAndEngine.screenUtil.LevelTilesGenerator;
 import com.pkp.flugnut.FlugnutAndEngine.utils.GameConstants;
+import com.pkp.flugnut.FlugnutAndEngine.utils.LevelXmlParser;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.util.HorizontalAlign;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +20,7 @@ import org.andengine.util.HorizontalAlign;
  * To change this template use File | Settings | File Templates.
  */
 public class CastleNavScene extends NavigationScene {
+
 
     public CastleNavScene(GLGame game) {
         super(game);
@@ -37,10 +43,18 @@ public class CastleNavScene extends NavigationScene {
         attachChild(backButton);
         registerTouchArea(backButton);
 
+        buildLevels();
     }
 
     @Override
     public boolean hasCompletedPreviousScene() {
         return true;
+    }
+
+    @Override
+    public void buildLevels() {
+        List<Level> levelList = LevelXmlParser.getInstance().getLevels(GameConstants.CASTLE_NAV);
+        LevelTilesGenerator tilesGenerator = new LevelTilesGenerator(this);
+        tilesGenerator.generateTiles(levelList);
     }
 }

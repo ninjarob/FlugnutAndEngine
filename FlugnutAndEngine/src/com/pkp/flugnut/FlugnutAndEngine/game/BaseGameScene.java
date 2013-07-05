@@ -104,4 +104,8 @@ public abstract class BaseGameScene extends Scene {
         defaultBackground = new SpriteBackground(0, 0, 0, new Sprite(0, 0, textureRegion, defaultObjectManager));
         return defaultBackground;
     }
+
+    public GLGame getGame() {
+        return game;
+    }
 }

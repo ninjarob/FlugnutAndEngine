@@ -1,40 +1,51 @@
 package com.pkp.flugnut.FlugnutAndEngine.model.level;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.andengine.entity.sprite.Sprite;
 
 /**
- * Contains all information and aspects of a level that are unique to the level;
+ * Contains all information and aspects of a level that are unique to all levels.
  */
 public class Level {
-	public boolean locked;
+    public boolean locked;
     public boolean weapons;
-    public List<VictoryCondition> victoryConditions;
-    public LevelOnMap levelOnMap;
-    public String bgFileName;
+    public String levelId;
+    public LevelScore score = LevelScore.ZERO_STAR;
+    public Sprite levelSprite;
+    public String gameSceneName;
+    public String preCondition;
+
+    public enum LevelScore {
+        ZERO_STAR(0),
+        ONE_STAR(1000),
+        TWO_STAR(2000),
+        THREE_STAR(3000);
+
+        private int points;
+
+        private LevelScore(int score) {
+            this.points = score;
+        }
+
+        public int getPoints() {
+            return points;
+        }
+    }
 
     //Level Info
-    public int oneSymbolScore=1000;
-    public int twoSymbolScore=2000;
-    public int threeSymbolScore=3000;
     public int highScore;
+    public int totalScore;
     public float timeLimit;
 
-	
-	public Level() {
-        victoryConditions = new ArrayList<VictoryCondition>();
-        bgFileName = "spacebg1-half-noalpha-smaller.gif";
-	}
+    public Level(String levelId, boolean weapons, boolean locked, String gameSceneName, String preCondition) {
+        this.levelId = levelId;
+        this.weapons = weapons;
+        this.locked = locked;
+        this.gameSceneName = gameSceneName;
+        this.preCondition = preCondition;
+    }
 
-	public void initLevel()
-	{
-
-	}
-
-    public boolean victory() {
-        for (VictoryCondition v : victoryConditions) {
-            if (!v.checkVictoryConditionsMet()) return false;
-        }
-        return true;
+    public Level(String levelId, Sprite levelSprite) {
+        this.levelId = levelId;
+        this.levelSprite = levelSprite;
     }
 }

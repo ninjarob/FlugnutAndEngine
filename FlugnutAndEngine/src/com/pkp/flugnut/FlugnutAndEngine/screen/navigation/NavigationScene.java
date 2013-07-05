@@ -11,9 +11,12 @@ import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class NavigationScene extends BaseGameScene {
+
     protected NavigationScene(GLGame game) {
         super(game);
     }
 
     public abstract boolean hasCompletedPreviousScene();
+
+    public abstract void buildLevels();
 }

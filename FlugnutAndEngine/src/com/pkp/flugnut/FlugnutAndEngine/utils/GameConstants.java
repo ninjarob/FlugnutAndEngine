@@ -13,6 +13,7 @@ public interface GameConstants {
     // Texts / Labels
     // ========================================
     public static final String EMPTY_STRING = "";
+    public static final String LOCKED = "Locked";
     public static final String LABEL_PLAY_BUTTON = "PLAY";
     public static final String LABEL_TUTORIAL_BUTTON = "TUTORIAL";
     public static final String LABEL_HELP_BUTTON = "HELP";
@@ -36,6 +37,7 @@ public interface GameConstants {
     public static final String PARALLAX_BACKGROUND_FRONT_FILE = "parallax_background_layer_front.png";
     public static final String PARALLAX_BACKGROUND_MID_FILE = "parallax_background_layer_mid.png";
     public static final String SETTING_BUTTONS = "buttons.png";
+    public static final String LEVEL_TILE_BUTTONS = "level.png";
     public static final String LEVEL_BUTTONS = "LevelSelect.png";
 
     // ========================================
@@ -65,4 +67,10 @@ public interface GameConstants {
     public static final String STORY_SCENE_NAV = "STORY_SCENE_NAV";
     public static final String TUTORIAL_MENU_NAV = "TUTORIAL_MENU_NAV";
 
+
+    public static final int TILE_DIMENSION_X = 97;
+    public static final int TILE_DIMENSION_Y = 84;
+    public static final int DEFAULT_COLUMNS = 3;
+    public static final int DEFAULT_ROWS = 2;
+    public static final int DEFAULT_PADDING = 25;
 }

@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutAndEngine;
 import android.os.PowerManager.WakeLock;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.MainMenuScene;
+import com.pkp.flugnut.FlugnutAndEngine.utils.LevelXmlParser;
 import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationElements;
 import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationRedirect;
 import org.andengine.audio.music.Music;
@@ -77,6 +78,7 @@ public class GLGame extends SimpleBaseGameActivity {
         mScene.initResources();
         navigationElements = new NavigationElements();
         NavigationRedirect.initInstance(getApplicationContext());
+        LevelXmlParser.initInstance(getApplicationContext());
     }
 
     @Override

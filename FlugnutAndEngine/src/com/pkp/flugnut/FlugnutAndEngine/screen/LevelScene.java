@@ -6,6 +6,7 @@ import com.pkp.flugnut.FlugnutAndEngine.model.level.Level;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.MapScene;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.PauseMenu;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.TutorialScene;
+import com.pkp.flugnut.FlugnutAndEngine.utils.GameConstants;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.Sprite;
@@ -65,7 +66,7 @@ public class LevelScene extends BaseGameScene {
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
         //BACKGROUND
         this.backgroundTexture = new BitmapTextureAtlas(game.getTextureManager(), 800, 1200);
-        this.mapBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.backgroundTexture, game, level.bgFileName, 0, 0);
+        this.mapBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.backgroundTexture, game, GameConstants.BACKGROUND_IMAGE_FILE, 0, 0);
         this.backgroundTexture.load();
 
         //BACK BUTTON
@@ -102,8 +103,7 @@ public class LevelScene extends BaseGameScene {
     public void back() {
         if (tutorial) {
             game.setNewScene(new TutorialScene(game));
-        }
-        else {
+        } else {
             game.setNewScene(new MapScene(game));
         }
     }

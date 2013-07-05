@@ -4,8 +4,6 @@ import android.opengl.GLES20;
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.game.Settings;
-import com.pkp.flugnut.FlugnutAndEngine.model.level.Level;
-import com.pkp.flugnut.FlugnutAndEngine.screen.LevelScene;
 import com.pkp.flugnut.FlugnutAndEngine.utils.Utilities;
 import org.andengine.audio.music.MusicFactory;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
@@ -30,7 +28,7 @@ import java.io.IOException;
 
 public class TutorialScene extends BaseGameScene implements MenuScene.IOnMenuItemClickListener {
     protected static final int TUT_ONE = 0;
-    protected static final int TUT_TWO = TUT_ONE+ 1;
+    protected static final int TUT_TWO = TUT_ONE + 1;
     protected static final int TUT_THREE = TUT_TWO + 1;
     protected static final int BACK = TUT_THREE + 1;
 
@@ -54,9 +52,9 @@ public class TutorialScene extends BaseGameScene implements MenuScene.IOnMenuIte
     private ITextureRegion backButtonTextureRegion;
 
 
-	public TutorialScene(GLGame game) {
-		super(game);
-	}
+    public TutorialScene(GLGame game) {
+        super(game);
+    }
 
     @Override
     public void initResources() {
@@ -99,19 +97,19 @@ public class TutorialScene extends BaseGameScene implements MenuScene.IOnMenuIte
     protected void createMenuScene() {
         menuScene = new MenuScene(game.mCamera);
 
-        final IMenuItem tut1MenuItem = new ColorMenuItemDecorator(new TextMenuItem(TUT_ONE, this.mFont, "Collect the Birds", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
+        final IMenuItem tut1MenuItem = new ColorMenuItemDecorator(new TextMenuItem(TUT_ONE, this.mFont, "Collect the Birds", game.getVertexBufferObjectManager()), new Color(1, 0, 0), new Color(1, 1, 1));
         tut1MenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         menuScene.addMenuItem(tut1MenuItem);
 
-        final IMenuItem tut2MenuItem = new ColorMenuItemDecorator(new TextMenuItem(TUT_TWO, this.mFont, "Fix the Cell Tower", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
+        final IMenuItem tut2MenuItem = new ColorMenuItemDecorator(new TextMenuItem(TUT_TWO, this.mFont, "Fix the Cell Tower", game.getVertexBufferObjectManager()), new Color(1, 0, 0), new Color(1, 1, 1));
         tut2MenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         menuScene.addMenuItem(tut2MenuItem);
 
-        final IMenuItem tut3MenuItem = new ColorMenuItemDecorator(new TextMenuItem(TUT_THREE, this.mFont, "Power Balloons", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
+        final IMenuItem tut3MenuItem = new ColorMenuItemDecorator(new TextMenuItem(TUT_THREE, this.mFont, "Power Balloons", game.getVertexBufferObjectManager()), new Color(1, 0, 0), new Color(1, 1, 1));
         tut3MenuItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         menuScene.addMenuItem(tut3MenuItem);
 
-        final IMenuItem backItem = new ColorMenuItemDecorator(new TextMenuItem(BACK, this.mFont, "back", game.getVertexBufferObjectManager()), new Color(1,0,0), new Color(1,1,1));
+        final IMenuItem backItem = new ColorMenuItemDecorator(new TextMenuItem(BACK, this.mFont, "back", game.getVertexBufferObjectManager()), new Color(1, 0, 0), new Color(1, 1, 1));
         backItem.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         menuScene.addMenuItem(backItem);
 
@@ -125,9 +123,9 @@ public class TutorialScene extends BaseGameScene implements MenuScene.IOnMenuIte
 
     @Override
     public boolean onMenuItemClicked(final MenuScene pMenuScene, final IMenuItem pMenuItem, final float pMenuItemLocalX, final float pMenuItemLocalY) {
-        switch(pMenuItem.getID()) {
+        switch (pMenuItem.getID()) {
             case TUT_ONE:
-                game.setNewScene(new LevelScene(game, new Level(), true));
+                //game.setNewScene(new LevelScene(game, new Level(), true));
                 return true;
             case TUT_TWO:
                 return true;
