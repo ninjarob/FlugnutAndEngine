@@ -5,7 +5,7 @@ import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.model.level.Level;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.MapScene;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.PauseMenu;
-import com.pkp.flugnut.FlugnutAndEngine.screen.global.TutorialScene;
+import com.pkp.flugnut.FlugnutAndEngine.screen.global.TutorialSelectionScene;
 import com.pkp.flugnut.FlugnutAndEngine.utils.GameConstants;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.SpriteBackground;
@@ -102,7 +102,7 @@ public class LevelScene extends BaseGameScene {
 
     public void back() {
         if (tutorial) {
-            game.setNewScene(new TutorialScene(game));
+            game.setNewScene(new TutorialSelectionScene(game));
         } else {
             game.setNewScene(new MapScene(game));
         }

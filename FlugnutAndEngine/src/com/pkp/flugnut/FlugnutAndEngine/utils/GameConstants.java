@@ -1,5 +1,8 @@
 package com.pkp.flugnut.FlugnutAndEngine.utils;
 
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import org.andengine.extension.physics.box2d.PhysicsFactory;
+
 /**
  * Created with IntelliJ IDEA.
  * User: cyrilthomas
@@ -73,4 +76,9 @@ public interface GameConstants {
     public static final int DEFAULT_COLUMNS = 3;
     public static final int DEFAULT_ROWS = 2;
     public static final int DEFAULT_PADDING = 25;
+
+    // =======================================
+    // Physics Fixtures
+    // =======================================
+    public static final FixtureDef FLUGNUT_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.1f, 0.5f);
 }

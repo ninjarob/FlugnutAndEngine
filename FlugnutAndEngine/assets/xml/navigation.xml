@@ -53,6 +53,6 @@
     <redirect>
         <id>TUTORIAL_MENU_NAV</id>
         <from></from>
-        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.TutorialScene</to>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.TutorialSelectionScene</to>
     </redirect>
 </navigation>
