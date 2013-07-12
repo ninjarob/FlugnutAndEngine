@@ -14,6 +14,7 @@ import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
+import org.andengine.util.IDisposable;
 
 public class GLGame extends SimpleBaseGameActivity {
 
@@ -93,7 +94,11 @@ public class GLGame extends SimpleBaseGameActivity {
         if (newScene == null)
             throw new IllegalArgumentException("Scene must not be null");
         this.mScene.detachChildren();
-        this.mScene.dispose();
+		try {
+	        this.mScene.dispose();
+		} catch (IDisposable.AlreadyDisposedException ade) {
+			// ignore that this scene was already disposed
+		}
         newScene.initResources();
         newScene.initScene();
         this.mScene = newScene;
