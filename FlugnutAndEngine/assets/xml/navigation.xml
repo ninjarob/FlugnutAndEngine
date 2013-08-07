@@ -26,6 +26,11 @@
         <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.MapScene</to>
     </redirect>
     <redirect>
+        <id>STORY_SCENE_DETAIL_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.StoryDetailScene</to>
+    </redirect>
+    <redirect>
         <id>HELP_MENU_NAV</id>
         <from></from>
         <to>com.pkp.flugnut.FlugnutAndEngine.screen.global.HelpScene</to>
