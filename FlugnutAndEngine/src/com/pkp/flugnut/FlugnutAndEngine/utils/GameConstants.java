@@ -68,6 +68,7 @@ public interface GameConstants {
     public static final String PAUSE_MENU_NAV = "PAUSE_MENU_NAV";
     public static final String SETTINGS_MENU_NAV = "SETTINGS_MENU_NAV";
     public static final String STORY_SCENE_NAV = "STORY_SCENE_NAV";
+	public static final String STORY_SCENE_DETAIL_NAV = "STORY_SCENE_DETAIL_NAV";
     public static final String TUTORIAL_MENU_NAV = "TUTORIAL_MENU_NAV";
 
 
