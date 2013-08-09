@@ -54,9 +54,9 @@ public class GenerateWorldObjects {
 //        }
 //    }
 
-//    public static List<Building> generateBuildings(GLGame game, FlugnutWorld flugnutWorld, int level)
+//    public static List<BlockBuilding> generateBuildings(GLGame game, FlugnutWorld flugnutWorld, int level)
 //	{
-//		List<Building> buildings;
+//		List<BlockBuilding> buildings;
 //		switch (level) {
 //            case 1:
 //                buildings = generateTutorial1Buildings(game, flugnutWorld);
@@ -82,9 +82,9 @@ public class GenerateWorldObjects {
 //		return buildings;
 //	}
 //
-//    public static List<Building> generateTutorial1Buildings(GLGame game, FlugnutWorld flugnutWorld) {
-//        List<Building> buildings = new ArrayList<Building>();
-//        Building birdCage = new BirdCage(game, flugnutWorld);
+//    public static List<BlockBuilding> generateTutorial1Buildings(GLGame game, FlugnutWorld flugnutWorld) {
+//        List<BlockBuilding> buildings = new ArrayList<BlockBuilding>();
+//        BlockBuilding birdCage = new BirdCage(game, flugnutWorld);
 //        BirdCageDoor d = new BirdCageDoor(game, flugnutWorld, birdCage);
 //        d.clickable = true;
 //        //setup victory objects and conditions
@@ -106,8 +106,8 @@ public class GenerateWorldObjects {
 //        return buildings;
 //    }
 //
-//    public static List<Building> generateTutorial2Buildings(GLGame game, FlugnutWorld flugnutWorld) {
-//        List<Building> buildings = new ArrayList<Building>();
+//    public static List<BlockBuilding> generateTutorial2Buildings(GLGame game, FlugnutWorld flugnutWorld) {
+//        List<BlockBuilding> buildings = new ArrayList<BlockBuilding>();
 //        EmptyBuilding empty = new EmptyBuilding(game, flugnutWorld);
 //        Tower d = new Tower(game, 50, 50, flugnutWorld, empty);
 //        d.clickable = true;
@@ -133,8 +133,8 @@ public class GenerateWorldObjects {
 //        return buildings;
 //    }
 //
-//    public static List<Building> generateTutorial3Buildings(GLGame game, FlugnutWorld flugnutWorld) {
-//        List<Building> buildings = new ArrayList<Building>();
+//    public static List<BlockBuilding> generateTutorial3Buildings(GLGame game, FlugnutWorld flugnutWorld) {
+//        List<BlockBuilding> buildings = new ArrayList<BlockBuilding>();
 //        EmptyBuilding empty = new EmptyBuilding(game, flugnutWorld);
 //        List<SolarPod> pods = new ArrayList<SolarPod>();
 //        pods.add(new SolarPod(game, 100/Constants.V_SCALE, 300/Constants.V_SCALE, flugnutWorld, empty));
@@ -149,10 +149,10 @@ public class GenerateWorldObjects {
 //        return buildings;
 //    }
 //
-//    public static List<Building> generatreFlugnutHomeLevelBuildings(GLGame game, FlugnutWorld flugnutWorld) {
-//        List<Building> buildings = new ArrayList<Building>();
+//    public static List<BlockBuilding> generatreFlugnutHomeLevelBuildings(GLGame game, FlugnutWorld flugnutWorld) {
+//        List<BlockBuilding> buildings = new ArrayList<BlockBuilding>();
 //        List<BuildingPiece> buildingPieces = new ArrayList<BuildingPiece>();
-//        Building flugnutHome = new FlugnutHome(game, flugnutWorld);
+//        BlockBuilding flugnutHome = new FlugnutHome(game, flugnutWorld);
 //        float startx = 80f;
 //        buildingPieces.add(new CircleWindow(game, flugnutWorld, Constants.F_HOME_STARTX+startx, flugnutHome));
 //        startx = 118f;
@@ -183,10 +183,10 @@ public class GenerateWorldObjects {
 //        return buildings;
 //    }
 //
-//    public static List<Building> generatreFlugnutLabLevelBuildings(GLGame game, FlugnutWorld flugnutWorld) {
-//        List<Building> buildings = new ArrayList<Building>();
+//    public static List<BlockBuilding> generatreFlugnutLabLevelBuildings(GLGame game, FlugnutWorld flugnutWorld) {
+//        List<BlockBuilding> buildings = new ArrayList<BlockBuilding>();
 //        List<BuildingPiece> buildingPieces = new ArrayList<BuildingPiece>();
-//        Building flugnutLab = new FlugnutLab(game, flugnutWorld);
+//        BlockBuilding flugnutLab = new FlugnutLab(game, flugnutWorld);
 //        //setup victory objects and conditions
 //        float startx = 90f/Constants.V_SCALE;
 //        Flag flag1 = new Flag(game, startx, Constants.F_LAB_FLAG1_Y_OFFSET, flugnutWorld, flugnutLab);
@@ -216,10 +216,10 @@ public class GenerateWorldObjects {
 //        return buildings;
 //    }
 //
-//    public static List<Building> generatreFlugnutHangarLevelBuildings(GLGame game, FlugnutWorld flugnutWorld) {
-//        List<Building> buildings = new ArrayList<Building>();
+//    public static List<BlockBuilding> generatreFlugnutHangarLevelBuildings(GLGame game, FlugnutWorld flugnutWorld) {
+//        List<BlockBuilding> buildings = new ArrayList<BlockBuilding>();
 //        List<BuildingPiece> buildingPieces = new ArrayList<BuildingPiece>();
-//        Building flugnutHangar = new FlugnutHangar(game, flugnutWorld);
+//        BlockBuilding flugnutHangar = new FlugnutHangar(game, flugnutWorld);
 //        List<Pylon> pylons = new ArrayList<Pylon>();
 //        //setup victory objects and conditions
 //        float startx = 53f/Constants.V_SCALE;

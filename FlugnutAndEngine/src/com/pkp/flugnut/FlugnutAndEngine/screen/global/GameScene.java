@@ -4,24 +4,23 @@ import android.hardware.SensorManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
-import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
-import com.pkp.flugnut.FlugnutAndEngine.Service.FlugnutService;
-import com.pkp.flugnut.FlugnutAndEngine.Service.MiscObject;
+import com.pkp.flugnut.FlugnutAndEngine.gameObject.BlockBuilding;
+import com.pkp.flugnut.FlugnutAndEngine.gameObject.Flugnut;
+import com.pkp.flugnut.FlugnutAndEngine.gameObject.GameObject;
+import com.pkp.flugnut.FlugnutAndEngine.gameObject.MiscObject;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.model.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutAndEngine.model.level.Wave;
+import com.pkp.flugnut.FlugnutAndEngine.utils.Utilities;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.SpriteBackground;
-import org.andengine.entity.shape.IAreaShape;
-import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
-import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.Vector2Pool;
@@ -36,7 +35,6 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.debug.Debug;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +68,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
     private PhysicsWorld physicsWorld;
 
-//    static final float MAX_FLIGHT_SPEED = 50.0f;
+    //    static final float MAX_FLIGHT_SPEED = 50.0f;
 //    static final float ACCELERATION = 800;
 //    static final float CLOSE_ENOUGH_THRESHOLD = 5;
 //    static final float START_DEACCELL_DISTANCE = 150;
@@ -80,7 +78,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     public List<Wave> waves = new ArrayList<Wave>();
     public float totalWaveTime;
     public List<MiscObject> miscObjects;
-//    public List<Bomb> bombs;
+    //    public List<Bomb> bombs;
 //    public List<EMPCircle> empCircles;
 //    public List<EMPSuperCircle> empSuperCircles;
 //    public List<EMPLauncher> empLaunchers;
@@ -104,9 +102,8 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     //physics
 //    public World world;
 
-    public FlugnutService flugnut;
+    private List<GameObject> gameObjects;
     private MouseJoint mMouseJointActive;
-    private Body mGroundBody;
 
     public GameScene(GLGame game, GameSceneInfo gameSceneInfo, boolean tutorial) {
         super(game);
@@ -133,6 +130,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         {
             totalWaveTime = waves.get(waves.size()-1).startTime;
         }
+        gameObjects = new ArrayList<GameObject>();
     }
 
     @Override
@@ -149,23 +147,36 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         this.mapBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.backgroundTexture, game, gameSceneInfo.getBgFileName(), 0, 0);
         this.backgroundTexture.load();
 
+        initLevel1();
+
+        this.mBitmapTextureAtlas.load();
+    }
+
+    public void initLevel1() {
         //129, 226 buttons
         //131, 169 flugnut    260, 395
-        //80,80  emp1          340, 475
-        this.mBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 340, 475, TextureOptions.BILINEAR);
+        //80,80  emp1         340, 475
+        //477, 238            817, 713
+
+        this.mBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 817, 713, TextureOptions.DEFAULT);
         this.buttonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, "buttons.png", 0, 0);
         this.pauseButtonTextureRegion = TextureRegionFactory.extractFromTexture(mBitmapTextureAtlas, 64, 128, 64, 64);
 
-        flugnut = new FlugnutService(this);
-        flugnut.initResources("Flugnut.png", mBitmapTextureAtlas, 226, 260);
-        //flugnut.initResources("NewGuy.png", mBitmapTextureAtlas, 226);
-//        waves = GenerateWorldObjects.generateWaves(gameScreen.gameSceneInfo.levelNum);
-//        buildings = GenerateWorldObjects.generateBuildings(game, this, gameScreen.gameSceneInfo.levelNum);
+        //remember, the origin is in the center.
+        Flugnut flugnut = new Flugnut(this, 226, 260);
+        flugnut.initResources("Flugnut.png", "emp1.png", mBitmapTextureAtlas);
+        flugnut.initSprites(vertexBufferObjectManager);
 
+        BlockBuilding b = new BlockBuilding(this, 340, 239, 120, 10, 10);
+        b.initResources("FlugnutLevel/House.png", mBitmapTextureAtlas);
+        b.initSprites(vertexBufferObjectManager);
 
+        //set start positions
+        flugnut.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH/2, 100));
+        b.setStartPosition(new Vector2((b.getSprite().getWidth()/2) + 10, GLGame.CAMERA_HEIGHT-(b.getSprite().getHeight()/2)));
 
-
-        this.mBitmapTextureAtlas.load();
+        gameObjects.add(flugnut);
+        gameObjects.add(b);
     }
 
     @Override
@@ -180,7 +191,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
         //physics
         this.physicsWorld = new FixedStepPhysicsWorld(30, new Vector2(0, SensorManager.GRAVITY_EARTH), false, 3, 2);
-        this.mGroundBody = this.physicsWorld.createBody(new BodyDef());
 
         //boundaries
         final Rectangle ground = new Rectangle(-20, GLGame.CAMERA_HEIGHT - 2, GLGame.CAMERA_WIDTH+20, 2, vertexBufferObjectManager);
@@ -197,9 +207,11 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         attachChild(left);
         attachChild(right);
 
+        for (GameObject o : gameObjects) {
+            o.initForScene(physicsWorld);
+        }
 
-        //flugnut
-        flugnut.initForScene(GLGame.CAMERA_WIDTH/2, 100, vertexBufferObjectManager, physicsWorld);
+
 
         registerUpdateHandler(physicsWorld);
 
@@ -264,7 +276,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     }
 
     private void updateBuildings(float deltaTime) {
-//        for (Building b: buildings) {
+//        for (BlockBuilding b: buildings) {
 //            b.update(deltaTime);
 //        }
     }
@@ -434,7 +446,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 //            {
 //                tbIndex = -1;
 //                for (int j = 0; j< buildings.size(); j++) {
-//                    Building building = buildings.get(j);
+//                    BlockBuilding building = buildings.get(j);
 //                    if (building.health >= 0)
 //                    {
 //                        tbIndex = j;
@@ -465,7 +477,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 //            {
 //                tbIndex = -1;
 //                for (int j = 0; j< buildings.size(); j++) {
-//                    Building building = buildings.get(j);
+//                    BlockBuilding building = buildings.get(j);
 //                    if (building.health >= 0)
 //                    {
 //                        tbIndex = j;
@@ -483,7 +495,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
     public void destroy() {
 //        flugnut.destroy();
-//        for (Building b : buildings){
+//        for (BlockBuilding b : buildings){
 //            b.destroy();
 //        }
 //        for (MiscObject mo : miscObjects){
@@ -513,7 +525,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
     @Override
     public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-        final Sprite flugnutSprite = (Sprite) pTouchArea;
+        final Sprite flugnutShieldSprite = (Sprite) pTouchArea;
         switch(pSceneTouchEvent.getAction()) {
             case TouchEvent.ACTION_DOWN:
                 /*
@@ -521,7 +533,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
                  * instead of creating a second one.
                  */
                 if(this.mMouseJointActive == null) {
-                    this.mMouseJointActive = this.createMouseJoint(flugnutSprite, pTouchAreaLocalX, pTouchAreaLocalY);
+                    this.mMouseJointActive = Utilities.createMouseJoint(flugnutShieldSprite, pTouchAreaLocalX, pTouchAreaLocalY, physicsWorld);
                 }
                 return true;
             case TouchEvent.ACTION_MOVE:
@@ -534,7 +546,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
             case TouchEvent.ACTION_UP:
                 if(this.mMouseJointActive != null) {
 //                    final Vector2 vec = Vector2Pool.obtain(pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-//                    if (flugnutSprite.contains(vec.x, vec.y)) {  //only destroy the joint if its a flick within the flugnut body.
+//                    if (flugnut.contains(vec.x, vec.y)) {  //only destroy the joint if its a flick within the flugnut body.
 //                        this.physicsWorld.destroyJoint(this.mMouseJointActive);
 //                        this.mMouseJointActive = null;
 //                    }
@@ -558,25 +570,5 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
             return false;
         }
         return false;
-    }
-
-    public MouseJoint createMouseJoint(final IAreaShape pFace, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-        final Body body = (Body) pFace.getUserData();
-        final MouseJointDef mouseJointDef = new MouseJointDef();
-
-        final Vector2 localPoint = Vector2Pool.obtain((pTouchAreaLocalX - pFace.getWidth() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, (pTouchAreaLocalY - pFace.getHeight() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-        this.mGroundBody.setTransform(localPoint, 0);
-
-        mouseJointDef.bodyA = this.mGroundBody;
-        mouseJointDef.bodyB = body;
-        mouseJointDef.dampingRatio = .99f;
-        mouseJointDef.frequencyHz = 30;
-        mouseJointDef.maxForce = (40.0f * body.getMass());
-        mouseJointDef.collideConnected = true;
-
-        mouseJointDef.target.set(body.getWorldPoint(localPoint));
-        Vector2Pool.recycle(localPoint);
-
-        return (MouseJoint) this.physicsWorld.createJoint(mouseJointDef);
     }
 }

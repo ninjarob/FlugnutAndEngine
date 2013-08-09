@@ -1,4 +1,4 @@
-package com.pkp.flugnut.FlugnutAndEngine.Service;
+package com.pkp.flugnut.FlugnutAndEngine.gameObject;
 
 
 public class Bird {
@@ -6,7 +6,7 @@ public class Bird {
 //    public float startx;
 //    public float timeSpent = 0;
 //    public boolean interact = false;
-//    public Building building;
+//    public BlockBuilding building;
 //    public BirdPath bp;
 //    public boolean caged = false;
 //    public String name;
@@ -15,7 +15,7 @@ public class Bird {
 //    private Animation animationClickedRight;
 //    private Animation animationClickedLeft;
 //
-//    public Bird(GLGame game, float startx, float starty, FlugnutWorld flugnutWorld, Building building) {
+//    public Bird(GLGame game, float startx, float starty, FlugnutWorld flugnutWorld, BlockBuilding building) {
 //        super(game, startx, starty,
 //                Constants.BIRD_WIDTH, Constants.BIRD_HEIGHT,
 //                Constants.BIRD_PATH, 0f, .2f, .25f, .3f);

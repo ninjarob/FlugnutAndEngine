@@ -1,4 +1,4 @@
-package com.pkp.flugnut.FlugnutAndEngine.Service;
+package com.pkp.flugnut.FlugnutAndEngine.gameObject;
 
 public abstract class BuildingPiece {
 //    public Body clickBody;
