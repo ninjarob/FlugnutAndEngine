@@ -1,8 +1,9 @@
-package com.pkp.flugnut.FlugnutAndEngine.gameObject;
+package com.pkp.flugnut.FlugnutAndEngine.gameObject.enemy;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.MassData;
+import com.pkp.flugnut.FlugnutAndEngine.gameObject.AbstractGameObjectImpl;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutAndEngine.utils.GameConstants;
 import org.andengine.entity.sprite.Sprite;
@@ -11,19 +12,19 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
-public class BlockBuilding extends AbstractGameObjectImpl {
+public class Missile extends AbstractGameObjectImpl {
 
     private int health;
     private int maxHealth;
-    private Sprite buildingSprite;
+    private Sprite missileSprite;
 
-    public BlockBuilding(GameScene scene, int yOrigForAtlas, int health, int maxHealth) {
+    public Missile(GameScene scene, int yOrigForAtlas, int health, int maxHealth) {
         super(scene, yOrigForAtlas);
         this.health = health;
         this.maxHealth = maxHealth;
     }
 
-    public BlockBuilding(GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight, int health, int maxHealth) {
+    public Missile(GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight, int health, int maxHealth) {
         super(scene, yOrigForAtlas, scaledWidth, scaledHeight);
         this.health = health;
         this.maxHealth = maxHealth;
@@ -32,25 +33,25 @@ public class BlockBuilding extends AbstractGameObjectImpl {
 
     @Override
     public void initSprites(VertexBufferObjectManager vertexBufferObjectManager) {
-        buildingSprite = new Sprite(sp.x, sp.y, scaledWidth, scaledHeight, textureRegion, vertexBufferObjectManager);
+        missileSprite = new Sprite(sp.x, sp.y, scaledWidth, scaledHeight, textureRegion, vertexBufferObjectManager);
     }
 
     //Block Buildings start point is in the lower left
     @Override
     public void initForScene(PhysicsWorld physics) {
-        Body buildingBody = PhysicsFactory.createBoxBody(physics, sp.x, sp.y, buildingSprite.getWidthScaled(),
-                buildingSprite.getHeightScaled(), BodyDef.BodyType.DynamicBody, GameConstants.BUILDING_FIXTURE_DEF);
+        Body buildingBody = PhysicsFactory.createBoxBody(physics, sp.x, sp.y, missileSprite.getWidthScaled(),
+                missileSprite.getHeightScaled(), BodyDef.BodyType.DynamicBody, GameConstants.FLUGNUT_FIXTURE_DEF);
         MassData md  = new MassData();
         md.mass = 1f;
         md.I = 0;
         buildingBody.setMassData(md);
         buildingBody.setFixedRotation(true);
         buildingBody.setLinearDamping(1);
-        buildingSprite.setUserData(buildingBody);
+        missileSprite.setUserData(buildingBody);
 
-        scene.attachChild(buildingSprite);
-        scene.registerTouchArea(buildingSprite);
-        physics.registerPhysicsConnector(new PhysicsConnector(buildingSprite, buildingBody, true, true));
+        scene.attachChild(missileSprite);
+        scene.registerTouchArea(missileSprite);
+        physics.registerPhysicsConnector(new PhysicsConnector(missileSprite, buildingBody, true, true));
     }
 
     public int getHealth() {
@@ -62,7 +63,7 @@ public class BlockBuilding extends AbstractGameObjectImpl {
     }
 
     public Sprite getSprite() {
-        return buildingSprite;
+        return missileSprite;
     }
 
 //    public BuildingPiece handleObjClick(float x, float y) {

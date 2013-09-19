@@ -11,6 +11,31 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
  * To change this template use File | Settings | File Templates.
  */
 public interface GameConstants {
+    // ========================================
+    // Collission filtering
+    // ========================================
+    public static final short CATEGORYBIT_WALL = 1;
+    public static final short CATEGORYBIT_FORCE_FIELD = 2;
+    public static final short CATEGORYBIT_FLUGNUT = 4;
+    public static final short CATEGORYBIT_BUILDING = 8;
+    public static final short CATEGORYBIT_BOMB = 16;
+    public static final short CATEGORYBIT_ENEMY = 32;
+
+    public static final short MASKBITS_WALL = CATEGORYBIT_WALL + CATEGORYBIT_FLUGNUT + CATEGORYBIT_BUILDING + CATEGORYBIT_BOMB + CATEGORYBIT_ENEMY;
+    public static final short MASKBITS_FORCE_FIELD = CATEGORYBIT_BOMB + CATEGORYBIT_ENEMY;
+    public static final short MASKBITS_FLUGNUT = CATEGORYBIT_WALL + CATEGORYBIT_ENEMY + CATEGORYBIT_BUILDING;
+    public static final short MASKBITS_BUILDING = CATEGORYBIT_WALL + CATEGORYBIT_BOMB + CATEGORYBIT_FLUGNUT;
+    public static final short MASKBITS_ENEMY = CATEGORYBIT_WALL + CATEGORYBIT_FORCE_FIELD + CATEGORYBIT_FLUGNUT;
+
+    // =======================================
+    // Physics Fixtures
+    // =======================================
+    public static final FixtureDef WALL_FIXTURE_DEF = PhysicsFactory.createFixtureDef(0, 0.5f, 0.5f, false, CATEGORYBIT_WALL, MASKBITS_WALL, (short)0);
+    public static final FixtureDef FORCE_FIELD_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.1f, 0.5f, false, CATEGORYBIT_FORCE_FIELD, MASKBITS_FORCE_FIELD, (short)0);
+    public static final FixtureDef FLUGNUT_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.1f, 0.5f, false, CATEGORYBIT_FLUGNUT, MASKBITS_FLUGNUT, (short)0);
+    public static final FixtureDef BUILDING_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.5f, 0.5f, false, CATEGORYBIT_BUILDING, MASKBITS_BUILDING, (short)0);
+    public static final FixtureDef ENEMY_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.5f, 0.5f, false, CATEGORYBIT_ENEMY, MASKBITS_ENEMY, (short)0);
+
 
     // ========================================
     // Texts / Labels
@@ -77,9 +102,4 @@ public interface GameConstants {
     public static final int DEFAULT_COLUMNS = 3;
     public static final int DEFAULT_ROWS = 2;
     public static final int DEFAULT_PADDING = 25;
-
-    // =======================================
-    // Physics Fixtures
-    // =======================================
-    public static final FixtureDef FLUGNUT_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.1f, 0.5f);
 }

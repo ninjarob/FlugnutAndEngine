@@ -46,7 +46,7 @@ public class Flugnut extends AbstractGameObjectImpl {
         Vector2 pos2 = new Vector2(sp.x- flugnutShieldSprite.getWidth()/2, sp.y- flugnutShieldSprite.getHeight()/2);
         pos = new Vector2(sp.x- flugnutSprite.getWidth()/2, sp.y- flugnutSprite.getHeight()/2);
         Body flugnutShieldBody = PhysicsFactory.createCircleBody(physics, pos.x, pos.y, flugnutShieldSprite.getWidth()/2, 0,
-                BodyDef.BodyType.DynamicBody, GameConstants.FLUGNUT_FIXTURE_DEF);
+                BodyDef.BodyType.DynamicBody, GameConstants.FORCE_FIELD_FIXTURE_DEF);
         flugnutShieldBody.setGravityScale(0);
         flugnutShieldBody.setFixedRotation(true);
         MassData shieldMassData = new MassData();

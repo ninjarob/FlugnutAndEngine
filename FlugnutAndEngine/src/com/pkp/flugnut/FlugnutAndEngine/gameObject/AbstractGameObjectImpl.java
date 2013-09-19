@@ -18,29 +18,31 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     protected int yOrigForAtlasTouch;
     protected int scaledWidth;
     protected int scaledHeight;
+    protected boolean liftable = false;
+    protected int weight = 0;
 
     public AbstractGameObjectImpl(GameScene scene, int yOrigForAtlas)
     {
-        this.scene = scene;
-        this.sp = new Vector2(0,0);
-        this.yOrigForAtlas = yOrigForAtlas;
+        init(scene, yOrigForAtlas);
     }
 
     public AbstractGameObjectImpl(GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight)
     {
-        this.scene = scene;
-        this.sp = new Vector2(0,0);
-        this.yOrigForAtlas = yOrigForAtlas;
+        init(scene, yOrigForAtlas);
         this.scaledWidth = scaledWidth;
         this.scaledHeight = scaledHeight;
     }
 
     public AbstractGameObjectImpl(GameScene scene, int yOrigForAtlas, int yOrigForAtlasTouch)
     {
+        init(scene, yOrigForAtlas);
+        this.yOrigForAtlasTouch = yOrigForAtlasTouch;
+    }
+
+    private void init(GameScene scene, int yOrigForAtlas) {
         this.scene = scene;
         this.sp = new Vector2(0,0);
         this.yOrigForAtlas = yOrigForAtlas;
-        this.yOrigForAtlasTouch = yOrigForAtlasTouch;
     }
 
     @Override
@@ -91,5 +93,21 @@ public abstract class AbstractGameObjectImpl implements GameObject {
 
     public int getScaledHeight() {
         return scaledHeight;
+    }
+
+    public boolean getLiftable() {
+        return liftable;
+    }
+
+    public void setLiftable(boolean liftable) {
+        this.liftable = liftable;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 }

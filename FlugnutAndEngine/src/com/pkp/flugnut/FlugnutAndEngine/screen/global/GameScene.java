@@ -5,14 +5,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.pkp.flugnut.FlugnutAndEngine.GLGame;
-import com.pkp.flugnut.FlugnutAndEngine.gameObject.BlockBuilding;
-import com.pkp.flugnut.FlugnutAndEngine.gameObject.Flugnut;
-import com.pkp.flugnut.FlugnutAndEngine.gameObject.GameObject;
-import com.pkp.flugnut.FlugnutAndEngine.gameObject.MiscObject;
+import com.pkp.flugnut.FlugnutAndEngine.gameObject.*;
 import com.pkp.flugnut.FlugnutAndEngine.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutAndEngine.model.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutAndEngine.model.level.Wave;
+import com.pkp.flugnut.FlugnutAndEngine.utils.GameConstants;
+import com.pkp.flugnut.FlugnutAndEngine.utils.GameUpdateHandler;
 import com.pkp.flugnut.FlugnutAndEngine.utils.Utilities;
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
+import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -45,7 +47,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     // ===========================================================
     // Fields
     // ===========================================================
-    public static final FixtureDef FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.5f, 0.5f);
     SpriteBackground normalBackground;
     VertexBufferObjectManager vertexBufferObjectManager;
 
@@ -103,6 +104,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 //    public World world;
 
     private List<GameObject> gameObjects;
+    private GameUpdateHandler guh;
     private MouseJoint mMouseJointActive;
 
     public GameScene(GLGame game, GameSceneInfo gameSceneInfo, boolean tutorial) {
@@ -123,7 +125,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         horizEmp.x = 0;
         horizEmp.y = 0;
         miscObjects = new ArrayList<MiscObject>();
-        //flugnut = new Shwaiflugnut(game, 64 * IScreen.SSC, 64 * IScreen.SSC, "Newflugnut.png", this);
         bodiesToDestroy = new ArrayList<Body>();
         totalWaveTime = 0;
         if (waves.size() > 0)
@@ -153,30 +154,41 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     }
 
     public void initLevel1() {
-        //129, 226 buttons
-        //131, 169 flugnut    260, 395
-        //80,80  emp1         340, 475
-        //477, 238            817, 713
+        // w    h
+        //129, 226 buttons    starty = 0
+        //131, 169 flugnut    starty = 226
+        //80,  80  emp1       starty = 395
+        //477, 238 building   starty = 475
+        //1100,400 pylon anim starty = 713
 
-        this.mBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 817, 713, TextureOptions.DEFAULT);
+        this.mBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), 1100, 1113, TextureOptions.DEFAULT);
         this.buttonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, "buttons.png", 0, 0);
         this.pauseButtonTextureRegion = TextureRegionFactory.extractFromTexture(mBitmapTextureAtlas, 64, 128, 64, 64);
 
         //remember, the origin is in the center.
-        Flugnut flugnut = new Flugnut(this, 226, 260);
+        Flugnut flugnut = new Flugnut(this, 226, 395);
         flugnut.initResources("Flugnut.png", "emp1.png", mBitmapTextureAtlas);
         flugnut.initSprites(vertexBufferObjectManager);
 
-        BlockBuilding b = new BlockBuilding(this, 340, 239, 120, 10, 10);
+        BlockBuilding b = new BlockBuilding(this, 475, 239, 120, 10, 10);
         b.initResources("FlugnutLevel/House.png", mBitmapTextureAtlas);
         b.initSprites(vertexBufferObjectManager);
 
+        //scaled by 1/12
+        Pylon pylon1 = new Pylon(this, 713, 79, 67);
+        pylon1.initResources("Anim/pylonAnim.png", mBitmapTextureAtlas);
+        pylon1.initSprites(vertexBufferObjectManager);
+        //Pylon plyon2;
+        //Flag flag;
+
         //set start positions
         flugnut.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH/2, 100));
-        b.setStartPosition(new Vector2((b.getSprite().getWidth()/2) + 10, GLGame.CAMERA_HEIGHT-(b.getSprite().getHeight()/2)));
-
-        gameObjects.add(flugnut);
+        b.setStartPosition(new Vector2((b.getSprite().getWidth()/2) + 100, GLGame.CAMERA_HEIGHT-(b.getSprite().getHeight()/2)-50));
+        pylon1.setStartPosition(new Vector2(100, 100));
         gameObjects.add(b);
+        gameObjects.add(flugnut);
+        gameObjects.add(pylon1);
+        guh = new GameUpdateHandler(game, gameObjects);
     }
 
     @Override
@@ -193,27 +205,18 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         this.physicsWorld = new FixedStepPhysicsWorld(30, new Vector2(0, SensorManager.GRAVITY_EARTH), false, 3, 2);
 
         //boundaries
-        final Rectangle ground = new Rectangle(-20, GLGame.CAMERA_HEIGHT - 2, GLGame.CAMERA_WIDTH+20, 2, vertexBufferObjectManager);
+        final Rectangle ground = new Rectangle(-20, GLGame.CAMERA_HEIGHT, GLGame.CAMERA_WIDTH+20, 2, vertexBufferObjectManager);
         final Rectangle roof = new Rectangle(-20, 0, GLGame.CAMERA_WIDTH+20, 2, vertexBufferObjectManager);
         final Rectangle left = new Rectangle(-20, -20, 2, GLGame.CAMERA_HEIGHT, vertexBufferObjectManager);
         final Rectangle right = new Rectangle(GLGame.CAMERA_WIDTH - 2+20, 20, 2, GLGame.CAMERA_HEIGHT, vertexBufferObjectManager);
-        final FixtureDef wallFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0.5f);
-        PhysicsFactory.createBoxBody(physicsWorld, ground, BodyDef.BodyType.StaticBody, wallFixtureDef);
-        PhysicsFactory.createBoxBody(physicsWorld, roof, BodyDef.BodyType.StaticBody, wallFixtureDef);
-        PhysicsFactory.createBoxBody(physicsWorld, left, BodyDef.BodyType.StaticBody, wallFixtureDef);
-        PhysicsFactory.createBoxBody(physicsWorld, right, BodyDef.BodyType.StaticBody, wallFixtureDef);
+        PhysicsFactory.createBoxBody(physicsWorld, ground, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
+        PhysicsFactory.createBoxBody(physicsWorld, roof, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
+        PhysicsFactory.createBoxBody(physicsWorld, left, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
+        PhysicsFactory.createBoxBody(physicsWorld, right, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
         attachChild(ground);
         attachChild(roof);
         attachChild(left);
         attachChild(right);
-
-        for (GameObject o : gameObjects) {
-            o.initForScene(physicsWorld);
-        }
-
-
-
-        registerUpdateHandler(physicsWorld);
 
         //listeners
         setOnAreaTouchListener(this);
@@ -234,7 +237,17 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         attachChild(pauseButton);
         registerTouchArea(pauseButton);
         setTouchAreaBindingOnActionDownEnabled(true);
+
+
+        for (GameObject o : gameObjects) {
+            o.initForScene(physicsWorld);
+        }
+
+        registerUpdateHandler(physicsWorld);
+        registerUpdateHandler(guh);
     }
+
+
 
 //    public void destroyBodies() {
 //        if(!world.isLocked()) {

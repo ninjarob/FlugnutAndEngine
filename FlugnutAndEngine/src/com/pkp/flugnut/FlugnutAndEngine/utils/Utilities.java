@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.pkp.flugnut.FlugnutAndEngine.game.Settings;
 import org.andengine.audio.music.Music;
+import org.andengine.audio.sound.Sound;
 import org.andengine.entity.shape.IAreaShape;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.Vector2Pool;
@@ -26,6 +27,12 @@ public class Utilities {
     public static void playMusic(Music mMusic) {
         if (Settings.musicEnabled && mMusic != null && !mMusic.isPlaying()) {
             mMusic.play();
+        }
+    }
+
+    public static void playSound(Sound s) {
+        if (Settings.soundEnabled && s != null) {
+            s.play();
         }
     }
 
