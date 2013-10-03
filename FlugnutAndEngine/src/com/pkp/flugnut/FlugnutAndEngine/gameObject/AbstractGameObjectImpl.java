@@ -1,6 +1,8 @@
 package com.pkp.flugnut.FlugnutAndEngine.gameObject;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.pkp.flugnut.FlugnutAndEngine.screen.global.GameScene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -20,6 +22,9 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     protected int scaledHeight;
     protected boolean liftable = false;
     protected int weight = 0;
+    protected RevoluteJoint anchor1;
+    protected RevoluteJoint anchor2;
+    protected Body body;
 
     public AbstractGameObjectImpl(GameScene scene, int yOrigForAtlas)
     {
@@ -109,5 +114,25 @@ public abstract class AbstractGameObjectImpl implements GameObject {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public RevoluteJoint getAncor1() {
+        return anchor1;
+    }
+
+    public void setAnchor1(RevoluteJoint j) {
+        anchor1 = j;
+    }
+
+    public RevoluteJoint getAncor2() {
+        return anchor2;
+    }
+
+    public void setAnchor2(RevoluteJoint j) {
+        anchor2 = j;
+    }
+
+    public Body getBody() {
+        return body;
     }
 }

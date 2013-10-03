@@ -31,22 +31,7 @@ public class GameUpdateHandler implements IUpdateHandler {
         //update objects already there.
         for (GameObject o : gameObjects) {
             if (o instanceof Flugnut) {
-                Flugnut f = (Flugnut)o;
-                for (GameObject o2 : gameObjects) {
-                    if (o2 instanceof BlockBuilding)
-                    {
-                        if (f.getSprite().collidesWith(o2.getSprite())) {
-                            try {
-                                SoundFactory.setAssetBasePath("mfx/");
-                                Sound explosion = SoundFactory.createSoundFromAsset(game.getSoundManager(), game, "explosion.ogg");
-                                Utilities.playSound(explosion);
-                            }
-                            catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
+                updateFlugnut(o);
             }
         }
 
@@ -59,6 +44,29 @@ public class GameUpdateHandler implements IUpdateHandler {
         //add objects that need adding
 
 
+    }
+
+    private void updateFlugnut(GameObject o) {
+        Flugnut f = (Flugnut)o;
+        for (GameObject o2 : gameObjects) {
+            if (o2 instanceof BlockBuilding)
+            {
+                if (f.getSprite().collidesWith(o2.getSprite())) {
+                    try {
+                        SoundFactory.setAssetBasePath("mfx/");
+                        Sound explosion = SoundFactory.createSoundFromAsset(game.getSoundManager(), game, "explosion.ogg");
+                        Utilities.playSound(explosion);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        if (f.getSprite().getX()-f.getGameScene().getLeftWall().getX() > 290 &&
+                f.getGameScene().getRightWall().getX()-f.getSprite().getX() > 290) {
+            game.mCamera.setCenter(f.getSprite().getX(), game.mCamera.getCenterY());
+        }
     }
 
     public GLGame getGame() {

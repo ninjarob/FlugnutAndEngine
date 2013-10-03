@@ -8,6 +8,7 @@ import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationElements;
 import com.pkp.flugnut.FlugnutAndEngine.utils.NavigationRedirect;
 import org.andengine.audio.music.Music;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
@@ -40,7 +41,7 @@ public class GLGame extends SimpleBaseGameActivity {
     // ===========================================================
     // Fields
     // ===========================================================
-    public Camera mCamera;
+    public SmoothCamera mCamera;
 
     private BaseGameScene mScene;
 
@@ -66,7 +67,7 @@ public class GLGame extends SimpleBaseGameActivity {
 
     @Override
     public EngineOptions onCreateEngineOptions() {
-        this.mCamera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+        this.mCamera = new SmoothCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT, 150, 150, 1);
         // getStartScene();
         EngineOptions eo = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera);
         eo.getAudioOptions().setNeedsMusic(true);

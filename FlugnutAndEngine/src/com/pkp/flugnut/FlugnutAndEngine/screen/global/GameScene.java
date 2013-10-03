@@ -98,6 +98,9 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     public static List<Joint> jointsToDestroy = new ArrayList<Joint>();
     public float worldTime = 0;
 
+    public Rectangle leftWall;
+    public Rectangle rightWall;
+
 
     private boolean birdAdded = false;
     //physics
@@ -165,10 +168,15 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         this.buttonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, "buttons.png", 0, 0);
         this.pauseButtonTextureRegion = TextureRegionFactory.extractFromTexture(mBitmapTextureAtlas, 64, 128, 64, 64);
 
+        FlugnutShield flugnutShield = new FlugnutShield(this, 395);
+        flugnutShield.initResources("emp1.png", mBitmapTextureAtlas);
+        flugnutShield.initSprites(vertexBufferObjectManager);
+
         //remember, the origin is in the center.
-        Flugnut flugnut = new Flugnut(this, 226, 395);
-        flugnut.initResources("Flugnut.png", "emp1.png", mBitmapTextureAtlas);
+        Flugnut flugnut = new Flugnut(this, 226, flugnutShield);
+        flugnut.initResources("Flugnut.png", mBitmapTextureAtlas);
         flugnut.initSprites(vertexBufferObjectManager);
+        flugnutShield.setFlugnut(flugnut);
 
         BlockBuilding b = new BlockBuilding(this, 475, 239, 120, 10, 10);
         b.initResources("FlugnutLevel/House.png", mBitmapTextureAtlas);
@@ -182,10 +190,13 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         //Flag flag;
 
         //set start positions
+        flugnutShield.setStartPosition(new Vector2((GLGame.CAMERA_WIDTH/2)+(flugnut.getSprite().getWidthScaled()/2),
+                                                    100+(flugnut.getSprite().getHeightScaled()/2)));
         flugnut.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH/2, 100));
         b.setStartPosition(new Vector2((b.getSprite().getWidth()/2) + 100, GLGame.CAMERA_HEIGHT-(b.getSprite().getHeight()/2)-50));
         pylon1.setStartPosition(new Vector2(100, 100));
         gameObjects.add(b);
+        gameObjects.add(flugnutShield);
         gameObjects.add(flugnut);
         gameObjects.add(pylon1);
         guh = new GameUpdateHandler(game, gameObjects);
@@ -205,18 +216,23 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         this.physicsWorld = new FixedStepPhysicsWorld(30, new Vector2(0, SensorManager.GRAVITY_EARTH), false, 3, 2);
 
         //boundaries
-        final Rectangle ground = new Rectangle(-20, GLGame.CAMERA_HEIGHT, GLGame.CAMERA_WIDTH+20, 2, vertexBufferObjectManager);
-        final Rectangle roof = new Rectangle(-20, 0, GLGame.CAMERA_WIDTH+20, 2, vertexBufferObjectManager);
+        final Rectangle ground = new Rectangle(-200, GLGame.CAMERA_HEIGHT, GLGame.CAMERA_WIDTH+400, 2, vertexBufferObjectManager);
+        final Rectangle roof = new Rectangle(-200, 0, GLGame.CAMERA_WIDTH+400, 2, vertexBufferObjectManager);
+        leftWall = new Rectangle(-200, -20, 2, GLGame.CAMERA_HEIGHT+40, vertexBufferObjectManager);
+        rightWall = new Rectangle(GLGame.CAMERA_WIDTH - 2+200, -20, 2, GLGame.CAMERA_HEIGHT+40, vertexBufferObjectManager);
+
         final Rectangle left = new Rectangle(-20, -20, 2, GLGame.CAMERA_HEIGHT, vertexBufferObjectManager);
         final Rectangle right = new Rectangle(GLGame.CAMERA_WIDTH - 2+20, 20, 2, GLGame.CAMERA_HEIGHT, vertexBufferObjectManager);
+
+
         PhysicsFactory.createBoxBody(physicsWorld, ground, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
         PhysicsFactory.createBoxBody(physicsWorld, roof, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
-        PhysicsFactory.createBoxBody(physicsWorld, left, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
-        PhysicsFactory.createBoxBody(physicsWorld, right, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
+        PhysicsFactory.createBoxBody(physicsWorld, leftWall, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
+        PhysicsFactory.createBoxBody(physicsWorld, rightWall, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
         attachChild(ground);
         attachChild(roof);
-        attachChild(left);
-        attachChild(right);
+        attachChild(leftWall);
+        attachChild(rightWall);
 
         //listeners
         setOnAreaTouchListener(this);
@@ -245,6 +261,14 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
         registerUpdateHandler(physicsWorld);
         registerUpdateHandler(guh);
+    }
+
+    public Rectangle getLeftWall() {
+        return leftWall;
+    }
+
+    public Rectangle getRightWall() {
+        return rightWall;
     }
 
 
@@ -539,8 +563,11 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     @Override
     public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX, float pTouchAreaLocalY) {
         final Sprite flugnutShieldSprite = (Sprite) pTouchArea;
+        FlugnutShield fs = ((FlugnutShield)flugnutShieldSprite.getUserData());
         switch(pSceneTouchEvent.getAction()) {
             case TouchEvent.ACTION_DOWN:
+                fs.getBody().setLinearDamping(1);
+                fs.getFlugnut().getBody().setLinearDamping(.5f);
                 /*
                  * If we have a active MouseJoint, we are just moving it around
                  * instead of creating a second one.
@@ -557,12 +584,14 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
                 }
                 return true;
             case TouchEvent.ACTION_UP:
-                if(this.mMouseJointActive != null) {
-//                    final Vector2 vec = Vector2Pool.obtain(pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-//                    if (flugnut.contains(vec.x, vec.y)) {  //only destroy the joint if its a flick within the flugnut body.
-//                        this.physicsWorld.destroyJoint(this.mMouseJointActive);
-//                        this.mMouseJointActive = null;
-//                    }
+                if(this.mMouseJointActive != null) {  //we've got the move joint!  Now get rid of it.
+                    //final Vector2 vec = Vector2Pool.obtain(pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+                    //if (flugnut.contains(vec.x, vec.y)) {  //only destroy the joint if its a flick within the flugnut body.
+                    this.physicsWorld.destroyJoint(this.mMouseJointActive);
+                    this.mMouseJointActive = null;
+                    fs.getBody().setLinearDamping(4);
+                    fs.getFlugnut().getBody().setLinearDamping(4);
+                    //}
                 }
                 return true;
         }

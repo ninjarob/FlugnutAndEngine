@@ -39,7 +39,7 @@ public class Pylon extends AbstractGameObjectImpl {
     public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
         //super.initResources(filename, mBitmapTextureAtlas);
         //this.pylonSingle = TextureRegionFactory.extractFromTexture(mBitmapTextureAtlas, 0, 713, 100, 120);
-        this.pylonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, scene.game, filename, 0, 713, 7, 3);
+        this.pylonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, scene.game, filename, 0, 713, 4, 5);
     }
 
     @Override
@@ -59,10 +59,13 @@ public class Pylon extends AbstractGameObjectImpl {
         pylonBody.setFixedRotation(true);
         pylonBody.setLinearDamping(1);
         pylonSprite.setUserData(pylonBody);
-
         scene.attachChild(pylonSprite);
         scene.registerTouchArea(pylonSprite);
-        pylonSprite.animate(100);
+        long[] durations = new long[12];
+        for (int i = 0; i < 12; i++) {
+            durations[i] = 100l;
+        }
+        pylonSprite.animate(durations, 5, 16, true);
         physics.registerPhysicsConnector(new PhysicsConnector(pylonSprite, pylonBody, true, true));
     }
 
