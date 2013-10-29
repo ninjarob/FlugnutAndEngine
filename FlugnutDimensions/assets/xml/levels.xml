@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This xml will be used for defining levels of each scene. Id to be the same as the value in GameConstants.java  -->
+<!-- Access the details from LevelXmlParser.-->
+<scenes>
+    <scene>
+        <id>CASTLE_NAV</id>
+        <levels>
+            <level>
+                <id>LEVEL_HOME</id>
+                <hasWeapon>false</hasWeapon>
+                <isUnlocked>true</isUnlocked>
+                <preCondition></preCondition>
+                <gameScene>CastleHomeScene</gameScene>
+            </level>
+            <level>
+                <id>LEVEL_LAB</id>
+                <hasWeapon>false</hasWeapon>
+                <isUnlocked>false</isUnlocked>
+                <preCondition>LEVEL_HOME</preCondition>
+                <gameScene></gameScene>
+            </level>
+            <level>
+                <id>LEVEL_HANGAR</id>
+                <hasWeapon>false</hasWeapon>
+                <isUnlocked>false</isUnlocked>
+                <preCondition>LEVEL_HANGAR</preCondition>
+                <gameScene></gameScene>
+            </level>
+        </levels>
+    </scene>
+    <scene>
+        <id>DAM_NAV</id>
+        <levels>
+            <level>
+                <id>LEVEL_PROTECT</id>
+                <hasWeapon>false</hasWeapon>
+                <isUnlocked>true</isUnlocked>
+                <preCondition></preCondition>
+                <gameScene>CastleHomeScene</gameScene>
+            </level>
+            <level>
+                <id>LEVEL_REINFORCE</id>
+                <hasWeapon>false</hasWeapon>
+                <isUnlocked>false</isUnlocked>
+                <preCondition>LEVEL_PROTECT</preCondition>
+                <gameScene></gameScene>
+            </level>
+            <level>
+                <id>LEVEL_REDIRECT</id>
+                <hasWeapon>false</hasWeapon>
+                <isUnlocked>false</isUnlocked>
+                <preCondition>LEVEL_REINFORCE</preCondition>
+                <gameScene></gameScene>
+            </level>
+        </levels>
+    </scene>
+</scenes>

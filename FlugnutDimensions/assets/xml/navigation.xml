@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This xml will be used for navigation around the game. Id to be the same as the value in GameConstants.java  -->
+<!-- The from and to need to class names of the scenes to which the redirect should happen to and from.-->
+<!-- Access the navigation details from NavigationRedirect.-->
+<navigation>
+    <redirect>
+        <id>CASTLE_NAV</id>
+        <from>MapScene</from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.CastleNavScene</to>
+    </redirect>
+    <redirect>
+        <id>CASTLE_PLANET_BACK_NAV</id>
+        <from>CastleNavScene</from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.MapScene</to>
+    </redirect>
+
+    <!-- Global Navigation -->
+    <redirect>
+        <id>MAIN_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.MainMenuScene</to>
+    </redirect>
+    <redirect>
+        <id>PLAY_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.MapScene</to>
+    </redirect>
+    <redirect>
+        <id>STORY_SCENE_DETAIL_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.StoryDetailScene</to>
+    </redirect>
+    <redirect>
+        <id>HELP_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.HelpScene</to>
+    </redirect>
+    <redirect>
+        <id>MAP_SCENE_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.MapScene</to>
+    </redirect>
+    <redirect>
+        <id>PAUSE_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.PauseMenu</to>
+    </redirect>
+    <redirect>
+        <id>SETTINGS_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.SettingsScene</to>
+    </redirect>
+    <redirect>
+        <id>STORY_SCENE_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.StoryScene</to>
+    </redirect>
+    <redirect>
+        <id>TUTORIAL_MENU_NAV</id>
+        <from></from>
+        <to>com.pkp.flugnut.FlugnutDimensions.screen.global.TutorialSelectionScene</to>
+    </redirect>
+</navigation>
