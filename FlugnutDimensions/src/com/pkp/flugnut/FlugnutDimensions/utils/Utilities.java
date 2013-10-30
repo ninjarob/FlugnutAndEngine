@@ -76,9 +76,13 @@ public class Utilities {
 
     public static float getAngle(Vector2 vec1, Vector2 vec2) {
         float deltaX = vec2.x - vec1.x;
-        float deltaY = vec2.y - vec1.y;
-        double deg = Math.tan(deltaX/deltaY); // In radians
-        return (float)deg;
+        float deltaY = -1*(vec2.y - vec1.y);
+        float angle = (float) Math.atan2(deltaY, deltaX);
+
+        if(angle < 0){
+            angle += 2*Math.PI;
+        }
+        return angle;
     }
 
 }

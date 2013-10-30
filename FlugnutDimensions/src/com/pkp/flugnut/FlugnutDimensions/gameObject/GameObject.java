@@ -16,8 +16,6 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  */
 public interface GameObject {
 
-    public void initResources(String filename, String filename2, BitmapTextureAtlas mBitmapTextureAtlas);
-
     public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas);
 
     public void initSprites(VertexBufferObjectManager vertexBufferObjectManager);
@@ -31,4 +29,10 @@ public interface GameObject {
     public Sprite getSprite();
 
     public Body getBody();
+
+    public boolean isTouchable();
+
+    public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld);
+    public void onActionMove(float touchX, float touchY, PhysicsWorld physicsWorld);
+    public void onActionUp(float touchX, float touchY, PhysicsWorld physicsWorld);
 }

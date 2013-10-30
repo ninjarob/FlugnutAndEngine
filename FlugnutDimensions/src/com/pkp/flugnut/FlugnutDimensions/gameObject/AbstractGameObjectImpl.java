@@ -3,7 +3,9 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
+import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
@@ -12,53 +14,42 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 public abstract class AbstractGameObjectImpl implements GameObject {
-    protected GameScene scene;
+    protected GLGame game;
+    protected Scene scene;
     protected ITextureRegion textureRegion;
     protected ITextureRegion touchAreaTextureRegion;
     protected Vector2 sp;
     protected int yOrigForAtlas;
-    protected int yOrigForAtlasTouch;
     protected int scaledWidth;
     protected int scaledHeight;
-    protected boolean liftable = false;
     protected int weight = 0;
     protected RevoluteJoint anchor1;
     protected RevoluteJoint anchor2;
     protected Body body;
+    protected boolean touchable;
 
-    public AbstractGameObjectImpl(GameScene scene, int yOrigForAtlas)
+    public AbstractGameObjectImpl(GLGame game, GameScene scene, int yOrigForAtlas)
     {
-        init(scene, yOrigForAtlas);
+        init(game, scene, yOrigForAtlas);
     }
 
-    public AbstractGameObjectImpl(GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight)
+    public AbstractGameObjectImpl(GLGame game, GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight)
     {
-        init(scene, yOrigForAtlas);
+        init(game, scene, yOrigForAtlas);
         this.scaledWidth = scaledWidth;
         this.scaledHeight = scaledHeight;
     }
 
-    public AbstractGameObjectImpl(GameScene scene, int yOrigForAtlas, int yOrigForAtlasTouch)
-    {
-        init(scene, yOrigForAtlas);
-        this.yOrigForAtlasTouch = yOrigForAtlasTouch;
-    }
-
-    private void init(GameScene scene, int yOrigForAtlas) {
+    private void init(GLGame game, GameScene scene, int yOrigForAtlas) {
         this.scene = scene;
         this.sp = new Vector2(0,0);
         this.yOrigForAtlas = yOrigForAtlas;
+        this.game = game;
     }
 
     @Override
     public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, scene.game, filename, 0, yOrigForAtlas);
-    }
-
-    @Override
-    public void initResources(String filename, String filename2, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, scene.game, filename, 0, yOrigForAtlas);
-        this.touchAreaTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, scene.game, filename2, 0, yOrigForAtlasTouch);
+        this.textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, filename, 0, yOrigForAtlas);
     }
 
     @Override
@@ -80,7 +71,16 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     @Override
     public abstract void initForScene(PhysicsWorld physics);
 
-    public GameScene getGameScene() {
+    @Override
+    public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {}
+
+    @Override
+    public void onActionMove(float touchX, float touchY, PhysicsWorld physicsWorld) {}
+
+    @Override
+    public void onActionUp(float touchX, float touchY, PhysicsWorld physicsWorld) {}
+
+    public Scene getScene() {
         return scene;
     }
 
@@ -100,12 +100,12 @@ public abstract class AbstractGameObjectImpl implements GameObject {
         return scaledHeight;
     }
 
-    public boolean getLiftable() {
-        return liftable;
+    public boolean isTouchable() {
+        return touchable;
     }
 
-    public void setLiftable(boolean liftable) {
-        this.liftable = liftable;
+    public void setTouchable(boolean touchable) {
+        this.touchable = touchable;
     }
 
     public int getWeight() {

@@ -2,7 +2,9 @@ package com.pkp.flugnut.FlugnutDimensions;
 
 import android.os.PowerManager.WakeLock;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
+import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.MainMenuScene;
+import com.pkp.flugnut.FlugnutDimensions.screen.global.PauseMenu;
 import com.pkp.flugnut.FlugnutDimensions.utils.LevelXmlParser;
 import com.pkp.flugnut.FlugnutDimensions.utils.NavigationElements;
 import com.pkp.flugnut.FlugnutDimensions.utils.NavigationRedirect;
@@ -67,8 +69,7 @@ public class GLGame extends SimpleBaseGameActivity {
 
     @Override
     public EngineOptions onCreateEngineOptions() {
-        this.mCamera = new SmoothCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT, 150, 150, 1);
-        // getStartScene();
+        mCamera = new SmoothCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT, 300, 300, 1);
         EngineOptions eo = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera);
         eo.getAudioOptions().setNeedsMusic(true);
         return eo;
@@ -119,5 +120,18 @@ public class GLGame extends SimpleBaseGameActivity {
 
     public NavigationElements getNavigationElements() {
         return navigationElements;
+    }
+
+    public void onBackPressed(){
+        if (mScene instanceof GameScene) {
+            if (!this.isGamePaused()) {
+                PauseMenu pauseMenu = new PauseMenu(this, mScene);
+                pauseMenu.initResources();
+                pauseMenu.initMenu();
+            }
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 }

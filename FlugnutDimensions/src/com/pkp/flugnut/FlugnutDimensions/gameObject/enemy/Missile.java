@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject.enemy;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.MassData;
+import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.AbstractGameObjectImpl;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
@@ -18,14 +19,14 @@ public class Missile extends AbstractGameObjectImpl {
     private int maxHealth;
     private Sprite missileSprite;
 
-    public Missile(GameScene scene, int yOrigForAtlas, int health, int maxHealth) {
-        super(scene, yOrigForAtlas);
+    public Missile(GLGame game, GameScene scene, int yOrigForAtlas, int health, int maxHealth) {
+        super(game, scene, yOrigForAtlas);
         this.health = health;
         this.maxHealth = maxHealth;
     }
 
-    public Missile(GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight, int health, int maxHealth) {
-        super(scene, yOrigForAtlas, scaledWidth, scaledHeight);
+    public Missile(GLGame game, GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight, int health, int maxHealth) {
+        super(game, scene, yOrigForAtlas, scaledWidth, scaledHeight);
         this.health = health;
         this.maxHealth = maxHealth;
     }
@@ -86,4 +87,8 @@ public class Missile extends AbstractGameObjectImpl {
 //        }
 //        return returnPiece;
 //    }
+
+    public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {
+
+    }
 }

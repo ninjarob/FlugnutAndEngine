@@ -2,6 +2,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.entity.sprite.AnimatedSprite;
@@ -25,14 +26,13 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 public class Ship extends AbstractGameObjectImpl{
 
     protected ITiledTextureRegion shipTR;
-    protected ITiledTextureRegion shipEngineTR;
     protected AnimatedSprite shipSprite;
-    protected AnimatedSprite shipEngineSprite;
-    private int yOrigForEngineAtlas;
-    protected int shipAnimationIndex=1;
+    protected int shipAnimationIndex=0;
+    protected float thrustPercent;
 
-    public Ship(GameScene scene, int yOrigForAtlas, int yOrigForEngineAtlas) {
-        super(scene, yOrigForAtlas);
+    public Ship(GLGame game, GameScene scene, int yOrigForAtlas) {
+        super(game, scene, yOrigForAtlas);
+        touchable = true;
     }
 
     @Override
@@ -41,15 +41,13 @@ public class Ship extends AbstractGameObjectImpl{
     }
 
     @Override
-    public void initResources(String filename, String filename2, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.shipTR = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, scene.game, filename, 0, yOrigForAtlas, 8, 8);
-        //this.shipEngineTR = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, scene.game, filename2, 0, yOrigForEngineAtlas, 8, 8);
+    public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
+        this.shipTR = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, game, filename, 0, yOrigForAtlas, 8, 8);
     }
 
     @Override
     public void initSprites(VertexBufferObjectManager vertexBufferObjectManager) {
         shipSprite = new AnimatedSprite(sp.x, sp.y, shipTR, vertexBufferObjectManager);
-        //shipEngineSprite = new AnimatedSprite(sp.x, sp.y, scaledWidth, scaledHeight, shipEngineTR, vertexBufferObjectManager);
     }
 
     @Override
@@ -59,16 +57,26 @@ public class Ship extends AbstractGameObjectImpl{
                 shipSprite.getHeight(), BodyDef.BodyType.DynamicBody, GameConstants.FLUGNUT_FIXTURE_DEF);
         body.setGravityScale(0);
         body.setFixedRotation(true);
-        body.setLinearDamping(1);
+        body.setLinearDamping(0.2f);
         shipSprite.setUserData(this);
 
         scene.attachChild(shipSprite);
+        scene.registerTouchArea(shipSprite);
         physics.registerPhysicsConnector(new PhysicsConnector(shipSprite, body, true, true));
     }
 
     public int getDestIndex(float angle) {
         float radiansPerFrame = 0.09817477f;  //(2*pi / 64)
-        return Math.round(angle/radiansPerFrame);
+        int destIndex = (int)(angle/radiansPerFrame);
+
+        return destIndex;
+    }
+
+    public float getAngleFromIndex(float index) {
+        float radiansPerFrame = 0.09817477f;  //(2*pi / 64)
+        float angle = (index * radiansPerFrame);
+
+        return angle;
     }
 
     public void rotateShip(int destIndex) {
@@ -77,32 +85,44 @@ public class Ship extends AbstractGameObjectImpl{
             shipAnimationIndex = shipSprite.getCurrentTileIndex();
         }
         if (destIndex == shipAnimationIndex) return;
-        int rotateRightDif = (shipAnimationIndex > destIndex)?shipAnimationIndex - destIndex:(64 - destIndex) + shipAnimationIndex;
-        int rotateLeftDif = (shipAnimationIndex < destIndex)?(64 - shipAnimationIndex) + destIndex:destIndex - shipAnimationIndex;
+        int rotateRightDif = (shipAnimationIndex > destIndex)?shipAnimationIndex - destIndex:((63 - destIndex) + shipAnimationIndex)+2;
+        int rotateLeftDif = (shipAnimationIndex > destIndex)?((63 - shipAnimationIndex) + destIndex)+2:destIndex - shipAnimationIndex;
         if (rotateRightDif < rotateLeftDif) {
-            long[] durations = new long[rotateRightDif];
-            int[] frames = new int[rotateRightDif];
+            long[] durations = new long[rotateRightDif+1];
+            int[] frames = new int[rotateRightDif+1];
             int j = 0;
             for (int i = shipAnimationIndex; i != destIndex; i--) {
-                durations[j] = 100l;
-                j++;
+                durations[j] = 10l;
                 frames[j] = i;
-                if (i == 0) i = 63;
+                if (i == 0) i = 64;
+                j++;
             }
             shipSprite.animate(durations, frames, false);
         }
         else {
-            long[] durations = new long[rotateLeftDif];
-            int[] frames = new int[rotateLeftDif];
+            long[] durations = new long[rotateLeftDif+1];
+            int[] frames = new int[rotateLeftDif+1];
             int j = 0;
             for (int i = shipAnimationIndex; i != destIndex; i++) {
-                durations[j] = 100l;
-                j++;
+                durations[j] = 10l;
                 frames[j] = i;
-                if (i == 63) i = 0;
+                if (i == 63) i = -1;
+                j++;
             }
             shipSprite.animate(durations, frames, false);
         }
         shipAnimationIndex = destIndex;
     }
+
+    public float getThrustPercent() {
+        return thrustPercent;
+    }
+
+    public void setThrustPercent(float thrustPercent) {
+        this.thrustPercent = thrustPercent;
+    }
+
+    public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {}
+
+    public void onActionMove(float touchX, float touchY, PhysicsWorld physicsWorld) {}
 }

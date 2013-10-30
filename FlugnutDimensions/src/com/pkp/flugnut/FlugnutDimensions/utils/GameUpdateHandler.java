@@ -1,11 +1,15 @@
 package com.pkp.flugnut.FlugnutDimensions.utils;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.GameObject;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.handler.IUpdateHandler;
+import org.andengine.entity.sprite.AnimatedSprite;
 
 import java.util.List;
 
@@ -31,9 +35,9 @@ public class GameUpdateHandler implements IUpdateHandler {
     public void onUpdate(float pSecondsElapsed) {
         //update objects already there.
         for (GameObject o : gameObjects) {
-//            if (o instanceof Flugnut) {
-//                updateFlugnut(o);
-//            }
+            if (o instanceof Ship) {
+                updateShip((Ship) o);
+            }
         }
 
         //check for new objects to be added and objects that need to be removed.
@@ -45,6 +49,19 @@ public class GameUpdateHandler implements IUpdateHandler {
         //add objects that need adding
 
 
+    }
+
+
+    private int accel = 10;
+    private void updateShip(Ship ship) {
+        if (ship.getThrustPercent() > 0) {
+            float angle = ship.getAngleFromIndex(((AnimatedSprite)ship.getSprite()).getCurrentTileIndex());
+            Vector2 vel = ship.getBody().getLinearVelocity();
+            double mag = Math.sqrt(Math.pow(vel.x, 2)+Math.pow(vel.y, 2));
+            if (ship.getThrustPercent() > 0  && mag <= 400) {
+                ship.getBody().applyForceToCenter((float)Math.cos(angle)*accel*ship.getThrustPercent(), -(float)Math.sin(angle)*accel*ship.getThrustPercent());
+            }
+        }
     }
 
 //    private void updateFlugnut(GameObject o) {

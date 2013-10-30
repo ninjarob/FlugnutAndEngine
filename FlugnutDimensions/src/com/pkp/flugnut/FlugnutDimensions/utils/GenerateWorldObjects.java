@@ -6,7 +6,7 @@ public class GenerateWorldObjects {
 
     public static GameSceneInfo generateTutorial1() {
         GameSceneInfo gsi = new GameSceneInfo();
-        gsi.setBgFileName("background.png");
+        gsi.setBgFileName("background2.png");
         gsi.setLocked(false);
         gsi.setWeaponEnabled(false);
         return gsi;
