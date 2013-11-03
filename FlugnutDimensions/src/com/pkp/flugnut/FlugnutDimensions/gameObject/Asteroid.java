@@ -15,6 +15,8 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+import java.util.Random;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rkevan
@@ -55,7 +57,8 @@ public class Asteroid extends AbstractGameObjectImpl{
         body.setGravityScale(0);
         body.setFixedRotation(false);
         body.setAngularVelocity(1f);
-        body.setLinearVelocity(5f, 10f);
+        Random r = new Random();
+        body.setLinearVelocity(r.nextInt(20)-10, r.nextInt(20)-10);
         asteroidSprite.setUserData(this);
 
         scene.attachChild(asteroidSprite);

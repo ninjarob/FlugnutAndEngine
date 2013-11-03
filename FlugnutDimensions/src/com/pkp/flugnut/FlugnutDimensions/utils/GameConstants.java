@@ -48,6 +48,10 @@ public interface GameConstants {
     public static final String LABEL_STORY_BUTTON = "STORY";
     public static final String LABEL_SETTINGS_BUTTON = "SETTINGS";
     public static final String LABEL_QUIT_BUTTON = "QUIT";
+    public static final String LABEL_CONNECT_BUTTON = "CONNECT";
+    public static final String LABEL_LOGIN_BUTTON = "LOGIN";
+    public static final String LABEL_CHECK_SERVER_STATUS_BUTTON = "CHECK SERVER STATUS";
+    public static final String LABEL_TEST_SERVER_BUTTON = "TEST SERVER";
 
     // ========================================
     // Fonts

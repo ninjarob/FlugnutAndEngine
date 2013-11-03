@@ -1,7 +1,11 @@
 package com.pkp.flugnut.FlugnutDimensions.screen.global;
 
+import android.app.Dialog;
 import android.opengl.GLES20;
+import android.os.Looper;
+import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.game.Settings;
+import com.pkp.flugnut.FlugnutDimensions.utils.DialogHandler;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import com.pkp.flugnut.FlugnutDimensions.utils.NavigationRedirect;
 import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
@@ -35,6 +39,10 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
     protected static final int MENU_STORY = MENU_HELP + 1;
     protected static final int MENU_SETTINGS = MENU_STORY + 1;
     protected static final int MENU_QUIT = MENU_SETTINGS + 1;
+    protected static final int CONNECT_TO_SERVER = MENU_QUIT + 1;
+    protected static final int LOGIN_TO_ZONE = CONNECT_TO_SERVER + 1;
+    protected static final int CHECK_SERVER_STATUS = LOGIN_TO_ZONE + 1;
+    protected static final int MENU_TEST_SERVER = CHECK_SERVER_STATUS + 1;
 
 
     // ===========================================================
@@ -52,15 +60,18 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
     private Font mFont;
     private MenuScene menuScene;
 
+    private SmartFoxBase sfb;
+
     public MainMenuScene(GLGame game) {
         super(game);
+        sfb = new SmartFoxBase(game);
     }
 
     @Override
     public void initResources() {
         FontFactory.setAssetBasePath(GameConstants.FONT_DIR);
         final ITexture fontTexture = new BitmapTextureAtlas(game.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        this.mFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(), GameConstants.FONT_PLOK, 48, true, android.graphics.Color.WHITE);
+        this.mFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(), GameConstants.FONT_PLOK, 32, true, android.graphics.Color.WHITE);
         this.mFont.load();
 
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GameConstants.GRAPHICS_DIR);
@@ -115,6 +126,18 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
         final IMenuItem quitMenuItem = getMenuItem(MENU_QUIT, GameConstants.LABEL_QUIT_BUTTON);
         menuScene.addMenuItem(quitMenuItem);
 
+        final IMenuItem connectToServerMenuItem = getMenuItem(CONNECT_TO_SERVER, GameConstants.LABEL_CONNECT_BUTTON);
+        menuScene.addMenuItem(connectToServerMenuItem);
+
+        final IMenuItem sfLoginMenuItem = getMenuItem(LOGIN_TO_ZONE, GameConstants.LABEL_LOGIN_BUTTON);
+        menuScene.addMenuItem(sfLoginMenuItem);
+
+        final IMenuItem checkServerStatusMenuItem = getMenuItem(CHECK_SERVER_STATUS, GameConstants.LABEL_CHECK_SERVER_STATUS_BUTTON);
+        menuScene.addMenuItem(checkServerStatusMenuItem);
+
+        final IMenuItem testServerMenuItem = getMenuItem(MENU_TEST_SERVER, GameConstants.LABEL_TEST_SERVER_BUTTON);
+        menuScene.addMenuItem(testServerMenuItem);
+
         menuScene.buildAnimations();
 
         //menuScene.setBackgroundEnabled(false);
@@ -141,7 +164,7 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
                 game.setNewScene(getScene(GameConstants.PLAY_MENU_NAV));
                 return true;
             case MENU_TUTORIAL:
-                game.setNewScene(getScene(GameConstants.TUTORIAL_MENU_NAV));
+                game.setNewScene(new TutorialSelectionScene(game, sfb));
                 return true;
             case MENU_HELP:
                 game.setNewScene(getScene(GameConstants.HELP_MENU_NAV));
@@ -154,6 +177,24 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
                 return true;
             case MENU_QUIT:
                 game.finish();
+                return true;
+            case CONNECT_TO_SERVER:
+                sfb.connect();
+                return true;
+            case LOGIN_TO_ZONE:
+                sfb.login();
+                return true;
+            case CHECK_SERVER_STATUS:
+                game.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Dialog d = DialogHandler.onCreateDialog(game, 3, sfb.getStatus().name());
+                        d.show();
+                    }
+                });
+                return true;
+            case MENU_TEST_SERVER:
+
                 return true;
             default:
                 return false;

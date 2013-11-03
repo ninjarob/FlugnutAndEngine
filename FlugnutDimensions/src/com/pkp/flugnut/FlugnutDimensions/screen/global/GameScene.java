@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
@@ -70,8 +71,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     private Ship ship;
     public static Vector2 empWave = new Vector2();
     public static Vector2 horizEmp = new Vector2();
-    public List<Wave> waves = new ArrayList<Wave>();
-    public float totalWaveTime;
+    public List<Asteroid> asteroids = new ArrayList<Asteroid>();
     public List<MiscObject> miscObjects;
     public GLGame game;
 
@@ -83,24 +83,26 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
     private HUD hud;
 
-    public GameScene(GLGame game, GameSceneInfo gameSceneInfo, boolean tutorial) {
+    private SmartFoxBase sfb;
+
+    private Integer asteroidNumber;
+
+    public GameScene(GLGame game, GameSceneInfo gameSceneInfo, boolean tutorial, SmartFoxBase sfb) {
         super(game);
         this.gameSceneInfo = gameSceneInfo;
         self = this;
         this.tutorial = tutorial;
 
         this.game = game;
-
+        this.sfb = sfb;
+        if (SmartFoxBase.Status.CONNECTED!=sfb.getStatus()) {
+            sfb.connect();
+        }
         empWave.x = 0;
         empWave.y = 0;
         horizEmp.x = 0;
         horizEmp.y = 0;
         miscObjects = new ArrayList<MiscObject>();
-        totalWaveTime = 0;
-        if (waves.size() > 0)
-        {
-            totalWaveTime = waves.get(waves.size()-1).startTime;
-        }
         gameObjects = new ArrayList<GameObject>();
     }
 
@@ -141,9 +143,12 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         ship.initResources("Ship/gawain.png", mBitmapTextureAtlas);
         ship.initSprites(vertexBufferObjectManager);
 
-        Asteroid asteroid = new Asteroid(game, this, 1122);
-        asteroid.initResources("asteroid.png", mBitmapTextureAtlas);
-        asteroid.initSprites(vertexBufferObjectManager);
+        for (int i = 0; i < asteroidNumber; i++) {
+            Asteroid asteroid = new Asteroid(game, this, 1122);
+            asteroid.initResources("asteroid.png", mBitmapTextureAtlas);
+            asteroid.initSprites(vertexBufferObjectManager);
+            asteroids.add(asteroid);
+        }
 
         hud = new HUD();
 
@@ -161,10 +166,12 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
 
         ship.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH / 2, GLGame.CAMERA_HEIGHT / 2));
-        asteroid.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH / 2, (GLGame.CAMERA_HEIGHT / 2)+120));
         game.mCamera.setChaseEntity(ship.getSprite());
         gameObjects.add(ship);
-        gameObjects.add(asteroid);
+        for (Asteroid a : asteroids) {
+            a.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH / 2, (GLGame.CAMERA_HEIGHT / 2)+120));
+            gameObjects.add(a);
+        }
         gameObjects.add(throttle);
         gameObjects.add(throttleInd);
         guh = new GameUpdateHandler(game, gameObjects, this);
@@ -231,7 +238,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
     public void back() {
         if (tutorial) {
-            game.setNewScene(new TutorialSelectionScene(game));
+            game.setNewScene(new TutorialSelectionScene(game, sfb));
         }
         else {
             game.setNewScene(new MapScene(game));
@@ -294,5 +301,14 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
             return false;
         }
         return false;
+    }
+
+
+    public Integer getAsteroidNumber() {
+        return asteroidNumber;
+    }
+
+    public void setAsteroidNumber(Integer asteroidNumber) {
+        this.asteroidNumber = asteroidNumber;
     }
 }

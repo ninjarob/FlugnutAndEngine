@@ -102,7 +102,7 @@ public class LevelScene extends BaseGameScene {
 
     public void back() {
         if (tutorial) {
-            game.setNewScene(new TutorialSelectionScene(game));
+            game.setNewScene(new TutorialSelectionScene(game, null));
         } else {
             game.setNewScene(new MapScene(game));
         }
