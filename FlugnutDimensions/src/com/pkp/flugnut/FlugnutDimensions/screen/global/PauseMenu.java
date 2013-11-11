@@ -104,7 +104,7 @@ public class PauseMenu implements IOnAreaTouchListener{
 
     public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final ITouchArea pTouchArea, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
         if (null==pTouchArea) return true;
-        if (pTouchArea instanceof  IMenuItem) {
+        if (pTouchArea instanceof IMenuItem) {
             final IMenuItem menuItem = ((IMenuItem)pTouchArea);
 
             switch(pSceneTouchEvent.getAction()) {
@@ -140,6 +140,11 @@ public class PauseMenu implements IOnAreaTouchListener{
                 hud.setOnAreaTouchListener((GameScene)parent);
                 return true;
             case EXIT:
+                hud.unregisterTouchArea(resumeMenuItem);
+                hud.detachChild(resumeMenuItem);
+                hud.unregisterTouchArea(exitMenuItem);
+                hud.detachChild(exitMenuItem);
+                hud.setOnAreaTouchListener((GameScene)parent);
                 parent.back();
                 return true;
             default:
