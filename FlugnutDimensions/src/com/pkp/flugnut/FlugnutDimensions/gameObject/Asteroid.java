@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.entity.sprite.AnimatedSprite;
@@ -29,8 +30,8 @@ public class Asteroid extends AbstractGameObjectImpl{
     protected ITiledTextureRegion asteroidTR;
     protected AnimatedSprite asteroidSprite;;
 
-    public Asteroid(GLGame game, GameScene scene, int yOrigForAtlas) {
-        super(game, scene, yOrigForAtlas);
+    public Asteroid(GLGame game, GameScene scene, TextureInfoHolder tih) {
+        super(game, scene, tih);
         touchable = true;
     }
 
@@ -40,8 +41,8 @@ public class Asteroid extends AbstractGameObjectImpl{
     }
 
     @Override
-    public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.asteroidTR = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, game, filename, 0, yOrigForAtlas, 21, 7);
+    public void initResources(BitmapTextureAtlas mBitmapTextureAtlas) {
+        this.asteroidTR = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, game, texInfo.getPath(), 0, texInfo.getStarty(), 21, 7);
     }
 
     @Override

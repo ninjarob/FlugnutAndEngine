@@ -16,7 +16,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  */
 public interface GameObject {
 
-    public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas);
+    public void initResources(BitmapTextureAtlas mBitmapTextureAtlas);
 
     public void initSprites(VertexBufferObjectManager vertexBufferObjectManager);
 

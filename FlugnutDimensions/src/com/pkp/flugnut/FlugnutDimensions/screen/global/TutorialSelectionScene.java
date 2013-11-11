@@ -4,9 +4,8 @@ import android.opengl.GLES20;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
+import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
 import com.pkp.flugnut.FlugnutDimensions.game.Settings;
-import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
-import com.pkp.flugnut.FlugnutDimensions.utils.GenerateWorldObjects;
 import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
 import org.andengine.audio.music.MusicFactory;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
@@ -129,13 +128,6 @@ public class TutorialSelectionScene extends BaseGameScene implements MenuScene.I
     public boolean onMenuItemClicked(final MenuScene pMenuScene, final IMenuItem pMenuItem, final float pMenuItemLocalX, final float pMenuItemLocalY) {
         switch(pMenuItem.getID()) {
             case TUT_ONE:
-                GameScene gs = new GameScene(game, GenerateWorldObjects.generateTutorial1(), true, sfb);
-                if (sfb.getStatus()!= SmartFoxBase.Status.CONNECTED) {
-                    sfb.connect();
-                }
-                sfb.getAsteroids(gs);
-                //callback (sfb.setAsteroids) should start the new scene momentarily.
-                //game.setNewScene(gs);
                 return true;
             case TUT_TWO:
                 return true;

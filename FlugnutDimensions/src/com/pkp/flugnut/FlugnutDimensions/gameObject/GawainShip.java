@@ -1,6 +1,7 @@
 package com.pkp.flugnut.FlugnutDimensions.gameObject;
 
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 
 /**
@@ -12,8 +13,8 @@ import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
  */
 public class GawainShip extends Ship {
 
-    public GawainShip(GLGame game, GameScene scene, int yOrigForAtlas, int yOrigForEngineAtlas) {
-        super(game, scene, yOrigForAtlas);
+    public GawainShip(GLGame game, GameScene scene, TextureInfoHolder textureInfoHolder) {
+        super(game, scene, textureInfoHolder);
 
     }
 

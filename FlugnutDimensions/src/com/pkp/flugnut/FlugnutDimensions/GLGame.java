@@ -111,7 +111,7 @@ public class GLGame extends SimpleBaseGameActivity {
     public void onBackPressed(){
         if (mScene instanceof GameScene) {
             if (!this.isGamePaused()) {
-                PauseMenu pauseMenu = new PauseMenu(this, mScene);
+                PauseMenu pauseMenu = new PauseMenu(this, ((GameScene)mScene).getHud(), mScene);
                 pauseMenu.initResources();
                 pauseMenu.initMenu();
             }

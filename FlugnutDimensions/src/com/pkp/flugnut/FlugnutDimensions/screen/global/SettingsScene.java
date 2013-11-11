@@ -1,6 +1,8 @@
 package com.pkp.flugnut.FlugnutDimensions.screen.global;
 
 import android.opengl.GLES20;
+import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutDimensions.game.Settings;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
@@ -17,8 +19,6 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import com.pkp.flugnut.FlugnutDimensions.GLGame;
-import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
 import org.andengine.util.color.Color;
 
 public class SettingsScene extends BaseGameScene implements MenuScene.IOnMenuItemClickListener {

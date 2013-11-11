@@ -20,12 +20,16 @@ public interface GameConstants {
     public static final short CATEGORYBIT_BUILDING = 8;
     public static final short CATEGORYBIT_BOMB = 16;
     public static final short CATEGORYBIT_ENEMY = 32;
+    public static final short CATEGORYBIT_ASTEROID_AREA_WALL = 64;
+    public static final short CATEGORYBIT_ASTEROID = 128;
 
     public static final short MASKBITS_WALL = CATEGORYBIT_WALL + CATEGORYBIT_FLUGNUT + CATEGORYBIT_BUILDING + CATEGORYBIT_BOMB + CATEGORYBIT_ENEMY;
     public static final short MASKBITS_FORCE_FIELD = CATEGORYBIT_BOMB + CATEGORYBIT_ENEMY;
     public static final short MASKBITS_FLUGNUT = CATEGORYBIT_WALL + CATEGORYBIT_ENEMY + CATEGORYBIT_BUILDING;
     public static final short MASKBITS_BUILDING = CATEGORYBIT_WALL + CATEGORYBIT_BOMB + CATEGORYBIT_FLUGNUT;
     public static final short MASKBITS_ENEMY = CATEGORYBIT_WALL + CATEGORYBIT_FORCE_FIELD + CATEGORYBIT_FLUGNUT;
+    public static final short MASKBITS_ASTEROID_AREA_WALL = CATEGORYBIT_ASTEROID;
+    public static final short MASKBITS_ASTEROID = CATEGORYBIT_ASTEROID_AREA_WALL;
 
     // =======================================
     // Physics Fixtures
@@ -35,6 +39,8 @@ public interface GameConstants {
     public static final FixtureDef FLUGNUT_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.1f, 0.5f, false, CATEGORYBIT_FLUGNUT, MASKBITS_FLUGNUT, (short)0);
     public static final FixtureDef BUILDING_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.5f, 0.5f, false, CATEGORYBIT_BUILDING, MASKBITS_BUILDING, (short)0);
     public static final FixtureDef ENEMY_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.5f, 0.5f, false, CATEGORYBIT_ENEMY, MASKBITS_ENEMY, (short)0);
+    public static final FixtureDef ASTEROID_AREA_WALL_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.5f, 0.5f, false, CATEGORYBIT_ASTEROID_AREA_WALL, MASKBITS_ASTEROID_AREA_WALL, (short)0);
+    public static final FixtureDef ASTEROID_FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.5f, 0.5f, false, CATEGORYBIT_ASTEROID, MASKBITS_ASTEROID, (short)0);
 
 
     // ========================================

@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.entity.sprite.AnimatedSprite;
@@ -13,7 +14,6 @@ import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
-import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 /**
@@ -30,8 +30,8 @@ public class Ship extends AbstractGameObjectImpl{
     protected int shipAnimationIndex=0;
     protected float thrustPercent;
 
-    public Ship(GLGame game, GameScene scene, int yOrigForAtlas) {
-        super(game, scene, yOrigForAtlas);
+    public Ship(GLGame game, GameScene scene, TextureInfoHolder textureInfoHolder) {
+        super(game, scene, textureInfoHolder);
         touchable = true;
     }
 
@@ -41,8 +41,8 @@ public class Ship extends AbstractGameObjectImpl{
     }
 
     @Override
-    public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.shipTR = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, game, filename, 0, yOrigForAtlas, 8, 8);
+    public void initResources(BitmapTextureAtlas mBitmapTextureAtlas) {
+        this.shipTR = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mBitmapTextureAtlas, game, texInfo.getPath(), 0, texInfo.getStarty(), 8, 8);
     }
 
     @Override

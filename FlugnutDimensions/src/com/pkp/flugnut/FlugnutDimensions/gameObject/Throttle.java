@@ -1,6 +1,7 @@
 package com.pkp.flugnut.FlugnutDimensions.gameObject;
 
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -17,15 +18,13 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * To change this template use File | Settings | File Templates.
  */
 public class Throttle extends AbstractGameObjectImpl{
-
-    private ITextureRegion throttleTR;
     private Sprite throttleSprite;
     private ThrottleInd throttleInd;
     private Ship ship;
     private HUD hud;
 
-    public Throttle(GLGame game, HUD hud, int yOrigForThrottleAtlas, ThrottleInd throttleInd, Ship ship) {
-        super(game, null, yOrigForThrottleAtlas);
+    public Throttle(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder, ThrottleInd throttleInd, Ship ship) {
+        super(game, null, textureInfoHolder);
         touchable = true;
         this.throttleInd = throttleInd;
         this.ship = ship;
@@ -38,13 +37,8 @@ public class Throttle extends AbstractGameObjectImpl{
     }
 
     @Override
-    public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.throttleTR = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, filename, 0, yOrigForAtlas);
-    }
-
-    @Override
     public void initSprites(VertexBufferObjectManager vertexBufferObjectManager) {
-        throttleSprite = new Sprite(sp.x, sp.y, throttleTR.getWidth(), throttleTR.getHeight(), throttleTR, vertexBufferObjectManager);
+        throttleSprite = new Sprite(sp.x, sp.y, textureRegion.getWidth(), textureRegion.getHeight(), textureRegion, vertexBufferObjectManager);
     }
 
     @Override

@@ -1,14 +1,15 @@
 package com.pkp.flugnut.FlugnutDimensions.utils;
 
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
+import com.pkp.flugnut.FlugnutDimensions.model.StationaryBody;
+
+import java.util.List;
 
 public class GenerateWorldObjects {
 
-    public static GameSceneInfo generateTutorial1() {
-        GameSceneInfo gsi = new GameSceneInfo();
-        gsi.setBgFileName("background2.png");
-        gsi.setLocked(false);
-        gsi.setWeaponEnabled(false);
+    public static GameSceneInfo generateTutorial1(List<AsteroidArea> asteroidAreas, List<StationaryBody> stationaryBodies, Integer systemRadius) {
+        GameSceneInfo gsi = new GameSceneInfo(asteroidAreas,stationaryBodies, systemRadius);
         return gsi;
     }
 

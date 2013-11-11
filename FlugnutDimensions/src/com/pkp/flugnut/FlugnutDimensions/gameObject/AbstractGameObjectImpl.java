@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
@@ -19,7 +20,7 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     protected ITextureRegion textureRegion;
     protected ITextureRegion touchAreaTextureRegion;
     protected Vector2 sp;
-    protected int yOrigForAtlas;
+    protected TextureInfoHolder texInfo;
     protected int scaledWidth;
     protected int scaledHeight;
     protected int weight = 0;
@@ -28,28 +29,27 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     protected Body body;
     protected boolean touchable;
 
-    public AbstractGameObjectImpl(GLGame game, GameScene scene, int yOrigForAtlas)
+    public AbstractGameObjectImpl(GLGame game, GameScene scene, TextureInfoHolder texInfo)
     {
-        init(game, scene, yOrigForAtlas);
+        init(game, scene, texInfo);
     }
 
-    public AbstractGameObjectImpl(GLGame game, GameScene scene, int yOrigForAtlas, int scaledWidth, int scaledHeight)
+    public AbstractGameObjectImpl(GLGame game, GameScene scene, TextureInfoHolder texInfo, int scaledWidth, int scaledHeight)
     {
-        init(game, scene, yOrigForAtlas);
+        init(game, scene, texInfo);
         this.scaledWidth = scaledWidth;
         this.scaledHeight = scaledHeight;
     }
 
-    private void init(GLGame game, GameScene scene, int yOrigForAtlas) {
+    private void init(GLGame game, GameScene scene, TextureInfoHolder textureInfoHolder) {
         this.scene = scene;
         this.sp = new Vector2(0,0);
-        this.yOrigForAtlas = yOrigForAtlas;
+        this.texInfo = textureInfoHolder;
         this.game = game;
     }
 
-    @Override
-    public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, filename, 0, yOrigForAtlas);
+    public void initResources(BitmapTextureAtlas mBitmapTextureAtlas) {
+        this.textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, texInfo.getPath(), 0, texInfo.getStarty());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.engine.camera.hud.HUD;
@@ -25,13 +26,11 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * To change this template use File | Settings | File Templates.
  */
 public class ThrottleInd extends AbstractGameObjectImpl{
-
-    protected ITextureRegion throttleIndTR;
     protected Sprite throttleIndSprite;
     protected HUD hud;
 
-    public ThrottleInd(GLGame game, HUD hud, int yOrigForAtlas) {
-        super(game, null, yOrigForAtlas);
+    public ThrottleInd(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder) {
+        super(game, null, textureInfoHolder);
         touchable = true;
         this.hud = hud;
     }
@@ -42,13 +41,13 @@ public class ThrottleInd extends AbstractGameObjectImpl{
     }
 
     @Override
-    public void initResources(String filename, BitmapTextureAtlas mBitmapTextureAtlas) {
-        this.throttleIndTR = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, filename, 0, yOrigForAtlas);
+    public void initResources(BitmapTextureAtlas mBitmapTextureAtlas) {
+        this.textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, texInfo.getPath(), 0, texInfo.getStarty());
     }
 
     @Override
     public void initSprites(VertexBufferObjectManager vertexBufferObjectManager) {
-        throttleIndSprite = new Sprite(sp.x, sp.y, throttleIndTR.getWidth(), throttleIndTR.getHeight(), throttleIndTR, vertexBufferObjectManager);
+        throttleIndSprite = new Sprite(sp.x, sp.y, textureRegion.getWidth(), textureRegion.getHeight(), textureRegion, vertexBufferObjectManager);
     }
 
     @Override
