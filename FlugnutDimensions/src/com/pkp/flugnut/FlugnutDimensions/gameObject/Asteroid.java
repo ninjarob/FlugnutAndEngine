@@ -28,10 +28,10 @@ import java.util.Random;
 public class Asteroid extends AbstractGameObjectImpl{
 
     protected ITiledTextureRegion asteroidTR;
-    protected AnimatedSprite asteroidSprite;;
+    protected AnimatedSprite asteroidSprite;
 
     public Asteroid(GLGame game, GameScene scene, TextureInfoHolder tih) {
-        super(game, scene, tih);
+        super(game, tih);
         touchable = true;
     }
 

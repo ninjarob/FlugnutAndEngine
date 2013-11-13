@@ -5,7 +5,6 @@ import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.primitive.Vector2;
-import org.andengine.entity.shape.IAreaShape;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;

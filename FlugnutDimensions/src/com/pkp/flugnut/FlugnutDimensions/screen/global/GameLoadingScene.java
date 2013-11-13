@@ -4,6 +4,7 @@ import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
+import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.sprite.Sprite;
@@ -20,6 +21,7 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.HorizontalAlign;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -66,7 +68,7 @@ public class GameLoadingScene extends BaseGameScene implements PropertyChangeLis
     private ITextureRegion backButtonTextureRegion;
     private SmartFoxBase sfb;
 
-    private String systemToLoad = "SolSystem";
+    private String systemToLoad = "DimLobby";
     //private String userToLoginWith = "Joseph";
 
     public GameLoadingScene(GLGame game, SmartFoxBase sfb) {
@@ -87,9 +89,9 @@ public class GameLoadingScene extends BaseGameScene implements PropertyChangeLis
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
         //BACKGROUND
         this.mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(game.getTextureManager(), 800, 1200);
-        this.mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, "parallax_background_layer_front.png", 0, 0);
-        this.mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, "spacebg1-half-noalpha-smaller.gif", 0, 188);  //plus the height of the front
-        this.mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, "parallax_background_layer_mid.png", 0, 989);   //plus the height of the front and the back
+        this.mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, GameConstants.PARALLAX_BACKGROUND_FRONT_FILE, 0, 0);
+        this.mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, GameConstants.BACKGROUND_IMAGE_FILE, 0, 188);  //plus the height of the front
+        this.mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, game, GameConstants.PARALLAX_BACKGROUND_MID_FILE, 0, 989);   //plus the height of the front and the back
         this.mAutoParallaxBackgroundTexture.load();
 
         //BACK BUTTON

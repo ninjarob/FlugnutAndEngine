@@ -1,7 +1,5 @@
 package com.pkp.flugnut.FlugnutDimensions.game;
 
-import com.pkp.flugnut.FlugnutDimensions.screen.global.GameLoadingScene;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;

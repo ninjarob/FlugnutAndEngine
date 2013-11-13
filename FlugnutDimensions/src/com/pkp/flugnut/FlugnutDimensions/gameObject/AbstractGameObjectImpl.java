@@ -1,5 +1,6 @@
 package com.pkp.flugnut.FlugnutDimensions.gameObject;
 
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
@@ -29,20 +30,19 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     protected Body body;
     protected boolean touchable;
 
-    public AbstractGameObjectImpl(GLGame game, GameScene scene, TextureInfoHolder texInfo)
+    public AbstractGameObjectImpl(GLGame game, TextureInfoHolder texInfo)
     {
-        init(game, scene, texInfo);
+        init(game, texInfo);
     }
 
-    public AbstractGameObjectImpl(GLGame game, GameScene scene, TextureInfoHolder texInfo, int scaledWidth, int scaledHeight)
+    public AbstractGameObjectImpl(GLGame game, TextureInfoHolder texInfo, int scaledWidth, int scaledHeight)
     {
-        init(game, scene, texInfo);
+        init(game, texInfo);
         this.scaledWidth = scaledWidth;
         this.scaledHeight = scaledHeight;
     }
 
-    private void init(GLGame game, GameScene scene, TextureInfoHolder textureInfoHolder) {
-        this.scene = scene;
+    private void init(GLGame game, TextureInfoHolder textureInfoHolder) {
         this.sp = new Vector2(0,0);
         this.texInfo = textureInfoHolder;
         this.game = game;
@@ -82,6 +82,10 @@ public abstract class AbstractGameObjectImpl implements GameObject {
 
     public Scene getScene() {
         return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 
     public ITextureRegion getTextureRegion() {

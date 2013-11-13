@@ -11,7 +11,7 @@ import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
-import com.pkp.flugnut.FlugnutDimensions.model.StationaryBody;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameUpdateHandler;
 import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
@@ -35,8 +35,6 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
-import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,22 +44,10 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     // ===========================================================
     // Fields
     // ===========================================================
-    private SpriteBackground normalBackground;
-    private VertexBufferObjectManager vertexBufferObjectManager;
-
-    private GameTextureAtlasManager gtam;
-    private BitmapTextureAtlas backgroundTexture;
-
-    private ITextureRegion mapBackground;
-    private ITextureRegion sunTextureRegion;
-
-    private BitmapTextureAtlas mBitmapTextureAtlas;
 
     private Font mFont;
 
     private GameSceneInfo gameSceneInfo;
-
-    public boolean tutorial;
 
     private PhysicsWorld physicsWorld;
 
@@ -69,7 +55,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     public static Vector2 empWave = new Vector2();
     public static Vector2 horizEmp = new Vector2();
     public List<Asteroid> asteroids = new ArrayList<Asteroid>();
-    public List<MiscObject> miscObjects;
+    public List<CelestialBody> stationaryBodies = new ArrayList<CelestialBody>();
     public GLGame game;
 
     public Rectangle leftWall;
@@ -95,7 +81,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         empWave.y = 0;
         horizEmp.x = 0;
         horizEmp.y = 0;
-        miscObjects = new ArrayList<MiscObject>();
         gameObjects = new ArrayList<GameObject>();
     }
 
@@ -107,83 +92,67 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         this.mFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(), "Droid.ttf", 16, true, android.graphics.Color.WHITE);
         this.mFont.load();
 
+        //init background resource
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-        //BACKGROUND
-        this.backgroundTexture = new BitmapTextureAtlas(game.getTextureManager(), 1024, 1024);
-        this.mapBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.backgroundTexture, game, "Background/nebula02.png", 0, 0);
-        this.backgroundTexture.load();
+        gameSceneInfo.getBackgroundTexture().load();
 
-        initLevel1();
+        //init ship resource
+        ship = gameSceneInfo.getShip();
+        ship.setScene(this);
+        gameObjects.add(ship);
+        game.mCamera.setChaseEntity(ship.getSprite());
 
-        this.mBitmapTextureAtlas.load();
+        //init hud
+        initHudResources();
+
+        //init updatehandler
+        guh = new GameUpdateHandler(game, gameObjects, this);
+        gameSceneInfo.getBitMapTextureAtlas().load();
     }
 
-    public void initLevel1() {
-        gtam = new GameTextureAtlasManager();
-        gtam.addTexture("Ship/gawain.png", TextureType.GAWAIN, 448, 448);
-        //gtam.addTexture("Ship/gawain_engine.png", TextureType.GAWAIN_ENGINE, 448, 448);
-        //gtam.addTexture("asteroid.png", TextureType.ASTEROID1, 2016, 560);
+    public void initHudResources() {
+        hud = new HUD();
+        GameTextureAtlasManager gtam = new GameTextureAtlasManager();
         gtam.addTexture("throttle.png", TextureType.THROTTLE, 20, 200);
         gtam.addTexture("throttle_ind.png", TextureType.THROTTLE_IND, 20, 4);
-        gtam.addTexture("TheSun.png", TextureType.SUN, 754, 754);
-
-        this.mBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), gtam.getWidth()+10, gtam.getHeight()+10, TextureOptions.DEFAULT);
-
-        ship = new GawainShip(game, this, gtam.getTextureInfoHolder(TextureType.GAWAIN));
-        ship.initResources(mBitmapTextureAtlas);
-        ship.initSprites(vertexBufferObjectManager);
-
-//        Asteroid asteroid = new Asteroid(game, this, 1122);
-//        asteroid.initResources("asteroid.png", mBitmapTextureAtlas);
-//        asteroid.initSprites(vertexBufferObjectManager);
-//        asteroids.add(asteroid);
-
-        hud = new HUD();
+        BitmapTextureAtlas hudBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), gtam.getWidth()+10, gtam.getHeight()+10, TextureOptions.DEFAULT);
 
         ThrottleInd throttleInd = new ThrottleInd(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_IND));
         throttleInd.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 30 , GLGame.CAMERA_HEIGHT - 10));
 
         Throttle throttle = new Throttle(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE), throttleInd, ship);
         throttle.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 30 , GLGame.CAMERA_HEIGHT - 210));
-        throttle.initResources(mBitmapTextureAtlas);
-        throttle.initSprites(vertexBufferObjectManager);
+        throttle.initResources(hudBitmapTextureAtlas);
+        throttle.initSprites(gameSceneInfo.getVertexBufferObjectManager());
 
-        throttleInd.initResources(mBitmapTextureAtlas);
-        throttleInd.initSprites(vertexBufferObjectManager);
+        throttleInd.initResources(hudBitmapTextureAtlas);
+        throttleInd.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+
+        hudBitmapTextureAtlas.load();
         game.mCamera.setHUD(hud);
 
-        this.sunTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, "TheSun.png", 0, gtam.getStarty(TextureType.SUN));
-
-        ship.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH / 2, GLGame.CAMERA_HEIGHT / 2));
-        game.mCamera.setChaseEntity(ship.getSprite());
-        gameObjects.add(ship);
-//        for (Asteroid a : asteroids) {
-//            a.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH / 2, (GLGame.CAMERA_HEIGHT / 2)+120));
-//            gameObjects.add(a);
-//        }
         gameObjects.add(throttle);
         gameObjects.add(throttleInd);
-        guh = new GameUpdateHandler(game, gameObjects, this);
     }
+
 
     @Override
     public void initScene() {
-        vertexBufferObjectManager = game.getVertexBufferObjectManager();
 
         //BACKGROUND
-        Sprite backgroundSprite = new Sprite(0, 0, mapBackground, vertexBufferObjectManager);
+        Sprite backgroundSprite = new Sprite(0, 0, gameSceneInfo.getMapBackground(), gameSceneInfo.getVertexBufferObjectManager());
         backgroundSprite.setScale(2.4f);
-        normalBackground = new SpriteBackground(0, 0, 0, backgroundSprite);
+        SpriteBackground normalBackground = new SpriteBackground(0, 0, 0, backgroundSprite);
         setBackground(normalBackground);
 
         //physics
         this.physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, 0), false, 8, 8);
 
         //boundaries
-        final Rectangle ground = new Rectangle(-1*gameSceneInfo.getSystemRadius(), gameSceneInfo.getSystemRadius(), 2*gameSceneInfo.getSystemRadius(), 2, vertexBufferObjectManager);
-        final Rectangle roof = new Rectangle(-1*gameSceneInfo.getSystemRadius(), -1*gameSceneInfo.getSystemRadius(), 2*gameSceneInfo.getSystemRadius(), 2, vertexBufferObjectManager);
-        leftWall = new Rectangle(-1*gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), vertexBufferObjectManager);
-        rightWall = new Rectangle(gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), vertexBufferObjectManager);
+        final Rectangle ground = new Rectangle(-1*gameSceneInfo.getSystemRadius(), gameSceneInfo.getSystemRadius(), 2*gameSceneInfo.getSystemRadius(), 2, gameSceneInfo.getVertexBufferObjectManager());
+        final Rectangle roof = new Rectangle(-1*gameSceneInfo.getSystemRadius(), -1*gameSceneInfo.getSystemRadius(), 2*gameSceneInfo.getSystemRadius(), 2, gameSceneInfo.getVertexBufferObjectManager());
+        leftWall = new Rectangle(-1*gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), gameSceneInfo.getVertexBufferObjectManager());
+        rightWall = new Rectangle(gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), gameSceneInfo.getVertexBufferObjectManager());
 
         PhysicsFactory.createBoxBody(physicsWorld, ground, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
         PhysicsFactory.createBoxBody(physicsWorld, roof, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
@@ -196,12 +165,11 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
         //asteroid area boundries
         for(AsteroidArea aa : gameSceneInfo.getAsteroidAreas()) {
-            aa.initAreaOnGame(this, physicsWorld, vertexBufferObjectManager);
+            aa.initAreaOnGame(this, physicsWorld, gameSceneInfo.getVertexBufferObjectManager());
         }
 
-        for (StationaryBody sb : gameSceneInfo.getStationaryBodies()) {
-            Sprite sp = new Sprite(sb.getLocation().x, sb.getLocation().y, this.sunTextureRegion, vertexBufferObjectManager);
-            attachChild(sp);
+        for (CelestialBody sb : gameSceneInfo.getCelestialBodies()) {
+            attachChild(sb.getSprite());
         }
 
         //listeners

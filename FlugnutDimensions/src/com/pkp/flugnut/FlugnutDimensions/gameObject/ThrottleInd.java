@@ -21,7 +21,7 @@ public class ThrottleInd extends AbstractGameObjectImpl{
     protected HUD hud;
 
     public ThrottleInd(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder) {
-        super(game, null, textureInfoHolder);
+        super(game, textureInfoHolder);
         touchable = true;
         this.hud = hud;
     }

@@ -1,5 +1,7 @@
 package com.pkp.flugnut.FlugnutDimensions.model;
 
+import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
+
 import java.util.List;
 
 /**
@@ -11,11 +13,11 @@ import java.util.List;
  */
 public class SpaceGameMap {
 
-    private List<StationaryBody> stationaryBodies;
+    private List<CelestialBody> stationaryBodies;
     private List<AsteroidArea> asteroidAreas;
     private int systemRadius;
 
-    public SpaceGameMap(List<StationaryBody> stationaryBodies, List<AsteroidArea> asteroidAreas, int systemRadius) {
+    public SpaceGameMap(List<CelestialBody> stationaryBodies, List<AsteroidArea> asteroidAreas, int systemRadius) {
         this.stationaryBodies = stationaryBodies;
         this.asteroidAreas = asteroidAreas;
         this.systemRadius = systemRadius;
@@ -29,11 +31,11 @@ public class SpaceGameMap {
         this.asteroidAreas = asteroidAreas;
     }
 
-    public List<StationaryBody> getStationaryBodies() {
+    public List<CelestialBody> getStationaryBodies() {
         return stationaryBodies;
     }
 
-    public void setStationaryBodies(List<StationaryBody> stationaryBodies) {
+    public void setStationaryBodies(List<CelestialBody> stationaryBodies) {
         this.stationaryBodies = stationaryBodies;
     }
 

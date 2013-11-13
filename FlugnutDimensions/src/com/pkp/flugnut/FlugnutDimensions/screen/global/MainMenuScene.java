@@ -1,12 +1,10 @@
 package com.pkp.flugnut.FlugnutDimensions.screen.global;
 
-import android.app.Dialog;
 import android.opengl.GLES20;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutDimensions.game.Settings;
-import com.pkp.flugnut.FlugnutDimensions.utils.DialogHandler;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import com.pkp.flugnut.FlugnutDimensions.utils.NavigationRedirect;
 import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;

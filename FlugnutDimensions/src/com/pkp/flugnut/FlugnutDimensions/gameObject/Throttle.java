@@ -21,7 +21,7 @@ public class Throttle extends AbstractGameObjectImpl{
     private HUD hud;
 
     public Throttle(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder, ThrottleInd throttleInd, Ship ship) {
-        super(game, null, textureInfoHolder);
+        super(game, textureInfoHolder);
         touchable = true;
         this.throttleInd = throttleInd;
         this.ship = ship;

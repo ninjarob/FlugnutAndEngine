@@ -30,8 +30,8 @@ public class Ship extends AbstractGameObjectImpl{
     protected int shipAnimationIndex=0;
     protected float thrustPercent;
 
-    public Ship(GLGame game, GameScene scene, TextureInfoHolder textureInfoHolder) {
-        super(game, scene, textureInfoHolder);
+    public Ship(GLGame game, TextureInfoHolder textureInfoHolder) {
+        super(game, textureInfoHolder);
         touchable = true;
     }
 

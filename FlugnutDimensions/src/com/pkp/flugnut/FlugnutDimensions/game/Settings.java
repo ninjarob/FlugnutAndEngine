@@ -1,8 +1,5 @@
 package com.pkp.flugnut.FlugnutDimensions.game;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Settings {
 	public static boolean soundEnabled = true;
     public static float soundVolume = 1.0f;

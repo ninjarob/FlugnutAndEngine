@@ -13,8 +13,8 @@ import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
  */
 public class GawainShip extends Ship {
 
-    public GawainShip(GLGame game, GameScene scene, TextureInfoHolder textureInfoHolder) {
-        super(game, scene, textureInfoHolder);
+    public GawainShip(GLGame game, TextureInfoHolder textureInfoHolder) {
+        super(game, textureInfoHolder);
 
     }
 

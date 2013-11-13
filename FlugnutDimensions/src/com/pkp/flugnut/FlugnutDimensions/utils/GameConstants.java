@@ -70,13 +70,10 @@ public interface GameConstants {
     // Images
     // ========================================
     public static final String GRAPHICS_DIR = "gfx/";
-    public static final String MAP_FILE = "map.png";
-    public static final String BACKGROUND_IMAGE_FILE = "spacebg1-half-noalpha-smaller.gif";
-    public static final String PARALLAX_BACKGROUND_FRONT_FILE = "parallax_background_layer_front.png";
-    public static final String PARALLAX_BACKGROUND_MID_FILE = "parallax_background_layer_mid.png";
+    public static final String BACKGROUND_IMAGE_FILE = "Background/spacebg1-half-noalpha-smaller.gif";
+    public static final String PARALLAX_BACKGROUND_FRONT_FILE = "Background/parallax_background_layer_front.png";
+    public static final String PARALLAX_BACKGROUND_MID_FILE = "Background/parallax_background_layer_mid.png";
     public static final String SETTING_BUTTONS = "buttons.png";
-    public static final String LEVEL_TILE_BUTTONS = "level.png";
-    public static final String LEVEL_BUTTONS = "LevelSelect.png";
 
     // ========================================
     // Music

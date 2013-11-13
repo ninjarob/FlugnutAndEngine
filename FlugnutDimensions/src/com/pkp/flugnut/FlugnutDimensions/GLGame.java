@@ -5,8 +5,6 @@ import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.MainMenuScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.PauseMenu;
-import com.pkp.flugnut.FlugnutDimensions.utils.LevelXmlParser;
-import com.pkp.flugnut.FlugnutDimensions.utils.NavigationElements;
 import com.pkp.flugnut.FlugnutDimensions.utils.NavigationRedirect;
 import org.andengine.audio.music.Music;
 import org.andengine.engine.camera.SmoothCamera;
@@ -14,7 +12,6 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
-
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 import org.andengine.util.IDisposable;
 
@@ -36,7 +33,6 @@ public class GLGame extends SimpleBaseGameActivity {
     public SmoothCamera mCamera;
     private BaseGameScene mScene;
     public Music mMusic;
-    private NavigationElements navigationElements;
 
     // ===========================================================
     // Constructors
@@ -65,9 +61,7 @@ public class GLGame extends SimpleBaseGameActivity {
     public void onCreateResources() {
         getStartScene();
         mScene.initResources();
-        navigationElements = new NavigationElements();
         NavigationRedirect.initInstance(getApplicationContext());
-        LevelXmlParser.initInstance(getApplicationContext());
     }
 
     @Override
@@ -102,10 +96,6 @@ public class GLGame extends SimpleBaseGameActivity {
             mScene = new MainMenuScene(this);
         }
         return mScene;
-    }
-
-    public NavigationElements getNavigationElements() {
-        return navigationElements;
     }
 
     public void onBackPressed(){

@@ -4,7 +4,6 @@ import android.opengl.GLES20;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
-import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
 import com.pkp.flugnut.FlugnutDimensions.game.Settings;
 import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
 import org.andengine.audio.music.MusicFactory;

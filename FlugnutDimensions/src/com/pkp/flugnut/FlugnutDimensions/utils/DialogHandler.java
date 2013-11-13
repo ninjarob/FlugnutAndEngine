@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.widget.EditText;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
-import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
-import org.andengine.extension.multiplayer.protocol.client.connector.ServerConnector;
 
 /**
  * Created with IntelliJ IDEA.
