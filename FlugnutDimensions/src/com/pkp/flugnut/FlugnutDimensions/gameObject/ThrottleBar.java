@@ -14,17 +14,15 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * Time: 7:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Throttle extends AbstractGameObjectImpl{
-    private Sprite throttleSprite;
-    private ThrottleInd throttleInd;
-    private Ship ship;
-    private HUD hud;
+public abstract class ThrottleBar extends AbstractGameObjectImpl{
+    protected Sprite throttleSprite;
+    protected ThrottleBarInd throttleBarInd;
+    protected HUD hud;
 
-    public Throttle(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder, ThrottleInd throttleInd, Ship ship) {
+    public ThrottleBar(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder, ThrottleBarInd throttleBarInd) {
         super(game, textureInfoHolder);
         touchable = true;
-        this.throttleInd = throttleInd;
-        this.ship = ship;
+        this.throttleBarInd = throttleBarInd;
         this.hud = hud;
     }
 
@@ -45,24 +43,7 @@ public class Throttle extends AbstractGameObjectImpl{
         hud.registerTouchArea(throttleSprite);
     }
 
-    private void updateThrottleAndThrust(float touchY) {
-        float diff = touchY - throttleSprite.getY();
-        if (diff < 0 || diff > throttleSprite.getHeight()) return;
-        throttleInd.getSprite().setPosition(throttleInd.getSprite().getX(), touchY);
-        float thrustPercent = diff/ throttleSprite.getHeight();
-        if (thrustPercent > .05) {
-            ship.setThrustPercent(1-(diff/throttleSprite.getHeight()));
-        }
-        else {
-            ship.setThrustPercent(0);
-        }
-    }
+    public abstract void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld);
 
-    public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {
-        updateThrottleAndThrust(touchY);
-    }
-
-    public void onActionMove(float touchX, float touchY, PhysicsWorld physicsWorld) {
-        updateThrottleAndThrust(touchY);
-    }
+    public abstract void onActionMove(float touchX, float touchY, PhysicsWorld physicsWorld);
 }

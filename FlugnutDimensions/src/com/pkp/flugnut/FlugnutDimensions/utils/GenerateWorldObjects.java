@@ -80,7 +80,7 @@ public class GenerateWorldObjects {
         for (String sysrec:sysrecs) {
             switch(Integer.parseInt(sysrec)) {
                 case 1:
-                    gtam.addTexture("Background/star/TheSun.png", TextureType.SUN, 377, 377);
+                    gtam.addTexture("Background/star/TheSun.png", TextureType.SUN, 700, 700);
                     break;
                 case 2:
                     gtam.addTexture("Background/planet/M01.png", TextureType.EARTH, 200, 200);

@@ -16,11 +16,11 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * Time: 7:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ThrottleInd extends AbstractGameObjectImpl{
+public class ThrottleBarInd extends AbstractGameObjectImpl{
     protected Sprite throttleIndSprite;
     protected HUD hud;
 
-    public ThrottleInd(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder) {
+    public ThrottleBarInd(GLGame game, HUD hud, TextureInfoHolder textureInfoHolder) {
         super(game, textureInfoHolder);
         touchable = true;
         this.hud = hud;

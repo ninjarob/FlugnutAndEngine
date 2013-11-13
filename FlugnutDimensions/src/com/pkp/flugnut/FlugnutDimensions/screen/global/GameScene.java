@@ -103,37 +103,88 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         game.mCamera.setChaseEntity(ship.getSprite());
 
         //init hud
-        initHudResources();
+        GameTextureAtlasManager gtam = new GameTextureAtlasManager();
+        gtam.addTexture("throttle.png", TextureType.THROTTLE, 30, 220);
+        gtam.addTexture("throttle_ind.png", TextureType.THROTTLE_IND, 20, 4);
+        gtam.addTexture("throttleButtons.png", TextureType.THROTTLE_BUTTON, 128, 70);
+        BitmapTextureAtlas hudBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), gtam.getWidth()+10, gtam.getHeight()+10, TextureOptions.DEFAULT);
+        hud = new HUD();
+        initHudThrustButtonsResources(gtam, hudBitmapTextureAtlas, hud);
+        //initHudThrustBarResources();
+        initHudZoomBarResources(gtam, hudBitmapTextureAtlas, hud);
+        hudBitmapTextureAtlas.load();
+        game.mCamera.setHUD(hud);
 
         //init updatehandler
         guh = new GameUpdateHandler(game, gameObjects, this);
         gameSceneInfo.getBitMapTextureAtlas().load();
     }
 
-    public void initHudResources() {
-        hud = new HUD();
-        GameTextureAtlasManager gtam = new GameTextureAtlasManager();
-        gtam.addTexture("throttle.png", TextureType.THROTTLE, 20, 200);
-        gtam.addTexture("throttle_ind.png", TextureType.THROTTLE_IND, 20, 4);
-        BitmapTextureAtlas hudBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), gtam.getWidth()+10, gtam.getHeight()+10, TextureOptions.DEFAULT);
+    public void initHudThrustButtonsResources(GameTextureAtlasManager gtam, BitmapTextureAtlas hudBitmapTextureAtlas, HUD hud) {
+        List<ThrottleButton> tbs = new ArrayList<ThrottleButton>();
+        ThrottleButton tb1 = new ThrottleButton(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_BUTTON), ship, 0);
+        ThrottleButton tb2 = new ThrottleButton(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_BUTTON), ship, 1);
+        ThrottleButton tb3 = new ThrottleButton(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_BUTTON), ship, 2);
+        ThrottleButton tb4 = new ThrottleButton(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_BUTTON), ship, 3);
+        tb1.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 60, GLGame.CAMERA_HEIGHT - 80));
+        tb2.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 60, GLGame.CAMERA_HEIGHT - 130));
+        tb3.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 60, GLGame.CAMERA_HEIGHT - 180));
+        tb4.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 60, GLGame.CAMERA_HEIGHT - 230));
+        tb1.initResources(hudBitmapTextureAtlas);
+        tb1.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+        tb2.initResources(hudBitmapTextureAtlas);
+        tb2.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+        tb3.initResources(hudBitmapTextureAtlas);
+        tb3.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+        tb4.initResources(hudBitmapTextureAtlas);
+        tb4.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+        tbs.add(tb1);
+        tbs.add(tb2);
+        tbs.add(tb3);
+        tbs.add(tb4);
+        tb1.setThrottleButtonList(tbs);
+        tb2.setThrottleButtonList(tbs);
+        tb3.setThrottleButtonList(tbs);
+        tb4.setThrottleButtonList(tbs);
 
-        ThrottleInd throttleInd = new ThrottleInd(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_IND));
-        throttleInd.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 30 , GLGame.CAMERA_HEIGHT - 10));
-
-        Throttle throttle = new Throttle(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE), throttleInd, ship);
-        throttle.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 30 , GLGame.CAMERA_HEIGHT - 210));
-        throttle.initResources(hudBitmapTextureAtlas);
-        throttle.initSprites(gameSceneInfo.getVertexBufferObjectManager());
-
-        throttleInd.initResources(hudBitmapTextureAtlas);
-        throttleInd.initSprites(gameSceneInfo.getVertexBufferObjectManager());
-
-        hudBitmapTextureAtlas.load();
-        game.mCamera.setHUD(hud);
-
-        gameObjects.add(throttle);
-        gameObjects.add(throttleInd);
+        gameObjects.add(tb1);
+        gameObjects.add(tb2);
+        gameObjects.add(tb3);
+        gameObjects.add(tb4);
     }
+
+    public void initHudZoomBarResources(GameTextureAtlasManager gtam, BitmapTextureAtlas hudBitmapTextureAtlas, HUD hud) {
+        ThrottleBarInd throttleBarInd = new ThrottleBarInd(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_IND));
+        throttleBarInd.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 95, GLGame.CAMERA_HEIGHT - 24));
+
+        ZoomThrottle zoomThrottle = new ZoomThrottle(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE), throttleBarInd);
+        zoomThrottle.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 100 , GLGame.CAMERA_HEIGHT - 230));
+        zoomThrottle.initResources(hudBitmapTextureAtlas);
+        zoomThrottle.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+
+        throttleBarInd.initResources(hudBitmapTextureAtlas);
+        throttleBarInd.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+
+        gameObjects.add(zoomThrottle);
+        gameObjects.add(throttleBarInd);
+    }
+
+    public void initHudThrustBarResources(GameTextureAtlasManager gtam, BitmapTextureAtlas hudBitmapTextureAtlas, HUD hud) {
+        ThrottleBarInd throttleBarInd = new ThrottleBarInd(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_IND));
+        throttleBarInd.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 45, GLGame.CAMERA_HEIGHT - 24));
+
+        ThrustThrottle thrustThrottle = new ThrustThrottle(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE), throttleBarInd, ship);
+        thrustThrottle.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 50 , GLGame.CAMERA_HEIGHT - 230));
+        thrustThrottle.initResources(hudBitmapTextureAtlas);
+        thrustThrottle.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+
+        throttleBarInd.initResources(hudBitmapTextureAtlas);
+        throttleBarInd.initSprites(gameSceneInfo.getVertexBufferObjectManager());
+
+        gameObjects.add(thrustThrottle);
+        gameObjects.add(throttleBarInd);
+    }
+
 
 
     @Override
@@ -185,14 +236,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         registerUpdateHandler(guh);
 
         setTouchAreaBindingOnActionDownEnabled(true);
-    }
-
-    public Rectangle getLeftWall() {
-        return leftWall;
-    }
-
-    public Rectangle getRightWall() {
-        return rightWall;
     }
 
     // ===========================================================

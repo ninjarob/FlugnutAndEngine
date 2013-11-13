@@ -23,7 +23,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * Time: 7:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Ship extends AbstractGameObjectImpl{
+public class Ship extends AbstractGameObjectImpl {
 
     protected ITiledTextureRegion shipTR;
     protected AnimatedSprite shipSprite;

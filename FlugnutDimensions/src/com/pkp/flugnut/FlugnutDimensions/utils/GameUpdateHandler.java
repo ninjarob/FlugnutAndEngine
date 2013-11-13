@@ -55,7 +55,7 @@ public class GameUpdateHandler implements IUpdateHandler {
             float angle = ship.getAngleFromIndex(((AnimatedSprite)ship.getSprite()).getCurrentTileIndex());
             Vector2 vel = ship.getBody().getLinearVelocity();
             double mag = Math.sqrt(Math.pow(vel.x, 2)+Math.pow(vel.y, 2));
-            if (ship.getThrustPercent() > 0  && mag <= 400) {
+            if (ship.getThrustPercent() > 0  && mag <= 250*ship.getThrustPercent()) {
                 ship.getBody().applyForceToCenter((float)Math.cos(angle)*accel*ship.getThrustPercent(), -(float)Math.sin(angle)*accel*ship.getThrustPercent());
             }
         }

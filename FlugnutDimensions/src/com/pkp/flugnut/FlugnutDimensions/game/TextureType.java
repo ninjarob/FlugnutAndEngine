@@ -9,7 +9,7 @@ package com.pkp.flugnut.FlugnutDimensions.game;
  */
 public enum TextureType {
 
-        /*Misc*/       BUTTONS, THROTTLE, THROTTLE_IND,
+        /*Misc*/       BUTTONS, THROTTLE, THROTTLE_IND, THROTTLE_BUTTON,
 
         /*Ships*/      GAWAIN, GAWAIN_ENGINE,
 
