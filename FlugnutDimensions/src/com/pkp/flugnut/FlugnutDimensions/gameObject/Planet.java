@@ -4,7 +4,6 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
-import org.andengine.opengl.texture.region.ITextureRegion;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,6 +1,5 @@
 package com.pkp.flugnut.FlugnutDimensions;
 
-import android.os.PowerManager.WakeLock;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.MainMenuScene;
@@ -20,9 +19,6 @@ public class GLGame extends SimpleBaseGameActivity {
     // ===========================================================
     // Constants
     // ===========================================================
-    long startTime = System.nanoTime();
-    WakeLock wakeLock;
-
     public static final int CAMERA_WIDTH = 533;
     public static final int CAMERA_HEIGHT = 800;
 
@@ -37,8 +33,7 @@ public class GLGame extends SimpleBaseGameActivity {
     // ===========================================================
     // Constructors
     // ===========================================================
-    public GLGame() {
-    }
+    public GLGame() {}
 
     // ===========================================================
     // Getter & Setter
@@ -65,7 +60,6 @@ public class GLGame extends SimpleBaseGameActivity {
 
     @Override
     public Scene onCreateScene() {
-        //this.mEngine.registerUpdateHandler(new FPSLogger());
         getStartScene();
         mScene.initScene();
         return this.mScene;
@@ -109,5 +103,4 @@ public class GLGame extends SimpleBaseGameActivity {
             super.onBackPressed();
         }
     }
-
 }

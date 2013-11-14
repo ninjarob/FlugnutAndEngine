@@ -11,7 +11,6 @@ import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameUpdateHandler;
 import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
@@ -44,26 +43,11 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     // ===========================================================
     // Fields
     // ===========================================================
-
-    private Font mFont;
-
-    private GameSceneInfo gameSceneInfo;
-
-    private PhysicsWorld physicsWorld;
-
-    private Ship ship;
-    public static Vector2 empWave = new Vector2();
-    public static Vector2 horizEmp = new Vector2();
-    public List<Asteroid> asteroids = new ArrayList<Asteroid>();
-    public List<CelestialBody> stationaryBodies = new ArrayList<CelestialBody>();
     public GLGame game;
-
-    public Rectangle leftWall;
-    public Rectangle rightWall;
-
+    private GameSceneInfo gameSceneInfo;
+    private PhysicsWorld physicsWorld;
     private List<GameObject> gameObjects;
     private GameUpdateHandler guh;
-
     private HUD hud;
 
     private SmartFoxBase sfb;
@@ -77,10 +61,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         if (ConnectionStatus.Status.CONNECTED!=sfb.getStatus().getStatus()) {
             sfb.connect();
         }
-        empWave.x = 0;
-        empWave.y = 0;
-        horizEmp.x = 0;
-        horizEmp.y = 0;
         gameObjects = new ArrayList<GameObject>();
     }
 
@@ -89,18 +69,17 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         //FONT
         FontFactory.setAssetBasePath("font/");
         final ITexture fontTexture = new BitmapTextureAtlas(game.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        this.mFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(), "Droid.ttf", 16, true, android.graphics.Color.WHITE);
-        this.mFont.load();
+        Font mFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(), "Droid.ttf", 16, true, android.graphics.Color.WHITE);
+        mFont.load();
 
         //init background resource
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
         gameSceneInfo.getBackgroundTexture().load();
 
         //init ship resource
-        ship = gameSceneInfo.getShip();
-        ship.setScene(this);
-        gameObjects.add(ship);
-        game.mCamera.setChaseEntity(ship.getSprite());
+        gameSceneInfo.getShip().setScene(this);
+        gameObjects.add(gameSceneInfo.getShip());
+        game.mCamera.setChaseEntity(gameSceneInfo.getShip().getSprite());
 
         //init hud
         GameTextureAtlasManager gtam = new GameTextureAtlasManager();
@@ -122,6 +101,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
     public void initHudThrustButtonsResources(GameTextureAtlasManager gtam, BitmapTextureAtlas hudBitmapTextureAtlas, HUD hud) {
         List<ThrottleButton> tbs = new ArrayList<ThrottleButton>();
+        Ship ship = gameSceneInfo.getShip();
         ThrottleButton tb1 = new ThrottleButton(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_BUTTON), ship, 0);
         ThrottleButton tb2 = new ThrottleButton(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_BUTTON), ship, 1);
         ThrottleButton tb3 = new ThrottleButton(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_BUTTON), ship, 2);
@@ -170,6 +150,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     }
 
     public void initHudThrustBarResources(GameTextureAtlasManager gtam, BitmapTextureAtlas hudBitmapTextureAtlas, HUD hud) {
+        Ship ship = gameSceneInfo.getShip();
         ThrottleBarInd throttleBarInd = new ThrottleBarInd(game, hud, gtam.getTextureInfoHolder(TextureType.THROTTLE_IND));
         throttleBarInd.setStartPosition(new Vector2(GLGame.CAMERA_WIDTH - 45, GLGame.CAMERA_HEIGHT - 24));
 
@@ -202,8 +183,8 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         //boundaries
         final Rectangle ground = new Rectangle(-1*gameSceneInfo.getSystemRadius(), gameSceneInfo.getSystemRadius(), 2*gameSceneInfo.getSystemRadius(), 2, gameSceneInfo.getVertexBufferObjectManager());
         final Rectangle roof = new Rectangle(-1*gameSceneInfo.getSystemRadius(), -1*gameSceneInfo.getSystemRadius(), 2*gameSceneInfo.getSystemRadius(), 2, gameSceneInfo.getVertexBufferObjectManager());
-        leftWall = new Rectangle(-1*gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), gameSceneInfo.getVertexBufferObjectManager());
-        rightWall = new Rectangle(gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), gameSceneInfo.getVertexBufferObjectManager());
+        final Rectangle leftWall = new Rectangle(-1*gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), gameSceneInfo.getVertexBufferObjectManager());
+        final Rectangle rightWall = new Rectangle(gameSceneInfo.getSystemRadius(), -gameSceneInfo.getSystemRadius(), 2, 2*gameSceneInfo.getSystemRadius(), gameSceneInfo.getVertexBufferObjectManager());
 
         PhysicsFactory.createBoxBody(physicsWorld, ground, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
         PhysicsFactory.createBoxBody(physicsWorld, roof, BodyDef.BodyType.StaticBody, GameConstants.WALL_FIXTURE_DEF);
@@ -268,20 +249,32 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     @Override
     public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
         if(physicsWorld != null) {
+            Ship ship = gameSceneInfo.getShip();
             switch(pSceneTouchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
-                case TouchEvent.ACTION_MOVE:
-                    final Vector2 touchLoc = Vector2Pool.obtain(pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-                    Vector2 shipLoc = Vector2Pool.obtain(ship.getSprite().getX()/ PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, ship.getSprite().getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-                    float angle = Utilities.getAngle(shipLoc, touchLoc);
-                    ship.rotateShip(ship.getDestIndex(angle));
+                    updateDirect(pSceneTouchEvent, ship);
+                    ship.setChangingDir(true);
                     return true;
+                case TouchEvent.ACTION_MOVE:
+                    if (ship.isChangingDir()) {
+                        updateDirect(pSceneTouchEvent, ship);
+                        return true;
+                    }
+                    break;
                 case TouchEvent.ACTION_UP:
+                    ship.setChangingDir(false);
                     return true;
             }
             return false;
         }
         return false;
+    }
+
+    private void updateDirect(TouchEvent pSceneTouchEvent, Ship ship) {
+        final Vector2 touchLoc = Vector2Pool.obtain(pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+        Vector2 shipLoc = Vector2Pool.obtain(ship.getSprite().getX()/ PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, ship.getSprite().getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+        float angle = Utilities.getAngle(shipLoc, touchLoc);
+        ship.rotateShip(ship.getDestIndex(angle));
     }
 
     public HUD getHud() {

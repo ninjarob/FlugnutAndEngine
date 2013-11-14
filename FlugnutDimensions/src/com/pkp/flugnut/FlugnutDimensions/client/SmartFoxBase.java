@@ -33,7 +33,7 @@ public class SmartFoxBase implements IEventListener{
     private final static boolean DEBUG_SFS = true;
     private final static boolean VERBOSE_MODE = true;
 
-    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.105";
+    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.104";
     private final static String DEFAULT_SERVER_PORT = "9933";
 
     ConnectionStatus currentStatus;
@@ -86,6 +86,7 @@ public class SmartFoxBase implements IEventListener{
 
                 if (event.getType().equalsIgnoreCase(SFSEvent.EXTENSION_RESPONSE)) {
                     Log.v(TAG,"Dispatching " + event.getType() + " (arguments="+ event.getArguments() + ")");
+                    event.getArguments().get("params");
                     receiveReadyGame(event);
                 }
                 if (event.getType().equalsIgnoreCase(SFSEvent.CONNECTION)) {

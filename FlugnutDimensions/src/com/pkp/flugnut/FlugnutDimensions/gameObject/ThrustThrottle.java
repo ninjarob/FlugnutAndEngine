@@ -3,9 +3,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import org.andengine.engine.camera.hud.HUD;
-import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 /**
  * Created with IntelliJ IDEA.

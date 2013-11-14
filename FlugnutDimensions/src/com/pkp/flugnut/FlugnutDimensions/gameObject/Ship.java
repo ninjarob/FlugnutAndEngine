@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
-import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -29,6 +28,7 @@ public class Ship extends AbstractGameObjectImpl {
     protected AnimatedSprite shipSprite;
     protected int shipAnimationIndex=0;
     protected float thrustPercent;
+    protected boolean changingDir = false;
 
     public Ship(GLGame game, TextureInfoHolder textureInfoHolder) {
         super(game, textureInfoHolder);
@@ -120,6 +120,14 @@ public class Ship extends AbstractGameObjectImpl {
 
     public void setThrustPercent(float thrustPercent) {
         this.thrustPercent = thrustPercent;
+    }
+
+    public boolean isChangingDir() {
+        return changingDir;
+    }
+
+    public void setChangingDir(boolean changingDir) {
+        this.changingDir = changingDir;
     }
 
     public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {}

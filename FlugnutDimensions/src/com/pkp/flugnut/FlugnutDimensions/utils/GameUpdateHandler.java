@@ -48,7 +48,6 @@ public class GameUpdateHandler implements IUpdateHandler {
 
     }
 
-
     private int accel = 10;
     private void updateShip(Ship ship) {
         if (ship.getThrustPercent() > 0) {
@@ -60,44 +59,6 @@ public class GameUpdateHandler implements IUpdateHandler {
             }
         }
     }
-
-//    private void updateFlugnut(GameObject o) {
-//        Flugnut f = (Flugnut)o;
-//        for (GameObject o2 : gameObjects) {
-//            if (o2 instanceof BlockBuilding)
-//            {
-//                if (f.getSprite().collidesWith(o2.getSprite())) {
-//                    try {
-//                        SoundFactory.setAssetBasePath("mfx/");
-//                        Sound explosion = SoundFactory.createSoundFromAsset(game.getSoundManager(), game, "explosion.ogg");
-//                        Utilities.playSound(explosion);
-//                    }
-//                    catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
-//
-//        //handle bounds
-//        float spritex = f.getSprite().getX();
-//        float lwx = f.getGameScene().getLeftWall().getX();
-//        float rwx = f.getGameScene().getRightWall().getX();
-////        if (spritex-lwx < 390 ||
-////                rwx-spritex < 390) {
-////            if (!f.getOutOfBounds()) {
-////                f.setOutOfBounds(true);
-////                gameScene.releaseMouseJoint(f.getFlugnutShield());
-////            }
-////        }
-////        else {
-////            f.setOutOfBounds(false);
-////        }
-//        if (spritex-lwx > 290 &&
-//                rwx-spritex > 290) {
-//            game.mCamera.setCenter(f.getSprite().getX(), game.mCamera.getCenterY());
-//        }
-//    }
 
     public GLGame getGame() {
         return game;

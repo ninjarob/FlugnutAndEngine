@@ -2,7 +2,6 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
-import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 
 /**
  * Created with IntelliJ IDEA.

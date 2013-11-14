@@ -1,9 +1,9 @@
 package com.pkp.flugnut.FlugnutDimensions.level;
 
 import com.badlogic.gdx.math.Vector2;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
