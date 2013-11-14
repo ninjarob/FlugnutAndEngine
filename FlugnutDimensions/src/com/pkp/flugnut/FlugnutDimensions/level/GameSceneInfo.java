@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
+import com.pkp.flugnut.FlugnutDimensions.model.PlayerInfo;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -14,6 +15,7 @@ import java.util.List;
  * Contains all information and aspects of a gameSceneInfo that are unique to the gameSceneInfo;
  */
 public class GameSceneInfo {
+    private List<PlayerInfo> playerInfos;
     private List<AsteroidArea> asteroidAreas;
     private List<CelestialBody> celestialBodies;
     private Integer systemRadius;
@@ -25,7 +27,8 @@ public class GameSceneInfo {
     private VertexBufferObjectManager vertexBufferObjectManager;
     private BitmapTextureAtlas bitMapTextureAtlas;
 
-    public GameSceneInfo(List<AsteroidArea> asteroidAreas,
+    public GameSceneInfo(List<PlayerInfo> playerInfos,
+                         List<AsteroidArea> asteroidAreas,
                          List<CelestialBody> celestialBodies,
                          Integer systemRadius,
                          Integer systemId,
@@ -35,6 +38,7 @@ public class GameSceneInfo {
                          ITextureRegion mapBackground,
                          VertexBufferObjectManager vertexBufferObjectManager,
                          BitmapTextureAtlas bitMapTextureAtlas) {
+        this.playerInfos = playerInfos;
         this.asteroidAreas = asteroidAreas;
         this.systemRadius = systemRadius;
         this.systemId = systemId;
@@ -45,6 +49,14 @@ public class GameSceneInfo {
         this.mapBackground = mapBackground;
         this.vertexBufferObjectManager = vertexBufferObjectManager;
         this.bitMapTextureAtlas = bitMapTextureAtlas;
+    }
+
+    public List<PlayerInfo> getPlayerInfos() {
+        return playerInfos;
+    }
+
+    public void setPlayerInfos(List<PlayerInfo> playerInfos) {
+        this.playerInfos = playerInfos;
     }
 
     public List<CelestialBody> getCelestialBodies() {

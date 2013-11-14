@@ -8,6 +8,7 @@ import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
+import com.pkp.flugnut.FlugnutDimensions.model.PlayerInfo;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
@@ -41,6 +42,7 @@ public class GenerateWorldObjects {
         Vector2 shipPos = new Vector2(dataHolder.getFloat("spx"), dataHolder.getFloat("spy"));
         Integer shipType = dataHolder.getInt("st");
         Integer systemRadius = dataHolder.getInt("rad");
+        ISFSArray playersInSystem = dataHolder.getSFSArray("pis");
         ISFSArray cbds = dataHolder.getSFSArray("sbds");
         ISFSArray abs = dataHolder.getSFSArray("abs");
 
@@ -51,12 +53,16 @@ public class GenerateWorldObjects {
         //SHIP
         Ship ship = getShip(gtam, game, mBitmapTextureAtlas, vertexBufferObjectManager, shipType);
 
+        //PLAYERS IN THE SYSTEM
+        List<PlayerInfo> playerInfos = getPlayerInfos(playersInSystem);
+
         //SCENE CELESTIAL BODIES
         List<CelestialBody> celestialBodies = getCelestialBodies(gtam, game, cbds, mBitmapTextureAtlas, vertexBufferObjectManager, systemId);
 
         List<AsteroidArea> asteroidAreas = getAsteroidAreas(abs);
 
-        GameSceneInfo gsi = new GameSceneInfo(asteroidAreas,
+        GameSceneInfo gsi = new GameSceneInfo(playerInfos,
+                asteroidAreas,
                 celestialBodies,
                 systemRadius,
                 systemId,
@@ -113,6 +119,15 @@ public class GenerateWorldObjects {
         ship.initResources(mBitmapTextureAtlas);
         ship.initSprites(vertexBufferObjectManager);
         return ship;
+    }
+
+    private List<PlayerInfo> getPlayerInfos(ISFSArray playersInSystem) {
+        List<PlayerInfo> playerInfos = new ArrayList<PlayerInfo>();
+        for (int i = 0; i < playersInSystem.size(); i++) {
+            String userName = playersInSystem.getUtfString(i);
+            playerInfos.add(new PlayerInfo(userName));
+        }
+        return playerInfos;
     }
 
     private List<CelestialBody> getCelestialBodies(GameTextureAtlasManager gtam,
