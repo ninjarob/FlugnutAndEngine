@@ -95,7 +95,7 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         game.mCamera.setHUD(hud);
 
         //init updatehandler
-        guh = new GameUpdateHandler(game, gameObjects, this);
+        guh = new GameUpdateHandler(game, gameObjects, sfb);
         gameSceneInfo.getBitMapTextureAtlas().load();
     }
 
@@ -279,5 +279,13 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
     public HUD getHud() {
         return hud;
+    }
+
+    public GameSceneInfo getGameSceneInfo() {
+        return gameSceneInfo;
+    }
+
+    public void setGameSceneInfo(GameSceneInfo gameSceneInfo) {
+        this.gameSceneInfo = gameSceneInfo;
     }
 }

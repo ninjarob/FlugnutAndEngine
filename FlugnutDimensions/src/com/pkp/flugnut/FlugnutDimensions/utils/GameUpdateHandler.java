@@ -2,11 +2,12 @@ package com.pkp.flugnut.FlugnutDimensions.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
+import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.GameObject;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
-import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.util.TimeUtils;
 
 import java.util.List;
 
@@ -20,12 +21,13 @@ import java.util.List;
 public class GameUpdateHandler implements IUpdateHandler {
     private GLGame game;
     private List<GameObject> gameObjects;
-    private GameScene gameScene;
+    private SmartFoxBase sfb;
+    private float secondsElapsedforShipUpdate = 0;
 
-    public GameUpdateHandler(GLGame game, List<GameObject> gameObjects, GameScene gameScene)    {
+    public GameUpdateHandler(GLGame game, List<GameObject> gameObjects, SmartFoxBase sfb)    {
         this.game = game;
         this.gameObjects = gameObjects;
-        this.gameScene = gameScene;
+        this.sfb = sfb;
     }
 
     @Override
@@ -33,7 +35,15 @@ public class GameUpdateHandler implements IUpdateHandler {
         //update objects already there.
         for (GameObject o : gameObjects) {
             if (o instanceof Ship) {
-                updateShip((Ship) o);
+                Ship ship = (Ship) o;
+                Vector2 vel = ship.getBody().getLinearVelocity();
+                updateShip(ship);
+                secondsElapsedforShipUpdate+=pSecondsElapsed;
+                if (secondsElapsedforShipUpdate > 0.3f && (vel.x > 0.01f || vel.y > 0.01f) || ship.isChangedDirForServer()) {
+                    sfb.updatePosition(ship);
+                    ship.setChangedDirForServer(false);
+                    secondsElapsedforShipUpdate = 0;
+                }
             }
         }
 
@@ -49,6 +59,7 @@ public class GameUpdateHandler implements IUpdateHandler {
     }
 
     private int accel = 10;
+    private TimeUtils tu;
     private void updateShip(Ship ship) {
         if (ship.getThrustPercent() > 0) {
             float angle = ship.getAngleFromIndex(((AnimatedSprite)ship.getSprite()).getCurrentTileIndex());

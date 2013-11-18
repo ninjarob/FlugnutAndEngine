@@ -15,6 +15,8 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rkevan
@@ -29,6 +31,8 @@ public class Ship extends AbstractGameObjectImpl {
     protected int shipAnimationIndex=0;
     protected float thrustPercent;
     protected boolean changingDir = false;
+    protected boolean changedDirForServer = false;
+    protected float angle = 0;
 
     public Ship(GLGame game, TextureInfoHolder textureInfoHolder) {
         super(game, textureInfoHolder);
@@ -74,7 +78,7 @@ public class Ship extends AbstractGameObjectImpl {
 
     public float getAngleFromIndex(float index) {
         float radiansPerFrame = 0.09817477f;  //(2*pi / 64)
-        float angle = (index * radiansPerFrame);
+        angle = (index * radiansPerFrame);
 
         return angle;
     }
@@ -98,6 +102,7 @@ public class Ship extends AbstractGameObjectImpl {
                 j++;
             }
             shipSprite.animate(durations, frames, false);
+            changedDirForServer = true;
         }
         else {
             long[] durations = new long[rotateLeftDif+1];
@@ -110,6 +115,7 @@ public class Ship extends AbstractGameObjectImpl {
                 j++;
             }
             shipSprite.animate(durations, frames, false);
+            changedDirForServer = true;
         }
         shipAnimationIndex = destIndex;
     }
@@ -128,6 +134,22 @@ public class Ship extends AbstractGameObjectImpl {
 
     public void setChangingDir(boolean changingDir) {
         this.changingDir = changingDir;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+
+    public boolean isChangedDirForServer() {
+        return changedDirForServer;
+    }
+
+    public void setChangedDirForServer(boolean changedDirForServer) {
+        this.changedDirForServer = changedDirForServer;
     }
 
     public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {}

@@ -26,7 +26,6 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class Asteroid extends AbstractGameObjectImpl{
-
     protected ITiledTextureRegion asteroidTR;
     protected AnimatedSprite asteroidSprite;
 

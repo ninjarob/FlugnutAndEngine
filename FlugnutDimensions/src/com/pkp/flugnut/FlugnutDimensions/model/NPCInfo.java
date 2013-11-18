@@ -3,6 +3,8 @@ package com.pkp.flugnut.FlugnutDimensions.model;
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 
+import java.util.Vector;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rkevan
@@ -10,16 +12,16 @@ import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
  * Time: 11:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PlayerInfo {
+public class NPCInfo {
 
     private int id;
-    private String username;
+    private String name;
     private Ship ship;
     private Vector2 pos;
 
-    public PlayerInfo(int id, String username, Vector2 pos) {
+    public NPCInfo(int id, String name, Vector2 pos) {
         this.id = id;
-        this.username = username;
+        this.name = name;
         this.pos = pos;
     }
 
@@ -31,12 +33,12 @@ public class PlayerInfo {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Ship getShip() {

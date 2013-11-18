@@ -1,12 +1,21 @@
 package com.pkp.flugnut.FlugnutDimensions.client;
 
 import android.util.Log;
+import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.GawainShip;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
+import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
+import com.pkp.flugnut.FlugnutDimensions.model.NPCInfo;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GenerateWorldObjects;
+import com.smartfoxserver.v2.entities.data.ISFSArray;
+import com.smartfoxserver.v2.entities.data.ISFSObject;
+import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.exceptions.SFSException;
+import org.andengine.entity.sprite.AnimatedSprite;
 import sfs2x.client.SmartFox;
 import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
@@ -36,13 +45,14 @@ public class SmartFoxBase implements IEventListener{
     private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.104";
     private final static String DEFAULT_SERVER_PORT = "9933";
 
-    ConnectionStatus currentStatus;
+    private ConnectionStatus currentStatus;
 
     SmartFox sfsClient;
     MessagesAdapter adapterMessages;
 
     GLGame game;
     Room room;
+    GameSceneInfo gsi;
 
     public SmartFoxBase(GLGame game) {
         this.game = game;
@@ -86,8 +96,13 @@ public class SmartFoxBase implements IEventListener{
 
                 if (event.getType().equalsIgnoreCase(SFSEvent.EXTENSION_RESPONSE)) {
                     Log.v(TAG,"Dispatching " + event.getType() + " (arguments="+ event.getArguments() + ")");
-                    event.getArguments().get("params");
-                    receiveReadyGame(event);
+                    String cmd = (String)(event.getArguments().get("cmd"));
+                    if ("npc_position_data".equals(cmd)) {
+                        Log.d(TAG, "update npcs");
+                    }
+                    else if ("setup_game_for_client".equals(cmd)) {
+                        receiveReadyGame(event);
+                    }
                 }
                 if (event.getType().equalsIgnoreCase(SFSEvent.CONNECTION)) {
                     if (event.getArguments().get("success").equals(true)) {
@@ -154,6 +169,21 @@ public class SmartFoxBase implements IEventListener{
         sfsClient.send(new JoinRoomRequest(roomName));
     }
 
+    public void updatePosition(Ship ship) {
+        float x = ship.getSprite().getX();
+        float y = ship.getSprite().getY();
+        float angle = ship.getAngle();
+        float thrust = ship.getThrustPercent();
+        SFSObject obj = new SFSObject();
+        obj.putFloat("x", x);
+        obj.putFloat("y", y);
+        obj.putFloat("a", angle);
+        obj.putFloat("t", thrust);
+
+        ExtensionRequest r = new ExtensionRequest("shipPosition", obj);
+        sfsClient.send(r);
+    }
+
     public void disconnect() {
         if (VERBOSE_MODE) Log.v(TAG, "Disconnecting");
         if (sfsClient.isConnected()) {
@@ -175,9 +205,36 @@ public class SmartFoxBase implements IEventListener{
     }
 
     public void receiveReadyGame(BaseEvent event) {
+
         GenerateWorldObjects gwo = new GenerateWorldObjects();
-        GameScene gs = new GameScene(game, gwo.generateSolSystem((SFSObject)(event.getArguments().get("params")), game), this);
+        gsi = gwo.generateSolSystem((SFSObject)(event.getArguments().get("params")), game);
+        GameScene gs = new GameScene(game, gsi, this);
         game.setNewScene(gs);
+    }
+
+    public void receiveNpcUpdate(BaseEvent event) {
+        ISFSArray positionData = (SFSArray)(event.getArguments().get("positionData"));
+        for (int i = 0; i < positionData.size(); i++) {
+            ISFSObject positionObj = positionData.getSFSObject(i);
+            Integer id = positionObj.getInt("nid");
+            Boolean stopTrack = positionObj.getBool("st");
+            if (stopTrack) {
+                gsi.removeNpcInfo(id);
+            }
+            else {
+                NPCInfo npcInfo = gsi.getNpcInfo(id);
+                Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
+                if (null == npcInfo) { //server has determined we are to start tracking it.
+                    String name = positionObj.getUtfString("name");
+                    npcInfo = new NPCInfo(id, name, pos);
+                    Ship npcShip = new GawainShip(game, gsi.getBitMapTextureAtlas().);
+                    gsi.addNpcInfo(npcInfo);
+                }
+                else {
+                    npcInfo.setPos(pos);
+                }
+            }
+        }
     }
 
     public void sendReadyGame() {

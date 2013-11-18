@@ -1,22 +1,30 @@
 package com.pkp.flugnut.FlugnutDimensions.level;
 
 import com.badlogic.gdx.math.Vector2;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
+import com.pkp.flugnut.FlugnutDimensions.model.NPCInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.PlayerInfo;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contains all information and aspects of a gameSceneInfo that are unique to the gameSceneInfo;
  */
 public class GameSceneInfo {
-    private List<PlayerInfo> playerInfos;
     private List<AsteroidArea> asteroidAreas;
+    private Map<Integer, PlayerInfo> playerInfos;
+    private Map<Integer, AsteroidInfo> asteroidInfos;
+    private Map<Integer, NPCInfo> npcInfos;  //a list of npcs we're tracking or viewing
     private List<CelestialBody> celestialBodies;
     private Integer systemRadius;
     private Integer systemId;
@@ -27,8 +35,7 @@ public class GameSceneInfo {
     private VertexBufferObjectManager vertexBufferObjectManager;
     private BitmapTextureAtlas bitMapTextureAtlas;
 
-    public GameSceneInfo(List<PlayerInfo> playerInfos,
-                         List<AsteroidArea> asteroidAreas,
+    public GameSceneInfo(List<AsteroidArea> asteroidAreas,
                          List<CelestialBody> celestialBodies,
                          Integer systemRadius,
                          Integer systemId,
@@ -38,7 +45,6 @@ public class GameSceneInfo {
                          ITextureRegion mapBackground,
                          VertexBufferObjectManager vertexBufferObjectManager,
                          BitmapTextureAtlas bitMapTextureAtlas) {
-        this.playerInfos = playerInfos;
         this.asteroidAreas = asteroidAreas;
         this.systemRadius = systemRadius;
         this.systemId = systemId;
@@ -49,14 +55,12 @@ public class GameSceneInfo {
         this.mapBackground = mapBackground;
         this.vertexBufferObjectManager = vertexBufferObjectManager;
         this.bitMapTextureAtlas = bitMapTextureAtlas;
-    }
 
-    public List<PlayerInfo> getPlayerInfos() {
-        return playerInfos;
-    }
-
-    public void setPlayerInfos(List<PlayerInfo> playerInfos) {
-        this.playerInfos = playerInfos;
+        asteroidAreas = new ArrayList<AsteroidArea>();
+        playerInfos = new HashMap<Integer, PlayerInfo>();
+        asteroidInfos = new HashMap<Integer, AsteroidInfo>();
+        npcInfos= new HashMap<Integer, NPCInfo>();
+        celestialBodies = new ArrayList<CelestialBody>();
     }
 
     public List<CelestialBody> getCelestialBodies() {
@@ -137,5 +141,57 @@ public class GameSceneInfo {
 
     public void setBitMapTextureAtlas(BitmapTextureAtlas bitMapTextureAtlas) {
         this.bitMapTextureAtlas = bitMapTextureAtlas;
+    }
+
+    public Map<Integer, PlayerInfo> getPlayerInfos() {
+        return playerInfos;
+    }
+
+    public void setPlayerInfos(Map<Integer, PlayerInfo> playerInfos) {
+        this.playerInfos = playerInfos;
+    }
+
+    public void addPlayerInfo(PlayerInfo pi) {
+        playerInfos.put(pi.getId(), pi);
+    }
+
+    public void removePlayerInfo(Integer pid) {
+        playerInfos.remove(pid);
+    }
+
+    public Map<Integer, NPCInfo> getNpcInfos() {
+        return npcInfos;
+    }
+
+    public void setNpcInfos(Map<Integer, NPCInfo> npcInfos) {
+        this.npcInfos = npcInfos;
+    }
+
+    public NPCInfo getNpcInfo(Integer id) {
+        return npcInfos.get(id);
+    }
+
+    public void addNpcInfo(NPCInfo npcInfo) {
+        npcInfos.put(npcInfo.getId(), npcInfo);
+    }
+
+    public void removeNpcInfo(Integer npcInfoId) {
+        npcInfos.remove(npcInfoId);
+    }
+
+    public Map<Integer, AsteroidInfo> getAsteroidInfos() {
+        return asteroidInfos;
+    }
+
+    public void setAsteroidInfos(Map<Integer, AsteroidInfo> asteroidInfos) {
+        this.asteroidInfos = asteroidInfos;
+    }
+
+    public void addAsteroidInfo(AsteroidInfo ai) {
+        asteroidInfos.put(ai.getId(), ai);
+    }
+
+    public void removeAsteroidInfo(Integer aid) {
+        asteroidInfos.remove(aid);
     }
 }
