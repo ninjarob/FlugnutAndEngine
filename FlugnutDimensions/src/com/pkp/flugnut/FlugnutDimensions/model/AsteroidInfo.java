@@ -2,7 +2,6 @@ package com.pkp.flugnut.FlugnutDimensions.model;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 
 /**
  * Created with IntelliJ IDEA.

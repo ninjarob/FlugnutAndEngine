@@ -76,10 +76,10 @@ public abstract class BaseGameScene extends Scene {
 
         FontFactory.setAssetBasePath(GameConstants.FONT_DIR);
         final ITexture fontTexture = new BitmapTextureAtlas(game.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        this.defaultFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(),
+        BaseGameScene.defaultFont = FontFactory.createFromAsset(game.getFontManager(), fontTexture, game.getAssets(),
                 GameConstants.FONT_DROID, 16, true, android.graphics.Color.WHITE);
-        this.defaultFont.load();
-        return defaultFont;
+        BaseGameScene.defaultFont.load();
+        return BaseGameScene.defaultFont;
     }
 
 

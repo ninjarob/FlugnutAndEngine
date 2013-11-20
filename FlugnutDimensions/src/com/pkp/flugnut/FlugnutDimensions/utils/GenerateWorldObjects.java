@@ -8,7 +8,6 @@ import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
-import com.pkp.flugnut.FlugnutDimensions.model.PlayerInfo;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
@@ -27,6 +26,8 @@ public class GenerateWorldObjects {
     public GenerateWorldObjects() {
 
     }
+
+    GameTextureAtlasManager gtam;
 
     public GameSceneInfo generateSolSystem(SFSObject dataHolder, GLGame game) {
         //init atlas
@@ -66,12 +67,13 @@ public class GenerateWorldObjects {
                 backgroundTexture,
                 mapBackground,
                 vertexBufferObjectManager,
-                mBitmapTextureAtlas);
+                mBitmapTextureAtlas,
+                gtam);
         return gsi;
     }
 
     private GameTextureAtlasManager initSpaceGTAM(SFSObject dataHolder) {
-        GameTextureAtlasManager gtam = new GameTextureAtlasManager();
+        gtam = new GameTextureAtlasManager();
         gtam.addTexture("Ship/gawain.png", TextureType.GAWAIN, 448, 448);
         String[] sysrecs = dataHolder.getUtfString("sysrec").split(",");
         for (String sysrec:sysrecs) {

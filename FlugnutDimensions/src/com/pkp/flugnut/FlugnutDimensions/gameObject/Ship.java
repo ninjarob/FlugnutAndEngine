@@ -15,8 +15,6 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: rkevan

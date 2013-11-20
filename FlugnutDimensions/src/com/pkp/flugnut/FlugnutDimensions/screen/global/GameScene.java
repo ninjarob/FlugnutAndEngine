@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
-import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
 import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
@@ -58,9 +57,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
 
         this.game = game;
         this.sfb = sfb;
-        if (ConnectionStatus.Status.CONNECTED!=sfb.getStatus().getStatus()) {
-            sfb.connect();
-        }
         gameObjects = new ArrayList<GameObject>();
     }
 
@@ -219,6 +215,11 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         setTouchAreaBindingOnActionDownEnabled(true);
     }
 
+    public boolean initNewObjectForScene(GameObject o) {
+        o.initForScene(physicsWorld);
+        return true;
+    }
+
     // ===========================================================
     // Methods
     // ===========================================================
@@ -288,4 +289,6 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     public void setGameSceneInfo(GameSceneInfo gameSceneInfo) {
         this.gameSceneInfo = gameSceneInfo;
     }
+
+
 }

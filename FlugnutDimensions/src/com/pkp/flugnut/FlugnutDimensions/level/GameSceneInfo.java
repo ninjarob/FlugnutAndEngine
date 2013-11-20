@@ -1,6 +1,7 @@
 package com.pkp.flugnut.FlugnutDimensions.level;
 
 import com.badlogic.gdx.math.Vector2;
+import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
@@ -34,6 +35,7 @@ public class GameSceneInfo {
     private ITextureRegion mapBackground;
     private VertexBufferObjectManager vertexBufferObjectManager;
     private BitmapTextureAtlas bitMapTextureAtlas;
+    private GameTextureAtlasManager gtam;
 
     public GameSceneInfo(List<AsteroidArea> asteroidAreas,
                          List<CelestialBody> celestialBodies,
@@ -44,7 +46,8 @@ public class GameSceneInfo {
                          BitmapTextureAtlas backgroundTexture,
                          ITextureRegion mapBackground,
                          VertexBufferObjectManager vertexBufferObjectManager,
-                         BitmapTextureAtlas bitMapTextureAtlas) {
+                         BitmapTextureAtlas bitMapTextureAtlas,
+                         GameTextureAtlasManager gtam) {
         this.asteroidAreas = asteroidAreas;
         this.systemRadius = systemRadius;
         this.systemId = systemId;
@@ -55,6 +58,7 @@ public class GameSceneInfo {
         this.mapBackground = mapBackground;
         this.vertexBufferObjectManager = vertexBufferObjectManager;
         this.bitMapTextureAtlas = bitMapTextureAtlas;
+        this.gtam = gtam;
 
         asteroidAreas = new ArrayList<AsteroidArea>();
         playerInfos = new HashMap<Integer, PlayerInfo>();
@@ -193,5 +197,13 @@ public class GameSceneInfo {
 
     public void removeAsteroidInfo(Integer aid) {
         asteroidInfos.remove(aid);
+    }
+
+    public GameTextureAtlasManager getGtam() {
+        return gtam;
+    }
+
+    public void setGtam(GameTextureAtlasManager gtam) {
+        this.gtam = gtam;
     }
 }

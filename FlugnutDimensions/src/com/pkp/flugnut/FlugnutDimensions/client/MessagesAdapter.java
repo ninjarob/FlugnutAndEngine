@@ -1,12 +1,7 @@
 package com.pkp.flugnut.FlugnutDimensions.client;
 
 import android.content.Context;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -21,47 +16,47 @@ public class MessagesAdapter extends ArrayAdapter<ChatMessage> {
         super(context, 1);
 	}
 
-	private class ViewHolder {
-		TextView labelUsername, labelMessage, labelTime;
-		View containerSender, containerMessage;
-	}
+//	private class ViewHolder {
+//		TextView labelUsername, labelMessage, labelTime;
+//		View containerSender, containerMessage;
+//	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View view=createOrReuseView(convertView,parent);
-		final ViewHolder holder=(ViewHolder) view.getTag();
-		ChatMessage messageToShow = getItem(position);
-		holder.labelMessage.setText(messageToShow.getMessage());
-		LayoutParams messageParams = (LayoutParams) holder.containerMessage
-				.getLayoutParams();
-		if (messageToShow.isSystemMessage()) {
-			messageParams.gravity = Gravity.CENTER;
-			//holder.containerMessage.setBackgroundResource(R.drawable.background_system_message);
-            holder.containerMessage.setBackgroundResource(2);
-			holder.containerSender.setVisibility(View.GONE);
-		} else {
-			holder.containerSender.setVisibility(View.VISIBLE);
-			holder.labelUsername.setText(messageToShow.getUsername()+":");
-			holder.labelTime
-					.setText(dateFormat.format(messageToShow.getDate()));
-			if (messageToShow.isIncomingMessage()) {
-				messageParams.gravity = Gravity.LEFT;
-				//holder.containerMessage.setBackgroundResource(R.drawable.background_incoming_message);
-                holder.containerMessage.setBackgroundResource(2);
-			} else {
-				messageParams.gravity = Gravity.RIGHT;
-				//holder.containerMessage.setBackgroundResource(R.drawable.background_outgoing_message);
-                holder.containerMessage.setBackgroundResource(2);
-			}
-		}
+//	@Override
+//	public View getView(int position, View convertView, ViewGroup parent) {
+//		View view=createOrReuseView(convertView,parent);
+//		final ViewHolder holder=(ViewHolder) view.getTag();
+//		ChatMessage messageToShow = getItem(position);
+//		holder.labelMessage.setText(messageToShow.getMessage());
+//		LayoutParams messageParams = (LayoutParams) holder.containerMessage
+//				.getLayoutParams();
+//		if (messageToShow.isSystemMessage()) {
+//			messageParams.gravity = Gravity.CENTER;
+//			//holder.containerMessage.setBackgroundResource(R.drawable.background_system_message);
+//            holder.containerMessage.setBackgroundResource(2);
+//			holder.containerSender.setVisibility(View.GONE);
+//		} else {
+//			holder.containerSender.setVisibility(View.VISIBLE);
+//			holder.labelUsername.setText(messageToShow.getUsername()+":");
+//			holder.labelTime
+//					.setText(dateFormat.format(messageToShow.getDate()));
+//			if (messageToShow.isIncomingMessage()) {
+//				messageParams.gravity = Gravity.LEFT;
+//				//holder.containerMessage.setBackgroundResource(R.drawable.background_incoming_message);
+//                holder.containerMessage.setBackgroundResource(2);
+//			} else {
+//				messageParams.gravity = Gravity.RIGHT;
+//				//holder.containerMessage.setBackgroundResource(R.drawable.background_outgoing_message);
+//                holder.containerMessage.setBackgroundResource(2);
+//			}
+//		}
+//
+//		return view;
+//	}
 
-		return view;
-	}
-
-	private View createOrReuseView(View convertView, ViewGroup parent) {
-		final View view;
-		final ViewHolder holder;
-		if (convertView == null) {
+	//private View createOrReuseView(View convertView, ViewGroup parent) {
+		//final View view;
+		//final ViewHolder holder;
+		//if (convertView == null) {
 			// Create the row
 //			view = LayoutInflater.from(getContext()).inflate(
 //					R.layout.row_message, parent, false);
@@ -75,13 +70,13 @@ public class MessagesAdapter extends ArrayAdapter<ChatMessage> {
 //			holder.containerMessage = view.findViewById(R.id.container_message);
 //			// Save the holder reference
 //			view.setTag(holder);
-		} else {
+		//} else {
 			// Recover the saved holder
-			view = convertView;
-			holder = (ViewHolder) view.getTag();
-		}
-		return null;
-	}
+			//view = convertView;
+			//holder = (ViewHolder) view.getTag();
+		//}
+		//return null;
+	//}
 	
 	
 

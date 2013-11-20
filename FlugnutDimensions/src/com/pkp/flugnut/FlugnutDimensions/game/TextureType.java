@@ -9,13 +9,28 @@ package com.pkp.flugnut.FlugnutDimensions.game;
  */
 public enum TextureType {
 
-        /*Misc*/       BUTTONS, THROTTLE, THROTTLE_IND, THROTTLE_BUTTON,
+        /*Misc*/       BUTTONS(1, 1), THROTTLE(1,2), THROTTLE_IND(1,3), THROTTLE_BUTTON(1,4),
 
-        /*Ships*/      GAWAIN, GAWAIN_ENGINE,
+        /*Ships*/      GAWAIN(2,1),
 
-        /*Stars*/      SUN,
+        /*Stars*/      SUN(3,1),
 
-        /*Planets*/    EARTH,
+        /*Planets*/    EARTH(4,1),
 
-        /*Asteroids*/  ASTEROID1
+        /*Asteroids*/  ASTEROID1(5,1);
+
+    private final int category;
+    private final int type;
+    TextureType(int category, int type) {
+        this.category = category;
+        this.type = type;
+    }
+
+    public int getCategory() {
+        return category;
+    }
+
+    public int getType() {
+        return type;
+    }
 }

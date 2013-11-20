@@ -3,8 +3,6 @@ package com.pkp.flugnut.FlugnutDimensions.model;
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 
-import java.util.Vector;
-
 /**
  * Created with IntelliJ IDEA.
  * User: rkevan

@@ -48,14 +48,8 @@ public class TutorialSelectionScene extends BaseGameScene implements MenuScene.I
     private Font mFont;
     private MenuScene menuScene;
 
-    private BitmapTextureAtlas mBitmapTextureAtlas;
-    private ITextureRegion buttonsTextureRegion;
-    private ITextureRegion backButtonTextureRegion;
-    private SmartFoxBase sfb;
-
-	public TutorialSelectionScene(GLGame game, SmartFoxBase sfb) {
+	public TutorialSelectionScene(GLGame game) {
 		super(game);
-        this.sfb = sfb;
 	}
 
     @Override
@@ -91,7 +85,7 @@ public class TutorialSelectionScene extends BaseGameScene implements MenuScene.I
         vertexBufferObjectManager = game.getVertexBufferObjectManager();
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0.0f, new Sprite(0, 0, this.mParallaxLayerBack, vertexBufferObjectManager)));
         autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5.0f, new Sprite(0, 80, this.mParallaxLayerMid, vertexBufferObjectManager)));
-        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.0f, new Sprite(0, game.CAMERA_HEIGHT - this.mParallaxLayerFront.getHeight(), this.mParallaxLayerFront, vertexBufferObjectManager)));
+        autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.0f, new Sprite(0, GLGame.CAMERA_HEIGHT - this.mParallaxLayerFront.getHeight(), this.mParallaxLayerFront, vertexBufferObjectManager)));
         setBackgroundEnabled(false);
         createMenuScene();
     }

@@ -48,8 +48,6 @@ public class GameUpdateHandler implements IUpdateHandler {
         }
 
         //check for new objects to be added and objects that need to be removed.
-        List<GameObject> objectsThatNeedAdding;
-        List<GameObject> objectsThatNeedRemoving;
 
         //remove objects that need removing;
 
@@ -58,15 +56,14 @@ public class GameUpdateHandler implements IUpdateHandler {
 
     }
 
-    private int accel = 10;
-    private TimeUtils tu;
+    private final int ACC = 10;
     private void updateShip(Ship ship) {
         if (ship.getThrustPercent() > 0) {
             float angle = ship.getAngleFromIndex(((AnimatedSprite)ship.getSprite()).getCurrentTileIndex());
             Vector2 vel = ship.getBody().getLinearVelocity();
             double mag = Math.sqrt(Math.pow(vel.x, 2)+Math.pow(vel.y, 2));
             if (ship.getThrustPercent() > 0  && mag <= 250*ship.getThrustPercent()) {
-                ship.getBody().applyForceToCenter((float)Math.cos(angle)*accel*ship.getThrustPercent(), -(float)Math.sin(angle)*accel*ship.getThrustPercent());
+                ship.getBody().applyForceToCenter((float)Math.cos(angle)*ACC*ship.getThrustPercent(), -(float)Math.sin(angle)*ACC*ship.getThrustPercent());
             }
         }
     }

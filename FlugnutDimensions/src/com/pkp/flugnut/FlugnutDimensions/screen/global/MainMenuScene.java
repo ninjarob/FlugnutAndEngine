@@ -144,7 +144,7 @@ public class MainMenuScene extends BaseGameScene implements MenuScene.IOnMenuIte
                 game.setNewScene(new GameLoadingScene(game, sfb));
                 return true;
             case MENU_TUTORIAL:
-                game.setNewScene(new TutorialSelectionScene(game, sfb));
+                game.setNewScene(new TutorialSelectionScene(game));
                 return true;
             case MENU_HELP:
                 game.setNewScene(getScene(GameConstants.HELP_MENU_NAV));

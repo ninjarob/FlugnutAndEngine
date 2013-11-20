@@ -14,7 +14,7 @@ import com.pkp.flugnut.FlugnutDimensions.GLGame;
  * To change this template use File | Settings | File Templates.
  */
 public class DialogHandler {
-    private GLGame game;
+    //private GLGame game;
 
     public static Dialog onCreateDialog(final GLGame game, final int pID, String message) {
         switch(pID) {

@@ -93,7 +93,7 @@ public class StoryScene extends MenuSceneBase {
 		vertexBufferObjectManager = game.getVertexBufferObjectManager();
 		autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(0.0f, new Sprite(0, 0, mParallaxLayerBack, vertexBufferObjectManager)));
 		autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5.0f, new Sprite(0, 80, mParallaxLayerMid, vertexBufferObjectManager)));
-		autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.0f, new Sprite(0, game.CAMERA_HEIGHT - mParallaxLayerFront.getHeight(), mParallaxLayerFront, vertexBufferObjectManager)));
+		autoParallaxBackground.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10.0f, new Sprite(0, GLGame.CAMERA_HEIGHT - mParallaxLayerFront.getHeight(), mParallaxLayerFront, vertexBufferObjectManager)));
 		setBackground(autoParallaxBackground);
 
 		MenuScene menuScene;

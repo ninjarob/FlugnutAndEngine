@@ -4,6 +4,7 @@ import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.GawainShip;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
@@ -12,10 +13,8 @@ import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GenerateWorldObjects;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
-import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.exceptions.SFSException;
-import org.andengine.entity.sprite.AnimatedSprite;
 import sfs2x.client.SmartFox;
 import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
@@ -42,17 +41,18 @@ public class SmartFoxBase implements IEventListener{
     private final static boolean DEBUG_SFS = true;
     private final static boolean VERBOSE_MODE = true;
 
-    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.104";
-    private final static String DEFAULT_SERVER_PORT = "9933";
+    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.106";
+    //private final static String DEFAULT_SERVER_PORT = "9933";
+    private final static String DEFAULT_SERVER_PORT = "8082";
 
     private ConnectionStatus currentStatus;
 
-    SmartFox sfsClient;
-    MessagesAdapter adapterMessages;
+    private SmartFox sfsClient;
+    private MessagesAdapter adapterMessages;
 
-    GLGame game;
-    Room room;
-    GameSceneInfo gsi;
+    private GLGame game;
+    private Room room;
+    private GameSceneInfo gsi;
 
     public SmartFoxBase(GLGame game) {
         this.game = game;
@@ -76,10 +76,6 @@ public class SmartFoxBase implements IEventListener{
         sfsClient.addEventListener(SFSEvent.USER_EXIT_ROOM, this);
         sfsClient.addEventListener(SFSEvent.PUBLIC_MESSAGE, this);
         sfsClient.addEventListener(SFSEvent.EXTENSION_RESPONSE, this);
-
-        if (VERBOSE_MODE)
-            Log.v(TAG, "SmartFox created:" + sfsClient.isConnected() + " BlueBox enabled="
-                    + sfsClient.useBlueBox());
     }
 
     @Override
@@ -99,6 +95,7 @@ public class SmartFoxBase implements IEventListener{
                     String cmd = (String)(event.getArguments().get("cmd"));
                     if ("npc_position_data".equals(cmd)) {
                         Log.d(TAG, "update npcs");
+                        receiveNpcUpdate(event);
                     }
                     else if ("setup_game_for_client".equals(cmd)) {
                         receiveReadyGame(event);
@@ -148,6 +145,7 @@ public class SmartFoxBase implements IEventListener{
     public void connect(String serverIP, String serverPort) {
         if (serverPort.length() > 0) {
             int serverPortValue = Integer.parseInt(serverPort);
+            sfsClient.setUseBlueBox(false);
             sfsClient.connect(serverIP, serverPortValue);
         }
         else {
@@ -213,36 +211,105 @@ public class SmartFoxBase implements IEventListener{
     }
 
     public void receiveNpcUpdate(BaseEvent event) {
-        ISFSArray positionData = (SFSArray)(event.getArguments().get("positionData"));
-        for (int i = 0; i < positionData.size(); i++) {
-            ISFSObject positionObj = positionData.getSFSObject(i);
-            Integer id = positionObj.getInt("nid");
-            Boolean stopTrack = positionObj.getBool("st");
-            if (stopTrack) {
-                gsi.removeNpcInfo(id);
-            }
-            else {
-                NPCInfo npcInfo = gsi.getNpcInfo(id);
-                Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
-                if (null == npcInfo) { //server has determined we are to start tracking it.
-                    String name = positionObj.getUtfString("name");
-                    npcInfo = new NPCInfo(id, name, pos);
-                    Ship npcShip = new GawainShip(game, gsi.getBitMapTextureAtlas().);
-                    gsi.addNpcInfo(npcInfo);
+        ISFSArray positionData = ((ISFSObject)(event.getArguments().get("params"))).getSFSArray("positionData");
+        if (positionData != null) {
+            for (int i = 0; i < positionData.size(); i++) {
+                ISFSObject positionObj = positionData.getSFSObject(i);
+                Integer id = positionObj.getInt("nid");
+                Boolean stopTrack = positionObj.containsKey("stop");
+                if (stopTrack) {
+                    gsi.removeNpcInfo(id);
                 }
                 else {
-                    npcInfo.setPos(pos);
+                    NPCInfo npcInfo = gsi.getNpcInfo(id);
+                    Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
+                    if (null == npcInfo) { //server has determined we are to start tracking it.
+                        String name = positionObj.getUtfString("name");
+                        npcInfo = new NPCInfo(id, name, pos);
+                        Ship npcShip = new GawainShip(game, gsi.getGtam().getTextureInfoHolder(TextureType.GAWAIN));
+                        npcShip.initResources(gsi.getBitMapTextureAtlas());
+                        npcShip.initSprites(gsi.getVertexBufferObjectManager());
+                        npcShip.setStartPosition(pos);
+                        GameScene scene = ((GameScene)(game.getCurrentScene()));
+                        npcShip.setScene(scene);
+                        scene.initNewObjectForScene(npcShip);
+                        npcInfo.setShip(npcShip);
+                        gsi.addNpcInfo(npcInfo);
+                    }
+                    else {
+                        float thrust = positionObj.getFloat("t");
+                        float angle = positionObj.getFloat("a");
+                        npcInfo.setPos(pos);
+                        int destIndex = npcInfo.getShip().getDestIndex(angle);
+                        npcInfo.getShip().rotateShip(destIndex);
+                    }
                 }
             }
         }
     }
 
-    public void sendReadyGame() {
+    public boolean sendReadyGame() {
         SFSObject obj = new SFSObject();
         obj.putInt("actionId", 3);
         if (room!=null) {
             ExtensionRequest r = new ExtensionRequest("gameSetup", obj);
             sfsClient.send(r);
+            return true;
         }
+        return false;
+    }
+
+
+
+    //************************************
+    // GETTERS AND SETTERS
+    //************************************
+
+    public ConnectionStatus getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(ConnectionStatus currentStatus) {
+        this.currentStatus = currentStatus;
+    }
+
+    public SmartFox getSfsClient() {
+        return sfsClient;
+    }
+
+    public void setSfsClient(SmartFox sfsClient) {
+        this.sfsClient = sfsClient;
+    }
+
+    public MessagesAdapter getAdapterMessages() {
+        return adapterMessages;
+    }
+
+    public void setAdapterMessages(MessagesAdapter adapterMessages) {
+        this.adapterMessages = adapterMessages;
+    }
+
+    public GLGame getGame() {
+        return game;
+    }
+
+    public void setGame(GLGame game) {
+        this.game = game;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public GameSceneInfo getGsi() {
+        return gsi;
+    }
+
+    public void setGsi(GameSceneInfo gsi) {
+        this.gsi = gsi;
     }
 }
