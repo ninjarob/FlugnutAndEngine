@@ -47,10 +47,12 @@ public class GameTextureAtlasManager {
         this.width = width;
     }
 
-    public void addTexture(String path, TextureType textureType, Integer width, Integer height) {
-        atlasMap.put(textureType, new TextureInfoHolder(0, this.height, path));
-        this.height += height;
-        this.width = width > this.width ? width: this.width;
+    public void addTexture(TextureInfoHolder tih) {
+        atlasMap.put(tih.getType(), tih);
+        tih.setStartx(0);
+        tih.setStarty(height+1);
+        this.height += tih.getHeight();
+        this.width = tih.getWidth() > this.width ? tih.getWidth(): this.width;
     }
 
     public String getPath(TextureType textureType) {

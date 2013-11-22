@@ -16,8 +16,8 @@ public class SpaceStation extends CelestialBody {
     private int height;
     private float rotation;
 
-    public SpaceStation(GLGame game, TextureInfoHolder tih, int id, Vector2 location, int bodyType, int width, int height, float rotation) {
-        super(game, tih, id, location, bodyType);
+    public SpaceStation(GLGame game, TextureInfoHolder tih, int id, Vector2 location, int width, int height, float rotation) {
+        super(game, tih, id, location);
         this.width = width;
         this.height = height;
         this.rotation = rotation;

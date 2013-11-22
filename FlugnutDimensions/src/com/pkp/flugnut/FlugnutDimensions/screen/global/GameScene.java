@@ -4,12 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
-import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
-import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
-import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
+import com.pkp.flugnut.FlugnutDimensions.game.*;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
-import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameUpdateHandler;
 import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
@@ -35,7 +33,9 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameScene extends BaseGameScene implements IOnSceneTouchListener, IOnAreaTouchListener {
 
@@ -58,6 +58,10 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         this.game = game;
         this.sfb = sfb;
         gameObjects = new ArrayList<GameObject>();
+
+
+
+
     }
 
     @Override
@@ -72,27 +76,30 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
         gameSceneInfo.getBackgroundTexture().load();
 
+        //init asteroid resources
+        for (AsteroidInfo ai : gameSceneInfo.getAsteroidInfos().values()) {
+            ai.getAsteroid().setScene(this);
+            gameObjects.add(ai.getAsteroid());
+        }
+
         //init ship resource
         gameSceneInfo.getShip().setScene(this);
         gameObjects.add(gameSceneInfo.getShip());
         game.mCamera.setChaseEntity(gameSceneInfo.getShip().getSprite());
 
         //init hud
-        GameTextureAtlasManager gtam = new GameTextureAtlasManager();
-        gtam.addTexture("throttle.png", TextureType.THROTTLE, 30, 220);
-        gtam.addTexture("throttle_ind.png", TextureType.THROTTLE_IND, 20, 4);
-        gtam.addTexture("throttleButtons.png", TextureType.THROTTLE_BUTTON, 128, 70);
-        BitmapTextureAtlas hudBitmapTextureAtlas = new BitmapTextureAtlas(game.getTextureManager(), gtam.getWidth()+10, gtam.getHeight()+10, TextureOptions.DEFAULT);
         hud = new HUD();
-        initHudThrustButtonsResources(gtam, hudBitmapTextureAtlas, hud);
         //initHudThrustBarResources();
-        initHudZoomBarResources(gtam, hudBitmapTextureAtlas, hud);
-        hudBitmapTextureAtlas.load();
+        initHudThrustButtonsResources(gameSceneInfo.getGtamMap().get(ImageResourceCategory.HUD), gameSceneInfo.getAtlasMap().get(ImageResourceCategory.HUD), hud);
+        initHudZoomBarResources(gameSceneInfo.getGtamMap().get(ImageResourceCategory.HUD), gameSceneInfo.getAtlasMap().get(ImageResourceCategory.HUD), hud);
+        gameSceneInfo.getAtlasMap().get(ImageResourceCategory.HUD).load();
         game.mCamera.setHUD(hud);
 
         //init updatehandler
         guh = new GameUpdateHandler(game, gameObjects, sfb);
-        gameSceneInfo.getBitMapTextureAtlas().load();
+        for (BitmapTextureAtlas bta : gameSceneInfo.getAtlasMap().values()) {
+            bta.load();
+        }
     }
 
     public void initHudThrustButtonsResources(GameTextureAtlasManager gtam, BitmapTextureAtlas hudBitmapTextureAtlas, HUD hud) {
@@ -191,13 +198,9 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
         attachChild(leftWall);
         attachChild(rightWall);
 
-        //asteroid area boundries
-        for(AsteroidArea aa : gameSceneInfo.getAsteroidAreas()) {
-            aa.initAreaOnGame(this, physicsWorld, gameSceneInfo.getVertexBufferObjectManager());
-        }
-
         for (CelestialBody sb : gameSceneInfo.getCelestialBodies()) {
-            attachChild(sb.getSprite());
+            sb.setScene(this);
+            sb.initForScene(physicsWorld);
         }
 
         //listeners

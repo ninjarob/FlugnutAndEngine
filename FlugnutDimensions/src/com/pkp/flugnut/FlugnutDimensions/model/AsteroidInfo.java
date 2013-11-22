@@ -13,14 +13,18 @@ import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
 public class AsteroidInfo {
 
     private int id;
-    private String name;
     private Asteroid asteroid;
     private Vector2 pos;
+    private Vector2 vel;
+    private int hp;
+    private int type;
 
-    public AsteroidInfo(int id, String name, Vector2 pos) {
+    public AsteroidInfo(int id, Vector2 pos, Vector2 vel, int hp, int type) {
         this.id = id;
-        this.name = name;
         this.pos = pos;
+        this.vel = vel;
+        this.hp = hp;
+        this.type = type;
     }
 
     public int getId() {
@@ -29,14 +33,6 @@ public class AsteroidInfo {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Asteroid getAsteroid() {
@@ -53,5 +49,29 @@ public class AsteroidInfo {
 
     public void setPos(Vector2 pos) {
         this.pos = pos;
+    }
+
+    public Vector2 getVel() {
+        return vel;
+    }
+
+    public void setVel(Vector2 vel) {
+        this.vel = vel;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

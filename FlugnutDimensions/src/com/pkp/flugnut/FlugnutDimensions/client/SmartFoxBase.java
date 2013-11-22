@@ -4,10 +4,11 @@ import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
+import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.GawainShip;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.NPCInfo;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GenerateWorldObjects;
@@ -41,7 +42,7 @@ public class SmartFoxBase implements IEventListener{
     private final static boolean DEBUG_SFS = true;
     private final static boolean VERBOSE_MODE = true;
 
-    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.106";
+    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.105";
     //private final static String DEFAULT_SERVER_PORT = "9933";
     private final static String DEFAULT_SERVER_PORT = "8082";
 
@@ -93,9 +94,13 @@ public class SmartFoxBase implements IEventListener{
                 if (event.getType().equalsIgnoreCase(SFSEvent.EXTENSION_RESPONSE)) {
                     Log.v(TAG,"Dispatching " + event.getType() + " (arguments="+ event.getArguments() + ")");
                     String cmd = (String)(event.getArguments().get("cmd"));
-                    if ("npc_position_data".equals(cmd)) {
+                    if ("npcd".equals(cmd)) {
                         Log.d(TAG, "update npcs");
                         receiveNpcUpdate(event);
+                    }
+                    else if ("astd".equals(cmd)) {
+                        Log.d(TAG, "update asteroids");
+                        receiveAsteroidUpdate(event);
                     }
                     else if ("setup_game_for_client".equals(cmd)) {
                         receiveReadyGame(event);
@@ -204,8 +209,8 @@ public class SmartFoxBase implements IEventListener{
 
     public void receiveReadyGame(BaseEvent event) {
 
-        GenerateWorldObjects gwo = new GenerateWorldObjects();
-        gsi = gwo.generateSolSystem((SFSObject)(event.getArguments().get("params")), game);
+        GenerateWorldObjects gwo = new GenerateWorldObjects(game);
+        gsi = gwo.generateSolSystem((SFSObject)(event.getArguments().get("params")));
         GameScene gs = new GameScene(game, gsi, this);
         game.setNewScene(gs);
     }
@@ -226,8 +231,8 @@ public class SmartFoxBase implements IEventListener{
                     if (null == npcInfo) { //server has determined we are to start tracking it.
                         String name = positionObj.getUtfString("name");
                         npcInfo = new NPCInfo(id, name, pos);
-                        Ship npcShip = new GawainShip(game, gsi.getGtam().getTextureInfoHolder(TextureType.GAWAIN));
-                        npcShip.initResources(gsi.getBitMapTextureAtlas());
+                        Ship npcShip = new GawainShip(game, gsi.getGtamMap().get(ImageResourceCategory.GAWAIN).getTextureInfoHolder(TextureType.GAWAIN));
+                        npcShip.initResources(gsi.getAtlasMap().get(ImageResourceCategory.GAWAIN));
                         npcShip.initSprites(gsi.getVertexBufferObjectManager());
                         npcShip.setStartPosition(pos);
                         GameScene scene = ((GameScene)(game.getCurrentScene()));
@@ -242,6 +247,60 @@ public class SmartFoxBase implements IEventListener{
                         npcInfo.setPos(pos);
                         int destIndex = npcInfo.getShip().getDestIndex(angle);
                         npcInfo.getShip().rotateShip(destIndex);
+                    }
+                }
+            }
+        }
+    }
+
+    public void receiveAsteroidUpdate(BaseEvent event) {
+        ISFSArray positionData = ((ISFSObject)(event.getArguments().get("params"))).getSFSArray("apd");
+        if (positionData != null) {
+            for (int i = 0; i < positionData.size(); i++) {
+                ISFSObject positionObj = positionData.getSFSObject(i);
+                Integer id = positionObj.getInt("id");
+                Boolean asteroidDestroyed = positionObj.containsKey("des");
+                if (asteroidDestroyed) {
+                    gsi.removeAsteroidInfo(id);
+                }
+                else {
+                    AsteroidInfo asteroidInfo = gsi.getAsteroidInfo(id);
+                    Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
+                    Vector2 vel = new Vector2(positionObj.getFloat("vx"), positionObj.getFloat("vy"));
+                    Integer hp = positionObj.getInt("hp");
+                    if (null == asteroidInfo) { //server has determined we are to start tracking it.
+                        Integer type = positionObj.getInt("t");
+                        asteroidInfo = new AsteroidInfo(id, pos, vel, hp, type);
+                        Asteroid asteroid;
+                        switch (type) {
+                            case 1:
+                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
+                                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
+                                break;
+                            case 2:
+                                asteroid = new LargeAsteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.NON_ANIMATED_ASTEROIDS).getTextureInfoHolder(TextureType.LARGE_ASTEROID1));
+                                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.NON_ANIMATED_ASTEROIDS));
+                                break;
+                            default:
+                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
+                                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
+
+                        }
+                        asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.GAWAIN));
+                        asteroid.initSprites(gsi.getVertexBufferObjectManager());
+                        asteroid.setStartPosition(pos);
+                        GameScene scene = ((GameScene)(game.getCurrentScene()));
+                        asteroid.setScene(scene);
+                        scene.initNewObjectForScene(asteroid);
+                        asteroidInfo.setAsteroid(asteroid);
+                        gsi.addAsteroidInfo(asteroidInfo);
+                    }
+                    else {
+                        asteroidInfo.setPos(pos);
+                        //asteroidInfo.getAsteroid().getBody()
+                        asteroidInfo.setVel(vel);
+                        //??asteroidInfo.getAsteroid().getSprite().setPosition();
+                        asteroidInfo.getAsteroid().getBody().setLinearVelocity(vel.x, vel.y);
                     }
                 }
             }

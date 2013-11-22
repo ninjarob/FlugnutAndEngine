@@ -15,9 +15,9 @@ import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 public class Planet extends CelestialBody {
     private int radius;
 
-    public Planet(GLGame game, TextureInfoHolder tih, int id, Vector2 location, int bodyType, int radius) {
-        super(game, tih, id, location, bodyType);
-        this.radius = radius;
+    public Planet(GLGame game, TextureInfoHolder tih, int id, Vector2 location) {
+        super(game, tih, id, location);
+        this.radius = tih.getHeight();
     }
 
     public int getRadius() {

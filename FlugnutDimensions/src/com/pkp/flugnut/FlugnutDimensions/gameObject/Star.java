@@ -16,9 +16,9 @@ public class Star extends CelestialBody {
 
     private int radius;
 
-    public Star(GLGame game, TextureInfoHolder tih, int id, Vector2 location, int bodyType, int radius) {
-        super(game, tih, id, location, bodyType);
-        this.radius = radius;
+    public Star(GLGame game, TextureInfoHolder tih, int id, Vector2 location) {
+        super(game, tih, id, location);
+        this.radius = tih.getHeight();
     }
 
     public int getRadius() {

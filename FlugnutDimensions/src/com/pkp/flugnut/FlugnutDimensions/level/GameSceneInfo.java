@@ -2,10 +2,10 @@ package com.pkp.flugnut.FlugnutDimensions.level;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
+import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
-import com.pkp.flugnut.FlugnutDimensions.model.AsteroidArea;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.NPCInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.PlayerInfo;
@@ -22,7 +22,6 @@ import java.util.Map;
  * Contains all information and aspects of a gameSceneInfo that are unique to the gameSceneInfo;
  */
 public class GameSceneInfo {
-    private List<AsteroidArea> asteroidAreas;
     private Map<Integer, PlayerInfo> playerInfos;
     private Map<Integer, AsteroidInfo> asteroidInfos;
     private Map<Integer, NPCInfo> npcInfos;  //a list of npcs we're tracking or viewing
@@ -34,10 +33,10 @@ public class GameSceneInfo {
     private BitmapTextureAtlas backgroundTexture;
     private ITextureRegion mapBackground;
     private VertexBufferObjectManager vertexBufferObjectManager;
-    private BitmapTextureAtlas bitMapTextureAtlas;
-    private GameTextureAtlasManager gtam;
+    private Map<ImageResourceCategory, GameTextureAtlasManager> gtamMap;
+    private Map<ImageResourceCategory, BitmapTextureAtlas> atlasMap;
 
-    public GameSceneInfo(List<AsteroidArea> asteroidAreas,
+    public GameSceneInfo(List<AsteroidInfo> asteroids,
                          List<CelestialBody> celestialBodies,
                          Integer systemRadius,
                          Integer systemId,
@@ -46,9 +45,8 @@ public class GameSceneInfo {
                          BitmapTextureAtlas backgroundTexture,
                          ITextureRegion mapBackground,
                          VertexBufferObjectManager vertexBufferObjectManager,
-                         BitmapTextureAtlas bitMapTextureAtlas,
-                         GameTextureAtlasManager gtam) {
-        this.asteroidAreas = asteroidAreas;
+                         Map<ImageResourceCategory, GameTextureAtlasManager> gtamMap,
+                         Map<ImageResourceCategory, BitmapTextureAtlas> atlasMap) {
         this.systemRadius = systemRadius;
         this.systemId = systemId;
         this.startPos = startPos;
@@ -57,14 +55,16 @@ public class GameSceneInfo {
         this.backgroundTexture = backgroundTexture;
         this.mapBackground = mapBackground;
         this.vertexBufferObjectManager = vertexBufferObjectManager;
-        this.bitMapTextureAtlas = bitMapTextureAtlas;
-        this.gtam = gtam;
+        this.gtamMap = gtamMap;
+        this.atlasMap = atlasMap;
 
-        asteroidAreas = new ArrayList<AsteroidArea>();
         playerInfos = new HashMap<Integer, PlayerInfo>();
         asteroidInfos = new HashMap<Integer, AsteroidInfo>();
+        for (AsteroidInfo a : asteroids)
+        {
+            addAsteroidInfo(a);
+        }
         npcInfos= new HashMap<Integer, NPCInfo>();
-        celestialBodies = new ArrayList<CelestialBody>();
     }
 
     public List<CelestialBody> getCelestialBodies() {
@@ -73,14 +73,6 @@ public class GameSceneInfo {
 
     public void setCelestialBodies(List<CelestialBody> celestialBodies) {
         this.celestialBodies = celestialBodies;
-    }
-
-    public List<AsteroidArea> getAsteroidAreas() {
-        return asteroidAreas;
-    }
-
-    public void setAsteroidAreas(List<AsteroidArea> asteroidAreas) {
-        this.asteroidAreas = asteroidAreas;
     }
 
     public Integer getSystemRadius() {
@@ -139,14 +131,6 @@ public class GameSceneInfo {
         this.vertexBufferObjectManager = vertexBufferObjectManager;
     }
 
-    public BitmapTextureAtlas getBitMapTextureAtlas() {
-        return bitMapTextureAtlas;
-    }
-
-    public void setBitMapTextureAtlas(BitmapTextureAtlas bitMapTextureAtlas) {
-        this.bitMapTextureAtlas = bitMapTextureAtlas;
-    }
-
     public Map<Integer, PlayerInfo> getPlayerInfos() {
         return playerInfos;
     }
@@ -191,6 +175,10 @@ public class GameSceneInfo {
         this.asteroidInfos = asteroidInfos;
     }
 
+    public AsteroidInfo getAsteroidInfo(Integer id) {
+        return asteroidInfos.get(id);
+    }
+
     public void addAsteroidInfo(AsteroidInfo ai) {
         asteroidInfos.put(ai.getId(), ai);
     }
@@ -199,11 +187,19 @@ public class GameSceneInfo {
         asteroidInfos.remove(aid);
     }
 
-    public GameTextureAtlasManager getGtam() {
-        return gtam;
+    public Map<ImageResourceCategory, GameTextureAtlasManager> getGtamMap() {
+        return gtamMap;
     }
 
-    public void setGtam(GameTextureAtlasManager gtam) {
-        this.gtam = gtam;
+    public void setGtamMap(Map<ImageResourceCategory, GameTextureAtlasManager> gtamMap) {
+        this.gtamMap = gtamMap;
+    }
+
+    public Map<ImageResourceCategory, BitmapTextureAtlas> getAtlasMap() {
+        return atlasMap;
+    }
+
+    public void setAtlasMap(Map<ImageResourceCategory, BitmapTextureAtlas> atlasMap) {
+        this.atlasMap = atlasMap;
     }
 }

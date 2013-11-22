@@ -21,18 +21,14 @@ public class CelestialBody extends AbstractGameObjectImpl{
     protected Sprite sprite;
     private int id;
     private Vector2 location;
-    private int bodyType;
-    protected ITextureRegion textureRegion;
 
     public CelestialBody(GLGame game,
                          TextureInfoHolder tih,
                          int id,
-                         Vector2 location,
-                         int bodyType) {
+                         Vector2 location) {
         super(game, tih);
         sp = location;
         this.id = id;
-        this.bodyType = bodyType;
         touchable = true;
     }
 
@@ -71,14 +67,6 @@ public class CelestialBody extends AbstractGameObjectImpl{
 
     public void setLocation(Vector2 location) {
         this.location = location;
-    }
-
-    public int getBodyType() {
-        return bodyType;
-    }
-
-    public void setBodyType(int bodyType) {
-        this.bodyType = bodyType;
     }
 
     public ITextureRegion getTextureRegion() {
