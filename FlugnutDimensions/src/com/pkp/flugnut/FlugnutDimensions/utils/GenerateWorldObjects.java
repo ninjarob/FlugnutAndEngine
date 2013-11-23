@@ -61,15 +61,18 @@ public class GenerateWorldObjects {
         solPlanetsGtam.addTexture(new TextureInfoHolder(TextureType.URANUS, 250, 250, "Background/planet/Uranus.png"));
         solPlanetsGtam.addTexture(new TextureInfoHolder(TextureType.NEPTUNE, 250, 250, "Background/planet/Neptune.png"));
         solPlanetsGtam.addTexture(new TextureInfoHolder(TextureType.PLUTO, 80, 80, "Background/planet/Pluto.png"));
+        solPlanetsGtam.addTexture(new TextureInfoHolder(TextureType.EROS, 70, 70, "Background/planet/Eros.png"));
         gtamMap.put(ImageResourceCategory.SOL_PLANETS, solPlanetsGtam);
 
+        GameTextureAtlasManager miscCelestialGtam = new GameTextureAtlasManager();
+        miscCelestialGtam.addTexture(new TextureInfoHolder(TextureType.LARGE_ASTEROID1, 165, 165, "Background/LargeAsteroid/LargeAsteroid1.png"));
+        gtamMap.put(ImageResourceCategory.MISC_CELESTIAL, miscCelestialGtam);
 
         GameTextureAtlasManager animatedAsteroid1Gtam = new GameTextureAtlasManager();
         animatedAsteroid1Gtam.addTexture(new TextureInfoHolder(TextureType.ASTEROID1, 1512, 420, "Anim/asteroid.png"));
         gtamMap.put(ImageResourceCategory.ANIMATED_ASTEROID1, animatedAsteroid1Gtam);
 
         GameTextureAtlasManager nonAnimatedAsteroidsGtam = new GameTextureAtlasManager();
-        nonAnimatedAsteroidsGtam.addTexture(new TextureInfoHolder(TextureType.LARGE_ASTEROID1, 165, 165, "Anim/LargeAsteroid1.png"));
         gtamMap.put(ImageResourceCategory.NON_ANIMATED_ASTEROIDS, nonAnimatedAsteroidsGtam);
 
         atlasMap.put(ImageResourceCategory.HUD, new BitmapTextureAtlas(game.getTextureManager(),hudGtam.getWidth()+50, hudGtam.getHeight()+50, TextureOptions.DEFAULT));
@@ -78,6 +81,7 @@ public class GenerateWorldObjects {
         atlasMap.put(ImageResourceCategory.SOL_PLANETS, new BitmapTextureAtlas(game.getTextureManager(),solPlanetsGtam.getWidth()+50, solPlanetsGtam.getHeight()+50, TextureOptions.DEFAULT));
         atlasMap.put(ImageResourceCategory.ANIMATED_ASTEROID1, new BitmapTextureAtlas(game.getTextureManager(),animatedAsteroid1Gtam.getWidth()+50, animatedAsteroid1Gtam.getHeight()+50, TextureOptions.DEFAULT));
         atlasMap.put(ImageResourceCategory.NON_ANIMATED_ASTEROIDS, new BitmapTextureAtlas(game.getTextureManager(),nonAnimatedAsteroidsGtam.getWidth()+50, nonAnimatedAsteroidsGtam.getHeight()+50, TextureOptions.DEFAULT));
+        atlasMap.put(ImageResourceCategory.MISC_CELESTIAL, new BitmapTextureAtlas(game.getTextureManager(),miscCelestialGtam.getWidth()+50, miscCelestialGtam.getHeight()+50, TextureOptions.DEFAULT));
     }
 
     public GameSceneInfo generateSolSystem(SFSObject dataHolder) {
@@ -175,10 +179,17 @@ public class GenerateWorldObjects {
                 case URANUS:
                 case NEPTUNE:
                 case PLUTO:
+                case EROS:
                     Planet planet = new Planet(game, gtamMap.get(ImageResourceCategory.SOL_PLANETS).getTextureInfoHolder(cbtype), id, loc);
                     planet.initResources(atlasMap.get(ImageResourceCategory.SOL_PLANETS));
                     planet.initSprites(vertexBufferObjectManager);
                     celestialBodies.add(planet);
+                    break;
+                case LARGE_ASTEROID1:
+                    Planet largeAsteroid1 = new Planet(game, gtamMap.get(ImageResourceCategory.MISC_CELESTIAL).getTextureInfoHolder(cbtype), id, loc);
+                    largeAsteroid1.initResources(atlasMap.get(ImageResourceCategory.MISC_CELESTIAL));
+                    largeAsteroid1.initSprites(vertexBufferObjectManager);
+                    celestialBodies.add(largeAsteroid1);
                     break;
             }
         }
@@ -197,19 +208,17 @@ public class GenerateWorldObjects {
             float y = sfsObj.getFloat("y");
             float vx = sfsObj.getFloat("vx");
             float vy = sfsObj.getFloat("vy");
+            float gx = sfsObj.getFloat("gx");
+            float gy = sfsObj.getFloat("gy");
             int type = sfsObj.getInt("t");
             int hp = sfsObj.getInt("hp");
 
-            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(vx,vy), hp, type);
+            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(vx,vy), new Vector2(gx, gy), hp, type);
             Asteroid asteroid;
             switch (type) {
                 case 1:
                     asteroid = new Asteroid1(game,gtamMap.get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
                     asteroid.initResources(atlasMap.get(ImageResourceCategory.ANIMATED_ASTEROID1));
-                    break;
-                case 2:
-                    asteroid = new LargeAsteroid1(game,gtamMap.get(ImageResourceCategory.NON_ANIMATED_ASTEROIDS).getTextureInfoHolder(TextureType.LARGE_ASTEROID1));
-                    asteroid.initResources(atlasMap.get(ImageResourceCategory.NON_ANIMATED_ASTEROIDS));
                     break;
                 default:
                     asteroid = new Asteroid1(game,gtamMap.get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
@@ -219,6 +228,7 @@ public class GenerateWorldObjects {
 
             asteroid.initSprites(vertexBufferObjectManager);
             asteroid.setStartPosition(new Vector2(x, y));
+            asteroid.setSv(new Vector2(vx, vy));
             ab.setAsteroid(asteroid);
             asteroids.add(ab);
         }

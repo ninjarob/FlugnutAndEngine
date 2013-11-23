@@ -2,6 +2,11 @@ package com.pkp.flugnut.FlugnutDimensions.client;
 
 import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
@@ -16,6 +21,10 @@ import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.exceptions.SFSException;
+import org.andengine.entity.shape.IAreaShape;
+import org.andengine.extension.physics.box2d.PhysicsWorld;
+import org.andengine.extension.physics.box2d.util.Vector2Pool;
+import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import sfs2x.client.SmartFox;
 import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
@@ -252,7 +261,7 @@ public class SmartFoxBase implements IEventListener{
             }
         }
     }
-
+    int count = 0;
     public void receiveAsteroidUpdate(BaseEvent event) {
         ISFSArray positionData = ((ISFSObject)(event.getArguments().get("params"))).getSFSArray("apd");
         if (positionData != null) {
@@ -260,26 +269,30 @@ public class SmartFoxBase implements IEventListener{
                 ISFSObject positionObj = positionData.getSFSObject(i);
                 Integer id = positionObj.getInt("id");
                 Boolean asteroidDestroyed = positionObj.containsKey("des");
+                GameScene scene = ((GameScene)(game.getCurrentScene()));
+                MouseJoint curJoint = (MouseJoint)(gsi.getAsteroidInfo(id).getPullJoint());
+
                 if (asteroidDestroyed) {
+                    if (curJoint != null) {
+                        scene.getPhysicsWorld().destroyJoint(curJoint);
+                    }
+                    scene.getGameObjects().remove(gsi.getAsteroidInfo(id));
                     gsi.removeAsteroidInfo(id);
                 }
                 else {
                     AsteroidInfo asteroidInfo = gsi.getAsteroidInfo(id);
                     Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
-                    Vector2 vel = new Vector2(positionObj.getFloat("vx"), positionObj.getFloat("vy"));
                     Integer hp = positionObj.getInt("hp");
                     if (null == asteroidInfo) { //server has determined we are to start tracking it.
+                        Vector2 vel = new Vector2(positionObj.getFloat("vx"), positionObj.getFloat("vy"));
+                        Vector2 gravCenter = new Vector2(positionObj.getFloat("gx"), positionObj.getFloat("gy"));
                         Integer type = positionObj.getInt("t");
-                        asteroidInfo = new AsteroidInfo(id, pos, vel, hp, type);
+                        asteroidInfo = new AsteroidInfo(id, pos, vel, gravCenter, hp, type);
                         Asteroid asteroid;
                         switch (type) {
                             case 1:
                                 asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
                                 asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
-                                break;
-                            case 2:
-                                asteroid = new LargeAsteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.NON_ANIMATED_ASTEROIDS).getTextureInfoHolder(TextureType.LARGE_ASTEROID1));
-                                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.NON_ANIMATED_ASTEROIDS));
                                 break;
                             default:
                                 asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
@@ -289,7 +302,6 @@ public class SmartFoxBase implements IEventListener{
                         asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.GAWAIN));
                         asteroid.initSprites(gsi.getVertexBufferObjectManager());
                         asteroid.setStartPosition(pos);
-                        GameScene scene = ((GameScene)(game.getCurrentScene()));
                         asteroid.setScene(scene);
                         scene.initNewObjectForScene(asteroid);
                         asteroidInfo.setAsteroid(asteroid);
@@ -297,14 +309,39 @@ public class SmartFoxBase implements IEventListener{
                     }
                     else {
                         asteroidInfo.setPos(pos);
-                        //asteroidInfo.getAsteroid().getBody()
-                        asteroidInfo.setVel(vel);
-                        //??asteroidInfo.getAsteroid().getSprite().setPosition();
-                        asteroidInfo.getAsteroid().getBody().setLinearVelocity(vel.x, vel.y);
+                        if (null!=curJoint) {
+                            final Vector2 vec = Vector2Pool.obtain(pos.x / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, pos.y / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+                            curJoint.setTarget(vec);
+                            Vector2Pool.recycle(vec);
+                        } else {
+                            curJoint = createMouseJoint(asteroidInfo.getAsteroid().getSprite(), pos.x, pos.y, asteroidInfo.getAsteroid().getMouseJointGroundBody(), scene.getPhysicsWorld());
+                            gsi.getAsteroidInfo(id).setPullJoint(curJoint);
+                        }
+                        count++;
                     }
                 }
             }
         }
+    }
+
+    public MouseJoint createMouseJoint(final IAreaShape sprite, final float pTouchAreaLocalX, final float pTouchAreaLocalY, Body mGroundBody, PhysicsWorld physicsWorld) {
+        final Body body = ((GameObject) sprite.getUserData()).getBody();
+        final MouseJointDef mouseJointDef = new MouseJointDef();
+
+        final Vector2 localPoint = Vector2Pool.obtain((pTouchAreaLocalX - sprite.getWidth() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, (pTouchAreaLocalY - sprite.getHeight() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+        mGroundBody.setTransform(localPoint, 0);
+
+        mouseJointDef.bodyA = mGroundBody;
+        mouseJointDef.bodyB = body;
+        mouseJointDef.dampingRatio = .99f;
+        mouseJointDef.frequencyHz = 30;
+        mouseJointDef.maxForce = (30.0f * body.getMass());
+        //mouseJointDef.collideConnected = true;
+
+        mouseJointDef.target.set(body.getWorldPoint(localPoint));
+        Vector2Pool.recycle(localPoint);
+
+        return (MouseJoint) physicsWorld.createJoint(mouseJointDef);
     }
 
     public boolean sendReadyGame() {

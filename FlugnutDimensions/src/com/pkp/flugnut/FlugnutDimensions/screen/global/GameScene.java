@@ -228,7 +228,25 @@ public class GameScene extends BaseGameScene implements IOnSceneTouchListener, I
     // ===========================================================
 
     public void back() {
+        super.back();
+        sfb.disconnect();
         game.setNewScene(new MainMenuScene(game));
+    }
+
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
+    }
+
+    public void setGameObjects(List<GameObject> gameObjects) {
+        this.gameObjects = gameObjects;
+    }
+
+    public PhysicsWorld getPhysicsWorld() {
+        return physicsWorld;
+    }
+
+    public void setPhysicsWorld(PhysicsWorld physicsWorld) {
+        this.physicsWorld = physicsWorld;
     }
 
     @Override

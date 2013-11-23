@@ -16,6 +16,8 @@ public enum ImageResourceCategory {
 
         SOL_PLANETS,
 
+        MISC_CELESTIAL,
+
         ANIMATED_ASTEROID1,
 
         NON_ANIMATED_ASTEROIDS

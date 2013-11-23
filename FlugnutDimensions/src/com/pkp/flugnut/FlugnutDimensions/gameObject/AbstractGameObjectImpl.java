@@ -20,6 +20,7 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     protected ITextureRegion textureRegion;
     protected ITextureRegion touchAreaTextureRegion;
     protected Vector2 sp;
+    protected Vector2 sv;
     protected TextureInfoHolder texInfo;
     protected int scaledWidth;
     protected int scaledHeight;
@@ -43,6 +44,7 @@ public abstract class AbstractGameObjectImpl implements GameObject {
 
     private void init(GLGame game, TextureInfoHolder textureInfoHolder) {
         this.sp = new Vector2(0,0);
+        this.sv = new Vector2(0,0);
         this.texInfo = textureInfoHolder;
         this.game = game;
     }
@@ -133,6 +135,14 @@ public abstract class AbstractGameObjectImpl implements GameObject {
 
     public void setAnchor2(RevoluteJoint j) {
         anchor2 = j;
+    }
+
+    public Vector2 getSv() {
+        return sv;
+    }
+
+    public void setSv(Vector2 sv) {
+        this.sv = sv;
     }
 
     public Body getBody() {

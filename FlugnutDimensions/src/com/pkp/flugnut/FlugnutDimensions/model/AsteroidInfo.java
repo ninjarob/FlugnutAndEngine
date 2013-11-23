@@ -1,6 +1,8 @@
 package com.pkp.flugnut.FlugnutDimensions.model;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
 
 /**
@@ -18,13 +20,16 @@ public class AsteroidInfo {
     private Vector2 vel;
     private int hp;
     private int type;
+    private Vector2 gravCenter;
+    private Joint pullJoint;
 
-    public AsteroidInfo(int id, Vector2 pos, Vector2 vel, int hp, int type) {
+    public AsteroidInfo(int id, Vector2 pos, Vector2 vel, Vector2 gravCenter, int hp, int type) {
         this.id = id;
         this.pos = pos;
         this.vel = vel;
         this.hp = hp;
         this.type = type;
+        this.gravCenter = gravCenter;
     }
 
     public int getId() {
@@ -73,5 +78,21 @@ public class AsteroidInfo {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public Vector2 getGravCenter() {
+        return gravCenter;
+    }
+
+    public void setGravCenter(Vector2 gravCenter) {
+        this.gravCenter = gravCenter;
+    }
+
+    public Joint getPullJoint() {
+        return pullJoint;
+    }
+
+    public void setPullJoint(Joint pullJoint) {
+        this.pullJoint = pullJoint;
     }
 }

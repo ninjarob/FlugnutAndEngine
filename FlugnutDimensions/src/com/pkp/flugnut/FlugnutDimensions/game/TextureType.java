@@ -15,9 +15,9 @@ public enum TextureType {
 
         /*Stars*/      SUN(3,1),
 
-        /*Planets*/    MERCURY(4,1), VENUS(4,2), EARTH(4,3), MARS(4,4), JUPITER(4,5), SATURN(4,6), URANUS(4,7), NEPTUNE(4,8), PLUTO(4,9), EROS(4,10),
+        /*Planets*/    MERCURY(4,1), VENUS(4,2), EARTH(4,3), MARS(4,4), JUPITER(4,5), SATURN(4,6), URANUS(4,7), NEPTUNE(4,8), PLUTO(4,9), EROS(4,10), LARGE_ASTEROID1(4,11),
 
-        /*Asteroids*/  ASTEROID1(5,1), LARGE_ASTEROID1(5,2);
+        /*Asteroids*/  ASTEROID1(5,1);
 
     private final int category;
     private final int type;
@@ -80,14 +80,14 @@ public enum TextureType {
                         return PLUTO;
                     case 10:
                         return EROS;
+                    case 11:
+                        return LARGE_ASTEROID1;
 
                 }
             case 5:
                 switch(type) {
                     case 1:
                         return ASTEROID1;
-                    case 2:
-                        return LARGE_ASTEROID1;
                 }
         }
         return null;
