@@ -3,7 +3,6 @@ package com.pkp.flugnut.FlugnutDimensions.level;
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.CelestialBody;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
@@ -13,7 +12,6 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

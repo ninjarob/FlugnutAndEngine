@@ -2,8 +2,8 @@ package com.pkp.flugnut.FlugnutDimensions.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
-import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
+import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;

@@ -4,7 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.client.SmartFoxBase;
-import com.pkp.flugnut.FlugnutDimensions.game.*;
+import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
+import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
+import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
+import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
@@ -33,9 +36,7 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GameScene extends BaseGameScene implements IOnSceneTouchListener, IOnAreaTouchListener {
 

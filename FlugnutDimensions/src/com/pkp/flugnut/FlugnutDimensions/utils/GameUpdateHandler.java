@@ -7,7 +7,6 @@ import com.pkp.flugnut.FlugnutDimensions.gameObject.GameObject;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.sprite.AnimatedSprite;
-import org.andengine.util.TimeUtils;
 
 import java.util.List;
 

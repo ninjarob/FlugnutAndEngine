@@ -1,9 +1,6 @@
 package com.pkp.flugnut.FlugnutDimensions;
 
 import com.pkp.flugnut.FlugnutDimensions.game.BaseGameScene;
-import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
-import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
-import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.MainMenuScene;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.PauseMenu;
@@ -14,13 +11,8 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
-import org.andengine.opengl.texture.TextureOptions;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 import org.andengine.util.IDisposable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GLGame extends SimpleBaseGameActivity {
 
