@@ -84,7 +84,7 @@ public class GenerateWorldObjects {
         atlasMap.put(ImageResourceCategory.MISC_CELESTIAL, new BitmapTextureAtlas(game.getTextureManager(),miscCelestialGtam.getWidth()+50, miscCelestialGtam.getHeight()+50, TextureOptions.DEFAULT));
     }
 
-    public GameSceneInfo generateSolSystem(SFSObject dataHolder) {
+    public GameSceneInfo generateSystem(SFSObject dataHolder) {
         //init vertexbuffer
         VertexBufferObjectManager vertexBufferObjectManager = game.getVertexBufferObjectManager();
 
@@ -206,14 +206,13 @@ public class GenerateWorldObjects {
             int id = sfsObj.getInt("id");
             float x = sfsObj.getFloat("x");
             float y = sfsObj.getFloat("y");
-            float vx = sfsObj.getFloat("vx");
-            float vy = sfsObj.getFloat("vy");
             float gx = sfsObj.getFloat("gx");
             float gy = sfsObj.getFloat("gy");
+            float velMag = sfsObj.getFloat("vm");
             int type = sfsObj.getInt("t");
             int hp = sfsObj.getInt("hp");
 
-            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(vx,vy), new Vector2(gx, gy), hp, type);
+            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(gx, gy), velMag, hp, type);
             Asteroid asteroid;
             switch (type) {
                 case 1:
@@ -225,10 +224,8 @@ public class GenerateWorldObjects {
                     asteroid.initResources(atlasMap.get(ImageResourceCategory.ANIMATED_ASTEROID1));
 
             }
-
-            asteroid.initSprites(vertexBufferObjectManager);
             asteroid.setStartPosition(new Vector2(x, y));
-            asteroid.setSv(new Vector2(vx, vy));
+            asteroid.initSprites(vertexBufferObjectManager);
             ab.setAsteroid(asteroid);
             asteroids.add(ab);
         }

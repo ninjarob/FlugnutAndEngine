@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
@@ -49,7 +51,8 @@ public class SmartFoxBase implements IEventListener{
     private final static boolean DEBUG_SFS = true;
     private final static boolean VERBOSE_MODE = true;
 
-    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.105";
+    private final static String DEFAULT_SERVER_ADDRESS = "192.168.1.100";
+    //private final static String DEFAULT_SERVER_ADDRESS = "10.109.106.54";
     //private final static String DEFAULT_SERVER_PORT = "9933";
     private final static String DEFAULT_SERVER_PORT = "8082";
 
@@ -217,7 +220,7 @@ public class SmartFoxBase implements IEventListener{
     public void receiveReadyGame(BaseEvent event) {
 
         GenerateWorldObjects gwo = new GenerateWorldObjects(game);
-        gsi = gwo.generateSolSystem((SFSObject)(event.getArguments().get("params")));
+        gsi = gwo.generateSystem((SFSObject) (event.getArguments().get("params")));
         GameScene gs = new GameScene(game, gsi, this);
         game.setNewScene(gs);
     }
@@ -268,7 +271,7 @@ public class SmartFoxBase implements IEventListener{
                 Integer id = positionObj.getInt("id");
                 Boolean asteroidDestroyed = positionObj.containsKey("des");
                 GameScene scene = ((GameScene)(game.getCurrentScene()));
-                MouseJoint curJoint = (MouseJoint)(gsi.getAsteroidInfo(id).getPullJoint());
+                RevoluteJoint curJoint = gsi.getAsteroidInfo(id).getRevoluteJoint();
 
                 if (asteroidDestroyed) {
                     if (curJoint != null) {
@@ -279,13 +282,19 @@ public class SmartFoxBase implements IEventListener{
                 }
                 else {
                     AsteroidInfo asteroidInfo = gsi.getAsteroidInfo(id);
+                    final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
+                    revoluteJointDef.initialize(asteroidInfo.getAsteroid().getCenterGravBody(), asteroidInfo.getAsteroid().getBody(), asteroidInfo.getAsteroid().getCenterGravBody().getWorldCenter());
+                    revoluteJointDef.enableMotor = true;
+                    revoluteJointDef.motorSpeed = 1;
+                    revoluteJointDef.maxMotorTorque = 10;
+
                     Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
                     Integer hp = positionObj.getInt("hp");
                     if (null == asteroidInfo) { //server has determined we are to start tracking it.
-                        Vector2 vel = new Vector2(positionObj.getFloat("vx"), positionObj.getFloat("vy"));
                         Vector2 gravCenter = new Vector2(positionObj.getFloat("gx"), positionObj.getFloat("gy"));
                         Integer type = positionObj.getInt("t");
-                        asteroidInfo = new AsteroidInfo(id, pos, vel, gravCenter, hp, type);
+                        float velMag = positionObj.getFloat("vm");
+                        asteroidInfo = new AsteroidInfo(id, pos, gravCenter, velMag, hp, type);
                         Asteroid asteroid;
                         switch (type) {
                             case 1:
@@ -304,22 +313,68 @@ public class SmartFoxBase implements IEventListener{
                         scene.initNewObjectForScene(asteroid);
                         asteroidInfo.setAsteroid(asteroid);
                         gsi.addAsteroidInfo(asteroidInfo);
+                        scene.getGameObjects().add(asteroid);
+                        curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
+                        asteroidInfo.setRevoluteJoint(curJoint);
                     }
                     else {
                         asteroidInfo.setPos(pos);
                         if (null!=curJoint) {
-                            final Vector2 vec = Vector2Pool.obtain(pos.x / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, pos.y / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-                            curJoint.setTarget(vec);
-                            Vector2Pool.recycle(vec);
+
+                            //tried setting things exactly, but that wasnt' working.  Instead I'll make the revolute moter pump
+                            // a little faster if it's behind or slower if it's ahead.
+                            float faster = getFaster(pos.x, pos.y, asteroidInfo);
+                            curJoint.setMotorSpeed(curJoint.getMotorSpeed()+faster);
                         } else {
-                            curJoint = createMouseJoint(asteroidInfo.getAsteroid().getSprite(), pos.x, pos.y, asteroidInfo.getAsteroid().getMouseJointGroundBody(), scene.getPhysicsWorld());
-                            gsi.getAsteroidInfo(id).setPullJoint(curJoint);
+                            curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
+                            asteroidInfo.setRevoluteJoint(curJoint);
                         }
                         count++;
                     }
                 }
             }
         }
+    }
+
+    private float getFaster(float x, float y, AsteroidInfo ai) {
+        Body b = ai.getAsteroid().getBody();
+        if (ai.getVelMag() > 0) {      //counterclockwise (so -x goes faster and +x goes slower)
+            if (y > 0) {               //below
+                if (x < b.getPosition().x) {                  //behind
+                    return -0.1f;  //-0.1 means go faster in the counterclockwise direction
+                }
+                else if (x > b.getPosition().x) {             //ahead
+                    return 0.1f;   //go slower
+                }
+            }
+            if (y < 0) {               //above
+                if (x < b.getPosition().x) {                  //ahead
+                    return 0.1f;    //go slower
+                }
+                else if (x > b.getPosition().x) {             //behind
+                    return -0.1f;   //go faster
+                }
+            }
+        }
+        else {                         //clockwise   (so +x goes faster and -x goes slower)
+            if (y > 0) {               //below
+                if (x < b.getPosition().x) {                  //ahead
+                    return -0.1f;  //go slower
+                }
+                else if (x > b.getPosition().x) {             //behind
+                    return 0.1f;   //go faster
+                }
+            }
+            if (y < 0) {               //above
+                if (x < b.getPosition().x) {                  //behind
+                    return 0.1f;    //go faster
+                }
+                else if (x > b.getPosition().x) {             //ahead
+                    return -0.1f;   //go slower
+                }
+            }
+        }
+        return 0;
     }
 
     public MouseJoint createMouseJoint(final IAreaShape sprite, final float pTouchAreaLocalX, final float pTouchAreaLocalY, Body mGroundBody, PhysicsWorld physicsWorld) {

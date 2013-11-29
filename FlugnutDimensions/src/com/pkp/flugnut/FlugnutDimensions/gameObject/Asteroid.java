@@ -19,7 +19,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 public abstract class Asteroid extends AbstractGameObjectImpl{
     protected ITiledTextureRegion asteroidTR;
     protected AnimatedSprite asteroidSprite;
-    protected Body mouseJointGroundBody;  //used to move the asteroid
+    protected Body centerGravBody;  //used to move the asteroid
 
     public Asteroid(GLGame game, TextureInfoHolder tih) {
         super(game, tih);
@@ -41,12 +41,12 @@ public abstract class Asteroid extends AbstractGameObjectImpl{
 
     public abstract void animate();
 
-    public Body getMouseJointGroundBody() {
-        return mouseJointGroundBody;
+    public Body getCenterGravBody() {
+        return centerGravBody;
     }
 
-    public void setMouseJointGroundBody(Body mouseJointGroundBody) {
-        this.mouseJointGroundBody = mouseJointGroundBody;
+    public void setCenterGravBody(Body centerGravBody) {
+        this.centerGravBody = centerGravBody;
     }
 
     public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {

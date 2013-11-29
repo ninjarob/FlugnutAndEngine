@@ -44,7 +44,7 @@ public class CelestialBody extends AbstractGameObjectImpl{
 
     @Override
     public void initSprites(VertexBufferObjectManager vertexBufferObjectManager) {
-        sprite = new Sprite(sp.x, sp.y, textureRegion.getWidth(), textureRegion.getHeight(), textureRegion, vertexBufferObjectManager);
+        sprite = new Sprite(sp.x-(textureRegion.getWidth()/2), sp.y-(textureRegion.getHeight()/2), textureRegion.getWidth(), textureRegion.getHeight(), textureRegion, vertexBufferObjectManager);
     }
 
     @Override

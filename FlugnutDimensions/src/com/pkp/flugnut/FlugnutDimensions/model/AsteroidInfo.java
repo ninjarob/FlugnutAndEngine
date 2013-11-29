@@ -2,6 +2,7 @@ package com.pkp.flugnut.FlugnutDimensions.model;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
 
 /**
@@ -16,16 +17,16 @@ public class AsteroidInfo {
     private int id;
     private Asteroid asteroid;
     private Vector2 pos;
-    private Vector2 vel;
+    private float velMag;
     private int hp;
     private int type;
     private Vector2 gravCenter;
-    private Joint pullJoint;
+    private RevoluteJoint revoluteJoint;
 
-    public AsteroidInfo(int id, Vector2 pos, Vector2 vel, Vector2 gravCenter, int hp, int type) {
+    public AsteroidInfo(int id, Vector2 pos, Vector2 gravCenter, float velMag, int hp, int type) {
         this.id = id;
         this.pos = pos;
-        this.vel = vel;
+        this.velMag = velMag;
         this.hp = hp;
         this.type = type;
         this.gravCenter = gravCenter;
@@ -55,12 +56,12 @@ public class AsteroidInfo {
         this.pos = pos;
     }
 
-    public Vector2 getVel() {
-        return vel;
+    public float getVelMag() {
+        return velMag;
     }
 
-    public void setVel(Vector2 vel) {
-        this.vel = vel;
+    public void setVelMag(float velMag) {
+        this.velMag = velMag;
     }
 
     public int getHp() {
@@ -87,11 +88,11 @@ public class AsteroidInfo {
         this.gravCenter = gravCenter;
     }
 
-    public Joint getPullJoint() {
-        return pullJoint;
+    public RevoluteJoint getRevoluteJoint() {
+        return revoluteJoint;
     }
 
-    public void setPullJoint(Joint pullJoint) {
-        this.pullJoint = pullJoint;
+    public void setRevoluteJoint(RevoluteJoint pullJoint) {
+        this.revoluteJoint = pullJoint;
     }
 }

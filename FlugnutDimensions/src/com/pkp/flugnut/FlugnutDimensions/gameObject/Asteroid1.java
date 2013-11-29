@@ -32,14 +32,13 @@ public class Asteroid1 extends Asteroid {
 
     @Override
     public void initForScene(PhysicsWorld physics) {
-        mouseJointGroundBody = ((GameScene)scene).getPhysicsWorld().createBody(new BodyDef());
-        Vector2 pos = new Vector2(sp.x- asteroidSprite.getWidth()/2, sp.y - (asteroidSprite.getHeight()/2));
+        centerGravBody = ((GameScene)scene).getPhysicsWorld().createBody(new BodyDef());
+        Vector2 pos = new Vector2(sp.x, sp.y);
 
         body = PhysicsFactory.createBoxBody(physics, pos.x, pos.y, asteroidSprite.getWidth(),
                 asteroidSprite.getHeight(), BodyDef.BodyType.DynamicBody, GameConstants.ASTEROID_FIXTURE_DEF);
         body.setFixedRotation(false);
-        body.setAngularVelocity(1f);
-        body.setLinearVelocity(sv.x, sv.y);
+        body.setLinearDamping(1f);
         asteroidSprite.setUserData(this);
 
         scene.attachChild(asteroidSprite);
