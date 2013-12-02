@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutDimensions.client;
 import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
@@ -16,12 +17,14 @@ import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.NPCInfo;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
+import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import com.pkp.flugnut.FlugnutDimensions.utils.GenerateWorldObjects;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.exceptions.SFSException;
 import org.andengine.entity.shape.IAreaShape;
+import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.Vector2Pool;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
@@ -283,7 +286,7 @@ public class SmartFoxBase implements IEventListener{
                 else {
                     AsteroidInfo asteroidInfo = gsi.getAsteroidInfo(id);
                     final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
-                    revoluteJointDef.initialize(asteroidInfo.getAsteroid().getCenterGravBody(), asteroidInfo.getAsteroid().getBody(), asteroidInfo.getAsteroid().getCenterGravBody().getWorldCenter());
+                    revoluteJointDef.initialize(asteroidInfo.getCenterGravBody(), asteroidInfo.getAsteroid().getBody(), asteroidInfo.getCenterGravBody().getWorldCenter());
                     revoluteJointDef.enableMotor = true;
                     revoluteJointDef.motorSpeed = 1;
                     revoluteJointDef.maxMotorTorque = 10;
@@ -292,17 +295,20 @@ public class SmartFoxBase implements IEventListener{
                     Integer hp = positionObj.getInt("hp");
                     if (null == asteroidInfo) { //server has determined we are to start tracking it.
                         Vector2 gravCenter = new Vector2(positionObj.getFloat("gx"), positionObj.getFloat("gy"));
+                        Body centerGravBody = PhysicsFactory.createBoxBody(scene.getPhysicsWorld(), gravCenter.x, gravCenter.y, 1,
+                                1, BodyDef.BodyType.StaticBody, GameConstants.ASTEROID_FIXTURE_DEF);
+
                         Integer type = positionObj.getInt("t");
                         float velMag = positionObj.getFloat("vm");
-                        asteroidInfo = new AsteroidInfo(id, pos, gravCenter, velMag, hp, type);
+                        asteroidInfo = new AsteroidInfo(id, pos, gravCenter, centerGravBody, velMag, hp, type);
                         Asteroid asteroid;
                         switch (type) {
                             case 1:
-                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
+                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), asteroidInfo);
                                 asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
                                 break;
                             default:
-                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
+                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), asteroidInfo);
                                 asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
 
                         }

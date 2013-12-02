@@ -1,9 +1,11 @@
 package com.pkp.flugnut.FlugnutDimensions.gameObject;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
@@ -21,8 +23,8 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
  */
 public class Asteroid1 extends Asteroid {
 
-    public Asteroid1(GLGame game, TextureInfoHolder tih) {
-        super(game, tih);
+    public Asteroid1(GLGame game, TextureInfoHolder tih, AsteroidInfo asteroidInfo) {
+        super(game, tih, asteroidInfo);
     }
 
     @Override
@@ -32,8 +34,11 @@ public class Asteroid1 extends Asteroid {
 
     @Override
     public void initForScene(PhysicsWorld physics) {
-        centerGravBody = ((GameScene)scene).getPhysicsWorld().createBody(new BodyDef());
         Vector2 pos = new Vector2(sp.x, sp.y);
+
+
+        asteroidInfo.setCenterGravBody(PhysicsFactory.createBoxBody(physics, asteroidInfo.getGravCenter().x, asteroidInfo.getGravCenter().y, 1,
+                1, BodyDef.BodyType.StaticBody, GameConstants.ASTEROID_FIXTURE_DEF));
 
         body = PhysicsFactory.createBoxBody(physics, pos.x, pos.y, asteroidSprite.getWidth(),
                 asteroidSprite.getHeight(), BodyDef.BodyType.DynamicBody, GameConstants.ASTEROID_FIXTURE_DEF);

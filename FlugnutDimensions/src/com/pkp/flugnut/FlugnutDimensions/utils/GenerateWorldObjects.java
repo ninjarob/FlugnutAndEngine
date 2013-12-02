@@ -1,6 +1,8 @@
 package com.pkp.flugnut.FlugnutDimensions.utils;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
@@ -12,6 +14,7 @@ import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
+import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -212,15 +215,15 @@ public class GenerateWorldObjects {
             int type = sfsObj.getInt("t");
             int hp = sfsObj.getInt("hp");
 
-            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(gx, gy), velMag, hp, type);
+            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(gx, gy), null, velMag, hp, type);
             Asteroid asteroid;
             switch (type) {
                 case 1:
-                    asteroid = new Asteroid1(game,gtamMap.get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
+                    asteroid = new Asteroid1(game,gtamMap.get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), ab);
                     asteroid.initResources(atlasMap.get(ImageResourceCategory.ANIMATED_ASTEROID1));
                     break;
                 default:
-                    asteroid = new Asteroid1(game,gtamMap.get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1));
+                    asteroid = new Asteroid1(game,gtamMap.get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), ab);
                     asteroid.initResources(atlasMap.get(ImageResourceCategory.ANIMATED_ASTEROID1));
 
             }

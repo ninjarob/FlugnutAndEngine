@@ -3,6 +3,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -19,11 +20,12 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 public abstract class Asteroid extends AbstractGameObjectImpl{
     protected ITiledTextureRegion asteroidTR;
     protected AnimatedSprite asteroidSprite;
-    protected Body centerGravBody;  //used to move the asteroid
+    protected AsteroidInfo asteroidInfo;
 
-    public Asteroid(GLGame game, TextureInfoHolder tih) {
+    public Asteroid(GLGame game, TextureInfoHolder tih, AsteroidInfo asteroidInfo) {
         super(game, tih);
         touchable = true;
+        this.asteroidInfo = asteroidInfo;
     }
 
     @Override
@@ -40,14 +42,6 @@ public abstract class Asteroid extends AbstractGameObjectImpl{
     public abstract void initForScene(PhysicsWorld physics);
 
     public abstract void animate();
-
-    public Body getCenterGravBody() {
-        return centerGravBody;
-    }
-
-    public void setCenterGravBody(Body centerGravBody) {
-        this.centerGravBody = centerGravBody;
-    }
 
     public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld) {
 
