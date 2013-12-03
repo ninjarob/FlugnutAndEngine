@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
+import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -16,7 +17,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 public abstract class AbstractGameObjectImpl implements GameObject {
     protected GLGame game;
-    protected Scene scene;
+    protected GameScene scene;
     protected ITextureRegion textureRegion;
     protected ITextureRegion touchAreaTextureRegion;
     protected Vector2 sp;
@@ -49,6 +50,7 @@ public abstract class AbstractGameObjectImpl implements GameObject {
         this.game = game;
     }
 
+    @Override
     public void initResources(BitmapTextureAtlas mBitmapTextureAtlas) {
         this.textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, game, texInfo.getPath(), 0, texInfo.getStarty());
     }
@@ -81,11 +83,13 @@ public abstract class AbstractGameObjectImpl implements GameObject {
     @Override
     public void onActionUp(float touchX, float touchY, PhysicsWorld physicsWorld) {}
 
-    public Scene getScene() {
+    @Override
+    public GameScene getScene() {
         return scene;
     }
 
-    public void setScene(Scene scene) {
+    @Override
+    public void setScene(GameScene scene) {
         this.scene = scene;
     }
 

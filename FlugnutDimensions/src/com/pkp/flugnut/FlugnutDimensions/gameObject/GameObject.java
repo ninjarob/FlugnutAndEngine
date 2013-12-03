@@ -2,6 +2,7 @@ package com.pkp.flugnut.FlugnutDimensions.gameObject;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
@@ -35,4 +36,7 @@ public interface GameObject {
     public void onActionDown(float touchX, float touchY, PhysicsWorld physicsWorld);
     public void onActionMove(float touchX, float touchY, PhysicsWorld physicsWorld);
     public void onActionUp(float touchX, float touchY, PhysicsWorld physicsWorld);
+
+    public GameScene getScene();
+    public void setScene(GameScene scene);
 }

@@ -4,30 +4,28 @@ import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
-import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.ConnectionStatus;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid1;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.GawainShip;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.NPCInfo;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import com.pkp.flugnut.FlugnutDimensions.utils.GenerateWorldObjects;
+import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.exceptions.SFSException;
-import org.andengine.entity.shape.IAreaShape;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
-import org.andengine.extension.physics.box2d.PhysicsWorld;
-import org.andengine.extension.physics.box2d.util.Vector2Pool;
-import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import sfs2x.client.SmartFox;
 import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
@@ -245,12 +243,9 @@ public class SmartFoxBase implements IEventListener{
                         String name = positionObj.getUtfString("name");
                         npcInfo = new NPCInfo(id, name, pos);
                         Ship npcShip = new GawainShip(game, gsi.getGtamMap().get(ImageResourceCategory.GAWAIN).getTextureInfoHolder(TextureType.GAWAIN));
-                        npcShip.initResources(gsi.getAtlasMap().get(ImageResourceCategory.GAWAIN));
-                        npcShip.initSprites(gsi.getVertexBufferObjectManager());
-                        npcShip.setStartPosition(pos);
-                        GameScene scene = ((GameScene)(game.getCurrentScene()));
-                        npcShip.setScene(scene);
-                        scene.initNewObjectForScene(npcShip);
+
+                        Utilities.addWorldObject(npcShip, gsi, pos, ((GameScene)(game.getCurrentScene())), ImageResourceCategory.GAWAIN);
+
                         npcInfo.setShip(npcShip);
                         gsi.addNpcInfo(npcInfo);
                     }
@@ -265,142 +260,93 @@ public class SmartFoxBase implements IEventListener{
             }
         }
     }
-    int count = 0;
+
     public void receiveAsteroidUpdate(BaseEvent event) {
         ISFSArray positionData = ((ISFSObject)(event.getArguments().get("params"))).getSFSArray("apd");
+        GameScene scene = ((GameScene)(game.getCurrentScene()));
         if (positionData != null) {
             for (int i = 0; i < positionData.size(); i++) {
                 ISFSObject positionObj = positionData.getSFSObject(i);
                 Integer id = positionObj.getInt("id");
-                Boolean asteroidDestroyed = positionObj.containsKey("des");
-                GameScene scene = ((GameScene)(game.getCurrentScene()));
-                RevoluteJoint curJoint = gsi.getAsteroidInfo(id).getRevoluteJoint();
-
-                if (asteroidDestroyed) {
-                    if (curJoint != null) {
-                        scene.getPhysicsWorld().destroyJoint(curJoint);
-                    }
-                    scene.getGameObjects().remove(gsi.getAsteroidInfo(id));
-                    gsi.removeAsteroidInfo(id);
+                AsteroidInfo asteroidInfo = gsi.getAsteroidInfo(id);
+                if (null == asteroidInfo) {
+                    addAsteroid(id, scene, positionObj);
                 }
                 else {
-                    AsteroidInfo asteroidInfo = gsi.getAsteroidInfo(id);
-                    final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
-                    revoluteJointDef.initialize(asteroidInfo.getCenterGravBody(), asteroidInfo.getAsteroid().getBody(), asteroidInfo.getCenterGravBody().getWorldCenter());
-                    revoluteJointDef.enableMotor = true;
-                    revoluteJointDef.motorSpeed = 1;
-                    revoluteJointDef.maxMotorTorque = 10;
-
-                    Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
-                    Integer hp = positionObj.getInt("hp");
-                    if (null == asteroidInfo) { //server has determined we are to start tracking it.
-                        Vector2 gravCenter = new Vector2(positionObj.getFloat("gx"), positionObj.getFloat("gy"));
-                        Body centerGravBody = PhysicsFactory.createBoxBody(scene.getPhysicsWorld(), gravCenter.x, gravCenter.y, 1,
-                                1, BodyDef.BodyType.StaticBody, GameConstants.ASTEROID_FIXTURE_DEF);
-
-                        Integer type = positionObj.getInt("t");
-                        float velMag = positionObj.getFloat("vm");
-                        asteroidInfo = new AsteroidInfo(id, pos, gravCenter, centerGravBody, velMag, hp, type);
-                        Asteroid asteroid;
-                        switch (type) {
-                            case 1:
-                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), asteroidInfo);
-                                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
-                                break;
-                            default:
-                                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), asteroidInfo);
-                                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
-
-                        }
-                        asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.GAWAIN));
-                        asteroid.initSprites(gsi.getVertexBufferObjectManager());
-                        asteroid.setStartPosition(pos);
-                        asteroid.setScene(scene);
-                        scene.initNewObjectForScene(asteroid);
-                        asteroidInfo.setAsteroid(asteroid);
-                        gsi.addAsteroidInfo(asteroidInfo);
-                        scene.getGameObjects().add(asteroid);
-                        curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
-                        asteroidInfo.setRevoluteJoint(curJoint);
+                    Boolean asteroidDestroyed = positionObj.containsKey("des");
+                    if (asteroidDestroyed) {
+                        removeAsteroid(gsi.getAsteroidInfo(id), scene);
                     }
                     else {
-                        asteroidInfo.setPos(pos);
-                        if (null!=curJoint) {
-
-                            //tried setting things exactly, but that wasnt' working.  Instead I'll make the revolute moter pump
-                            // a little faster if it's behind or slower if it's ahead.
-                            float faster = getFaster(pos.x, pos.y, asteroidInfo);
-                            curJoint.setMotorSpeed(curJoint.getMotorSpeed()+faster);
-                        } else {
-                            curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
-                            asteroidInfo.setRevoluteJoint(curJoint);
-                        }
-                        count++;
+                        updateAsteroid(asteroidInfo, scene, positionObj);
                     }
                 }
             }
         }
     }
 
-    private float getFaster(float x, float y, AsteroidInfo ai) {
-        Body b = ai.getAsteroid().getBody();
-        if (ai.getVelMag() > 0) {      //counterclockwise (so -x goes faster and +x goes slower)
-            if (y > 0) {               //below
-                if (x < b.getPosition().x) {                  //behind
-                    return -0.1f;  //-0.1 means go faster in the counterclockwise direction
-                }
-                else if (x > b.getPosition().x) {             //ahead
-                    return 0.1f;   //go slower
-                }
-            }
-            if (y < 0) {               //above
-                if (x < b.getPosition().x) {                  //ahead
-                    return 0.1f;    //go slower
-                }
-                else if (x > b.getPosition().x) {             //behind
-                    return -0.1f;   //go faster
-                }
-            }
+    protected void addAsteroid(Integer id, GameScene scene, ISFSObject positionObj) {
+        Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
+        Integer hp = positionObj.getInt("hp");
+        Vector2 gravCenter = new Vector2(positionObj.getFloat("gx"), positionObj.getFloat("gy"));
+        Integer type = positionObj.getInt("t");
+        Float velMag = positionObj.getFloat("vm");
+        Body centerGravBody = PhysicsFactory.createBoxBody(scene.getPhysicsWorld(), gravCenter.x, gravCenter.y, 1,
+                1, BodyDef.BodyType.StaticBody, GameConstants.ASTEROID_FIXTURE_DEF);
+        AsteroidInfo asteroidInfo = new AsteroidInfo(id, pos, gravCenter, centerGravBody, velMag, hp, type);
+        Asteroid asteroid;
+        switch (type) {
+            case 1:
+                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), asteroidInfo);
+                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
+                break;
+            default:
+                asteroid = new Asteroid1(game,gsi.getGtamMap().get(ImageResourceCategory.ANIMATED_ASTEROID1).getTextureInfoHolder(TextureType.ASTEROID1), asteroidInfo);
+                asteroid.initResources(gsi.getAtlasMap().get(ImageResourceCategory.ANIMATED_ASTEROID1));
         }
-        else {                         //clockwise   (so +x goes faster and -x goes slower)
-            if (y > 0) {               //below
-                if (x < b.getPosition().x) {                  //ahead
-                    return -0.1f;  //go slower
-                }
-                else if (x > b.getPosition().x) {             //behind
-                    return 0.1f;   //go faster
-                }
-            }
-            if (y < 0) {               //above
-                if (x < b.getPosition().x) {                  //behind
-                    return 0.1f;    //go faster
-                }
-                else if (x > b.getPosition().x) {             //ahead
-                    return -0.1f;   //go slower
-                }
-            }
-        }
-        return 0;
+        Utilities.addWorldObject(asteroid, gsi, pos, scene, ImageResourceCategory.ANIMATED_ASTEROID1);
+
+        asteroidInfo.setAsteroid(asteroid);
+        gsi.addAsteroidInfo(asteroidInfo);
+
+        final RevoluteJointDef revoluteJointDef = getRevoluteJointDef(asteroidInfo);
+
+        RevoluteJoint curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
+        asteroidInfo.setRevoluteJoint(curJoint);
     }
 
-    public MouseJoint createMouseJoint(final IAreaShape sprite, final float pTouchAreaLocalX, final float pTouchAreaLocalY, Body mGroundBody, PhysicsWorld physicsWorld) {
-        final Body body = ((GameObject) sprite.getUserData()).getBody();
-        final MouseJointDef mouseJointDef = new MouseJointDef();
+    protected void updateAsteroid(AsteroidInfo asteroidInfo, GameScene scene, ISFSObject positionObj) {
+        Vector2 pos = new Vector2(positionObj.getFloat("x"), positionObj.getFloat("y"));
+        Integer hp = positionObj.getInt("hp");
+        asteroidInfo.setPos(pos);
+        asteroidInfo.setHp(hp);
+        RevoluteJoint curJoint = asteroidInfo.getRevoluteJoint();
+        if (null!=curJoint) {
+            float faster = Utilities.getAsteroidFaster(pos.x, pos.y, asteroidInfo);
+            curJoint.setMotorSpeed(curJoint.getMotorSpeed()+faster);
+        } else {
+            RevoluteJointDef revoluteJointDef = getRevoluteJointDef(asteroidInfo);
+            curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
+            asteroidInfo.setRevoluteJoint(curJoint);
+        }
+    }
 
-        final Vector2 localPoint = Vector2Pool.obtain((pTouchAreaLocalX - sprite.getWidth() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, (pTouchAreaLocalY - sprite.getHeight() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-        mGroundBody.setTransform(localPoint, 0);
+    protected void removeAsteroid(AsteroidInfo ai, GameScene scene) {
+        RevoluteJoint curJoint = ai.getRevoluteJoint();
+        if (curJoint != null) {
+            scene.getPhysicsWorld().destroyJoint(curJoint);
+        }
+        scene.getGameObjects().remove(ai);
+        gsi.removeAsteroidInfo(ai.getId());
+    }
 
-        mouseJointDef.bodyA = mGroundBody;
-        mouseJointDef.bodyB = body;
-        mouseJointDef.dampingRatio = .99f;
-        mouseJointDef.frequencyHz = 30;
-        mouseJointDef.maxForce = (30.0f * body.getMass());
-        //mouseJointDef.collideConnected = true;
-
-        mouseJointDef.target.set(body.getWorldPoint(localPoint));
-        Vector2Pool.recycle(localPoint);
-
-        return (MouseJoint) physicsWorld.createJoint(mouseJointDef);
+    protected RevoluteJointDef getRevoluteJointDef(AsteroidInfo asteroidInfo) {
+        final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
+        revoluteJointDef.initialize(asteroidInfo.getCenterGravBody(), asteroidInfo.getAsteroid().getBody(), asteroidInfo.getCenterGravBody().getWorldCenter());
+        revoluteJointDef.enableMotor = true;
+        revoluteJointDef.motorSpeed = 1;
+        revoluteJointDef.maxMotorTorque = 10;
+        return revoluteJointDef;
     }
 
     public boolean sendReadyGame() {
@@ -413,8 +359,6 @@ public class SmartFoxBase implements IEventListener{
         }
         return false;
     }
-
-
 
     //************************************
     // GETTERS AND SETTERS

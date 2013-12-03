@@ -5,8 +5,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.joints.*;
+import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.Settings;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.GameObject;
+import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
+import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import org.andengine.audio.music.Music;
 import org.andengine.audio.sound.Sound;
 import org.andengine.entity.shape.IAreaShape;
@@ -85,4 +89,53 @@ public class Utilities {
         return angle;
     }
 
+    public static float getAsteroidFaster(float x, float y, AsteroidInfo ai) {
+        Body b = ai.getAsteroid().getBody();
+        if (ai.getVelMag() > 0) {      //counterclockwise (so -x goes faster and +x goes slower)
+            if (y > 0) {               //below
+                if (x < b.getPosition().x) {                  //behind
+                    return -0.1f;  //-0.1 means go faster in the counterclockwise direction
+                }
+                else if (x > b.getPosition().x) {             //ahead
+                    return 0.1f;   //go slower
+                }
+            }
+            if (y < 0) {               //above
+                if (x < b.getPosition().x) {                  //ahead
+                    return 0.1f;    //go slower
+                }
+                else if (x > b.getPosition().x) {             //behind
+                    return -0.1f;   //go faster
+                }
+            }
+        }
+        else {                         //clockwise   (so +x goes faster and -x goes slower)
+            if (y > 0) {               //below
+                if (x < b.getPosition().x) {                  //ahead
+                    return -0.1f;  //go slower
+                }
+                else if (x > b.getPosition().x) {             //behind
+                    return 0.1f;   //go faster
+                }
+            }
+            if (y < 0) {               //above
+                if (x < b.getPosition().x) {                  //behind
+                    return 0.1f;    //go faster
+                }
+                else if (x > b.getPosition().x) {             //ahead
+                    return -0.1f;   //go slower
+                }
+            }
+        }
+        return 0;
+    }
+
+    public static void addWorldObject(GameObject go, GameSceneInfo gsi, Vector2 pos, GameScene scene, ImageResourceCategory irc) {
+        go.initResources(gsi.getAtlasMap().get(irc));
+        go.initSprites(gsi.getVertexBufferObjectManager());
+        go.setStartPosition(pos);
+        go.setScene(scene);
+        scene.initNewObjectForScene(go);
+        scene.getGameObjects().add(go);
+    }
 }

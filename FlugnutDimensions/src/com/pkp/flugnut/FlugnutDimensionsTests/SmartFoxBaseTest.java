@@ -106,6 +106,11 @@ public class SmartFoxBaseTest {
     }
 
     @Test
+    public void testReceiveAsteroidUpdate() throws Exception {
+
+    }
+
+    @Test
     public void testSendReadyGame() throws Exception {
         boolean sent = sfb.sendReadyGame();
         Assert.assertTrue(sent);
