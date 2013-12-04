@@ -1,4 +1,4 @@
-package com.pkp.flugnut.FlugnutDimensions.gameObject;
+package com.pkp.flugnut.FlugnutDimensions.gameObject.npc;
 
 
 import com.badlogic.gdx.math.Vector2;
@@ -12,10 +12,11 @@ import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
  * Time: 7:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Planet extends CelestialBody {
+public class Star extends CelestialBody {
+
     private int radius;
 
-    public Planet(GLGame game, TextureInfoHolder tih, int id, Vector2 location) {
+    public Star(GLGame game, TextureInfoHolder tih, int id, Vector2 location) {
         super(game, tih, id, location);
         this.radius = tih.getHeight();
     }

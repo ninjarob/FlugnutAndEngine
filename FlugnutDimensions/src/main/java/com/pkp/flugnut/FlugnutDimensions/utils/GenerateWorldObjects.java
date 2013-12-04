@@ -1,21 +1,18 @@
 package com.pkp.flugnut.FlugnutDimensions.utils;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.npc.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
-import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -215,8 +212,10 @@ public class GenerateWorldObjects {
             float velMag = sfsObj.getFloat("vm");
             int type = sfsObj.getInt("t");
             int hp = sfsObj.getInt("hp");
+            String path = sfsObj.getUtfString("path");
 
             AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(gx, gy), null, velMag, hp, type);
+            ab.setPath(path);
             Asteroid asteroid;
             switch (type) {
                 case 1:

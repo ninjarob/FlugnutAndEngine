@@ -1,25 +1,22 @@
 package com.pkp.flugnut.FlugnutDimensionsTests;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.npc.Asteroid;
+import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.utils.AsteroidUtilities;
+import com.pkp.flugnut.FlugnutDimensions.utils.Utilities;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.testng.Assert;
 import org.testng.IObjectFactory;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.ObjectFactory;
-import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-import org.powermock.api.support.membermodification.MemberModifier;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,12 +25,26 @@ import org.powermock.api.support.membermodification.MemberModifier;
  * Time: 8:31 AM
  * To change this template use File | Settings | File Templates.
  */
-@PrepareForTest(AsteroidUtilities.class)
+@PrepareForTest(Utilities.class)
 public class AsteroidUtilitiesTest {
+
+    @ObjectFactory
+    public IObjectFactory getObjectFactory() {
+        return new org.powermock.modules.testng.PowerMockObjectFactory();
+    }
+
+    @Mock
+    private AsteroidInfo ai;
+
+    @Mock
+    private Asteroid asteroid;
+
+    @Mock
+    private Body body;
 
     @BeforeMethod
     public void setUp() throws Exception {
-
+        PowerMockito.mockStatic(Utilities.class);
     }
 
     @Test
@@ -57,7 +68,24 @@ public class AsteroidUtilitiesTest {
     }
 
     @Test
-    public void testGetAsteroidFaster() throws Exception {
+    public void testGetAsteroidFasterAheadPositiveVelocity() throws Exception {
+        when(ai.getAsteroid()).thenReturn(asteroid);
+        when(asteroid.getBody()).thenReturn(body);
+        when(ai.getVelMag()).thenReturn(1f);
+        Vector2 pos = new Vector2(1,0);
+        when(body.getPosition()).thenReturn(pos);
+        float faster = AsteroidUtilities.getOrbitalAsteroidFaster(0f, 1f, ai, true);
+        Assert.assertTrue(faster < 0);
+    }
 
+    @Test
+    public void testGetAsteroidFasterAheadPositiveVelocityAcrossEquator() throws Exception {
+        when(ai.getAsteroid()).thenReturn(asteroid);
+        when(asteroid.getBody()).thenReturn(body);
+        when(ai.getVelMag()).thenReturn(1f);
+        Vector2 pos = new Vector2(1,-.1f);
+        when(body.getPosition()).thenReturn(pos);
+        float faster = AsteroidUtilities.getOrbitalAsteroidFaster(1f, .1f, ai, true);
+        Assert.assertTrue(faster < 0);
     }
 }

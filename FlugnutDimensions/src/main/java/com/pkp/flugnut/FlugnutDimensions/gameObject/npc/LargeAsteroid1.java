@@ -1,4 +1,4 @@
-package com.pkp.flugnut.FlugnutDimensions.gameObject;
+package com.pkp.flugnut.FlugnutDimensions.gameObject.npc;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;

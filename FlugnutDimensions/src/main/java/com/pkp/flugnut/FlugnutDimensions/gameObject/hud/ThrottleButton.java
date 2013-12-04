@@ -1,7 +1,9 @@
-package com.pkp.flugnut.FlugnutDimensions.gameObject;
+package com.pkp.flugnut.FlugnutDimensions.gameObject.hud;
 
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.AbstractGameObjectImpl;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -25,7 +27,7 @@ import java.util.List;
  * Time: 7:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ThrottleButton extends AbstractGameObjectImpl{
+public class ThrottleButton extends AbstractGameObjectImpl {
 
     protected ITiledTextureRegion throttleTR;
     protected AnimatedSprite throttleSprite;

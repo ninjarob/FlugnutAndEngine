@@ -1,4 +1,4 @@
-package com.pkp.flugnut.FlugnutDimensions.gameObject;
+package com.pkp.flugnut.FlugnutDimensions.gameObject.hud;
 
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;

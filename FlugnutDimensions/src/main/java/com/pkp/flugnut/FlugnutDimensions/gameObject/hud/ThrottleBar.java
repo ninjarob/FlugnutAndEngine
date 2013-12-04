@@ -1,7 +1,8 @@
-package com.pkp.flugnut.FlugnutDimensions.gameObject;
+package com.pkp.flugnut.FlugnutDimensions.gameObject.hud;
 
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.AbstractGameObjectImpl;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -14,7 +15,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * Time: 7:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class ThrottleBar extends AbstractGameObjectImpl{
+public abstract class ThrottleBar extends AbstractGameObjectImpl {
     protected Sprite throttleSprite;
     protected ThrottleBarInd throttleBarInd;
     protected HUD hud;

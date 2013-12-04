@@ -8,8 +8,8 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid1;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.npc.Asteroid;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.npc.Asteroid1;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
@@ -49,10 +49,9 @@ public class AsteroidUtilities {
         asteroidInfo.setAsteroid(asteroid);
         gsi.addAsteroidInfo(asteroidInfo);
 
-        final RevoluteJointDef revoluteJointDef = AsteroidUtilities.getAsteroidRevoluteJointDef(asteroidInfo);
-
-        RevoluteJoint curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
-        asteroidInfo.setRevoluteJoint(curJoint);
+        String path = positionObj.getUtfString("path");
+        asteroidInfo.setPath(path);
+        AsteroidUtilities.pathSetup(asteroidInfo, scene, path);
     }
 
     public static void updateAsteroid(AsteroidInfo asteroidInfo, GameScene scene, ISFSObject positionObj) {
@@ -60,15 +59,8 @@ public class AsteroidUtilities {
         Integer hp = positionObj.getInt("hp");
         asteroidInfo.setPos(pos);
         asteroidInfo.setHp(hp);
-        RevoluteJoint curJoint = asteroidInfo.getRevoluteJoint();
-        if (null!=curJoint) {
-            float faster = AsteroidUtilities.getAsteroidFaster(pos.x, pos.y, asteroidInfo);
-            curJoint.setMotorSpeed(curJoint.getMotorSpeed()+faster);
-        } else {
-            RevoluteJointDef revoluteJointDef = getAsteroidRevoluteJointDef(asteroidInfo);
-            curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
-            asteroidInfo.setRevoluteJoint(curJoint);
-        }
+        String path = asteroidInfo.getPath();
+        AsteroidUtilities.pathUpdate(asteroidInfo, scene, path, pos, null);
     }
 
     public static void removeAsteroid(AsteroidInfo ai, GameScene scene, GameSceneInfo gsi) {
@@ -80,18 +72,17 @@ public class AsteroidUtilities {
         gsi.removeAsteroidInfo(ai.getId());
     }
 
-    protected static RevoluteJointDef getAsteroidRevoluteJointDef(AsteroidInfo asteroidInfo) {
+    public static RevoluteJointDef getAsteroidRevoluteJointDef(AsteroidInfo asteroidInfo) {
         final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
         revoluteJointDef.initialize(asteroidInfo.getCenterGravBody(), asteroidInfo.getAsteroid().getBody(), asteroidInfo.getCenterGravBody().getWorldCenter());
         revoluteJointDef.enableMotor = true;
-        revoluteJointDef.motorSpeed = 1;
+        revoluteJointDef.motorSpeed = asteroidInfo.getVelMag();
         revoluteJointDef.maxMotorTorque = 10;
         return revoluteJointDef;
     }
 
-    protected static float getAsteroidFaster(float x, float y, AsteroidInfo ai) {
-        Body b = ai.getAsteroid().getBody();
-        if (ai.getVelMag() > 0) {      //counterclockwise (so -x goes faster and +x goes slower)
+    public static float getOrbitalAsteroidFaster(float x, float y, Body b, boolean clockwise) {
+        if (clockwise) {      //counterclockwise (so -x goes faster and +x goes slower)
             if (y > 0) {               //below
                 if (x < b.getPosition().x) {                  //behind
                     return -0.1f;  //-0.1 means go faster in the counterclockwise direction
@@ -128,5 +119,28 @@ public class AsteroidUtilities {
             }
         }
         return 0;
+    }
+
+    public static void pathSetup(AsteroidInfo asteroidInfo, GameScene scene, String path) {
+        if("ccco".equals(path)) {
+            final RevoluteJointDef revoluteJointDef = AsteroidUtilities.getAsteroidRevoluteJointDef(asteroidInfo);
+
+            RevoluteJoint curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
+            asteroidInfo.setRevoluteJoint(curJoint);
+        }
+    }
+
+    public static void pathUpdate(AsteroidInfo asteroidInfo, GameScene scene, String path, Vector2 pos, Vector2 vel) {
+        if ("cco".equals(path) || "ccco".equals(path)) {   //circular orbits
+            RevoluteJoint curJoint = asteroidInfo.getRevoluteJoint();
+            if (null!=curJoint) {
+                float faster = AsteroidUtilities.getOrbitalAsteroidFaster(pos.x, pos.y, asteroidInfo.getAsteroid().getBody(), "cco".equals(path));
+                curJoint.setMotorSpeed(curJoint.getMotorSpeed()+faster);
+            } else {
+                RevoluteJointDef revoluteJointDef = getAsteroidRevoluteJointDef(asteroidInfo);
+                curJoint = (RevoluteJoint)(scene.getPhysicsWorld().createJoint(revoluteJointDef));
+                asteroidInfo.setRevoluteJoint(curJoint);
+            }
+        }
     }
 }

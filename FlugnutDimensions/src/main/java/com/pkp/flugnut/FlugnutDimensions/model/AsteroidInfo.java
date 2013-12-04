@@ -2,11 +2,8 @@ package com.pkp.flugnut.FlugnutDimensions.model;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.Asteroid;
-import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.npc.Asteroid;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +23,7 @@ public class AsteroidInfo {
     private Vector2 gravCenter;
     protected Body centerGravBody;  //used to move the asteroid
     private RevoluteJoint revoluteJoint;
+    private String path;
 
     public AsteroidInfo(int id, Vector2 pos, Vector2 gravCenter, Body centerGravBody, float velMag, int hp, int type) {
         this.id = id;
@@ -108,5 +106,13 @@ public class AsteroidInfo {
 
     public void setGravCenter(Vector2 gravCenter) {
         this.gravCenter = gravCenter;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

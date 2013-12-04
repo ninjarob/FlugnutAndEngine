@@ -1,8 +1,9 @@
-package com.pkp.flugnut.FlugnutDimensions.gameObject;
+package com.pkp.flugnut.FlugnutDimensions.gameObject.npc;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.AbstractGameObjectImpl;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
@@ -17,7 +18,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * Time: 9:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CelestialBody extends AbstractGameObjectImpl{
+public class CelestialBody extends AbstractGameObjectImpl {
     protected Sprite sprite;
     private int id;
     private Vector2 location;

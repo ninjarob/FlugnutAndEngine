@@ -1,8 +1,9 @@
-package com.pkp.flugnut.FlugnutDimensions.gameObject;
+package com.pkp.flugnut.FlugnutDimensions.gameObject.npc;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.AbstractGameObjectImpl;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -17,7 +18,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
  * Time: 7:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class Asteroid extends AbstractGameObjectImpl{
+public abstract class Asteroid extends AbstractGameObjectImpl {
     protected ITiledTextureRegion asteroidTR;
     protected AnimatedSprite asteroidSprite;
     protected AsteroidInfo asteroidInfo;
