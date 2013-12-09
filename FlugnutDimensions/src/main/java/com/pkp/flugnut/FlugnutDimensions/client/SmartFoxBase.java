@@ -268,10 +268,10 @@ public class SmartFoxBase implements IEventListener{
                 else {
                     Boolean asteroidDestroyed = positionObj.containsKey("des");
                     if (asteroidDestroyed) {
-                        AsteroidUtilities.removeAsteroid(gsi.getAsteroidInfo(id), scene, gsi);
+                        asteroidInfo.removeAsteroid(scene, gsi);
                     }
                     else {
-                        AsteroidUtilities.updateAsteroid(asteroidInfo, scene, positionObj);
+                        asteroidInfo.updateAsteroid(positionObj);
                     }
                 }
             }

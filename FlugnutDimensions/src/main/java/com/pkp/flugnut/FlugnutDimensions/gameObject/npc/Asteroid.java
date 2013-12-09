@@ -1,6 +1,5 @@
 package com.pkp.flugnut.FlugnutDimensions.gameObject.npc;
 
-import com.badlogic.gdx.physics.box2d.Body;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.AbstractGameObjectImpl;

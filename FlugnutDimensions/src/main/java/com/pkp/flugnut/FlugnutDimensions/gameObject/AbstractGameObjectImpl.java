@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
-import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;

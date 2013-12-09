@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.pkp.flugnut.FlugnutDimensions.GLGame;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
+import com.pkp.flugnut.FlugnutDimensions.model.PathBehavior;
 import com.pkp.flugnut.FlugnutDimensions.utils.GameConstants;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
@@ -33,10 +34,6 @@ public class Asteroid1 extends Asteroid {
     @Override
     public void initForScene(PhysicsWorld physics) {
         Vector2 pos = new Vector2(sp.x, sp.y);
-
-
-        asteroidInfo.setCenterGravBody(PhysicsFactory.createBoxBody(physics, asteroidInfo.getGravCenter().x, asteroidInfo.getGravCenter().y, 1,
-                1, BodyDef.BodyType.StaticBody, GameConstants.ASTEROID_FIXTURE_DEF));
 
         body = PhysicsFactory.createBoxBody(physics, pos.x, pos.y, asteroidSprite.getWidth(),
                 asteroidSprite.getHeight(), BodyDef.BodyType.DynamicBody, GameConstants.ASTEROID_FIXTURE_DEF);

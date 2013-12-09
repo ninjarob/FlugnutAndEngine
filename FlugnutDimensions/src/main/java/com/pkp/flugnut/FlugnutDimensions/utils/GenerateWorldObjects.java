@@ -6,7 +6,8 @@ import com.pkp.flugnut.FlugnutDimensions.game.GameTextureAtlasManager;
 import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureInfoHolder;
 import com.pkp.flugnut.FlugnutDimensions.game.TextureType;
-import com.pkp.flugnut.FlugnutDimensions.gameObject.*;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.GawainShip;
+import com.pkp.flugnut.FlugnutDimensions.gameObject.Ship;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.npc.*;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
 import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
@@ -207,14 +208,12 @@ public class GenerateWorldObjects {
             int id = sfsObj.getInt("id");
             float x = sfsObj.getFloat("x");
             float y = sfsObj.getFloat("y");
-            float gx = sfsObj.getFloat("gx");
-            float gy = sfsObj.getFloat("gy");
             float velMag = sfsObj.getFloat("vm");
             int type = sfsObj.getInt("t");
             int hp = sfsObj.getInt("hp");
             String path = sfsObj.getUtfString("path");
 
-            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), new Vector2(gx, gy), null, velMag, hp, type);
+            AsteroidInfo ab = new AsteroidInfo(id, new Vector2(x, y), velMag, hp, type, path);
             ab.setPath(path);
             Asteroid asteroid;
             switch (type) {

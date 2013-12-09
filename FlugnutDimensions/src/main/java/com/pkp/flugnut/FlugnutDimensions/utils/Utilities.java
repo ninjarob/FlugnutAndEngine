@@ -9,7 +9,6 @@ import com.pkp.flugnut.FlugnutDimensions.game.ImageResourceCategory;
 import com.pkp.flugnut.FlugnutDimensions.game.Settings;
 import com.pkp.flugnut.FlugnutDimensions.gameObject.GameObject;
 import com.pkp.flugnut.FlugnutDimensions.level.GameSceneInfo;
-import com.pkp.flugnut.FlugnutDimensions.model.AsteroidInfo;
 import com.pkp.flugnut.FlugnutDimensions.screen.global.GameScene;
 import org.andengine.audio.music.Music;
 import org.andengine.audio.sound.Sound;
